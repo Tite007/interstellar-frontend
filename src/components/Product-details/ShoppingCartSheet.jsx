@@ -8,7 +8,7 @@ import {
   SheetContent,
   SheetHeader,
   SheetTitle,
-} from '@/src/components/ui/sheet'
+} from '../ui/sheet' // Adjust the relative path as needed
 import { Button } from '@nextui-org/button'
 import { ShoppingBag } from 'lucide-react' // Import the ShoppingBag icon
 
