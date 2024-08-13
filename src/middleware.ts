@@ -1,43 +1,42 @@
-import { NextResponse, NextRequest } from 'next/server'
 import { getToken } from 'next-auth/jwt'
+import { NextResponse, NextRequest } from 'next/server'
 
 export async function middleware(req: NextRequest) {
-  console.log('Middleware triggered:', req.nextUrl.pathname)
-  console.log('NextAuth secret:', process.env.NEXTAUTH_SECRET)
-  console.log('Request Cookies:', req.cookies)
-  console.log('Request Headers:', req.headers)
-
   let token
+
   try {
-    // Cast to an appropriate type that excludes the salt requirement
+    // Fetch and decode the token using next-auth's getToken function
     token = await getToken({
       req,
       secret: process.env.NEXTAUTH_SECRET,
-    } as any) // Casting to 'any' to bypass TypeScript error
+    })
+
     console.log('Decoded token:', token)
   } catch (error) {
     console.error('Error decoding token:', error)
   }
 
-  if (!token) {
-    console.log('Token is null or invalid:', { token, cookies: req.cookies })
-    const loginUrl = new URL('/customer/login', req.nextUrl.origin)
-    return NextResponse.redirect(loginUrl)
-  }
-
+  // Add your role-based access control logic here
   const { pathname } = req.nextUrl
 
-  if (pathname.startsWith('/admin') && token.role !== 'admin') {
-    return NextResponse.redirect(new URL('/not-authorized', req.nextUrl.origin))
+  if (pathname.startsWith('/admin')) {
+    if (!token || token.role !== 'admin') {
+      const notAuthorizedUrl = new URL('/not-authorized', req.nextUrl.origin)
+      return NextResponse.redirect(notAuthorizedUrl)
+    }
   }
 
-  if (pathname.startsWith('/customer-profile') && token.role !== 'user') {
-    return NextResponse.redirect(new URL('/customer/login', req.nextUrl.origin))
+  if (pathname.startsWith('/customer-profile')) {
+    if (!token || token.role !== 'user') {
+      const loginUrl = new URL('/customer/login', req.nextUrl.origin)
+      return NextResponse.redirect(loginUrl)
+    }
   }
 
   return NextResponse.next()
 }
 
+// Define matcher configuration to target specific paths
 export const config = {
   matcher: ['/admin/:path*', '/customer-profile'],
 }
