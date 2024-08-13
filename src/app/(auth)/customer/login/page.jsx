@@ -66,7 +66,7 @@ export default function UserLoginPage() {
     <div className="min-h-screen flex items-center justify-center">
       <form
         onSubmit={handleSubmit}
-        className="max-w-lg p-4 bg-white w-full shadow-md rounded-md"
+        className="text-base max-w-lg p-4 bg-white w-full shadow-md rounded-md"
       >
         <h2 className="text-2xl text-center font-semibold mb-4">Log in</h2>
         <div className="mb-4">
