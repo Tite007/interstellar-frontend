@@ -82,7 +82,7 @@ export default function UserLoginPage() {
         <div className="mb-4 relative">
           <Input
             name="password"
-            className="text-base"
+            className="text-lg"
             type={showPassword ? 'text' : 'password'}
             required
             label="Password"
