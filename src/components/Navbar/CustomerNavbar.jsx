@@ -5,6 +5,9 @@ import {
   NavbarBrand,
   NavbarContent,
   NavbarItem,
+  NavbarMenuToggle,
+  NavbarMenu,
+  NavbarMenuItem,
 } from '@nextui-org/navbar'
 import { Button } from '@nextui-org/button'
 import { AcmeLogo } from '@/src/components/Navbar/logo'
@@ -26,6 +29,7 @@ export default function MainNavbarCustomer() {
   const { data: session, status } = useSession()
   const { cart } = useContext(CartContext) // Use CartContext to get cart items
   const [hydrated, setHydrated] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false) // State to control menu toggle
 
   // Ensure the component is fully hydrated before rendering dynamic content
   useEffect(() => {
@@ -40,24 +44,35 @@ export default function MainNavbarCustomer() {
     return null
   }
 
-  return (
-    <Navbar maxWidth="2xl" className="bg-gray-200 shadow-lg">
-      <NavbarBrand>
-        <AcmeLogo />
-        <p className="font-bold text-inherit"></p>
-      </NavbarBrand>
-      <NavbarContent className="hidden sm:flex gap-4" justify="center">
-        <NavbarItem>
-          <Link color="foreground" href="/">
-            Home
-          </Link>
-        </NavbarItem>
+  const menuItems = [
+    { label: 'Home', href: '/' },
+    { label: 'Products', href: '/products' },
+  ]
 
-        <NavbarItem>
-          <Link color="foreground" href="/products">
-            Products
-          </Link>
-        </NavbarItem>
+  return (
+    <Navbar
+      maxWidth="2xl"
+      className="bg-gray-200 shadow-lg"
+      onMenuOpenChange={setIsMenuOpen}
+    >
+      <NavbarContent>
+        <NavbarMenuToggle
+          aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+          className="sm:hidden"
+        />
+        <NavbarBrand>
+          <AcmeLogo />
+          <p className="font-bold text-inherit"></p>
+        </NavbarBrand>
+      </NavbarContent>
+      <NavbarContent className="hidden sm:flex gap-4" justify="center">
+        {menuItems.map((item, index) => (
+          <NavbarItem key={index}>
+            <Link color="foreground" href={item.href}>
+              {item.label}
+            </Link>
+          </NavbarItem>
+        ))}
       </NavbarContent>
       <NavbarContent justify="end" className="items-center gap-4">
         {status === 'unauthenticated' && (
@@ -152,6 +167,21 @@ export default function MainNavbarCustomer() {
           </Dropdown>
         )}
       </NavbarContent>
+
+      <NavbarMenu isOpen={isMenuOpen}>
+        {menuItems.map((item, index) => (
+          <NavbarMenuItem key={index}>
+            <Link
+              color="foreground"
+              href={item.href}
+              className="w-full"
+              size="lg"
+            >
+              {item.label}
+            </Link>
+          </NavbarMenuItem>
+        ))}
+      </NavbarMenu>
     </Navbar>
   )
 }
