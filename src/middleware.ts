@@ -5,15 +5,35 @@ export async function middleware(req: NextRequest) {
   let token
 
   try {
-    // Fetch and decode the token using next-auth's getToken function
-    token = await getToken({
-      req,
-      secret: process.env.NEXTAUTH_SECRET,
-    })
+    // Attempt to fetch and decode the token using cookies
+    const tokenFromCookie = req.cookies.get('authToken')
 
-    console.log('Decoded token:', token)
+    if (tokenFromCookie) {
+      // If token exists in cookies, use it
+      token = JSON.parse(tokenFromCookie)
+      console.log('Token retrieved from cookie:', token)
+    } else {
+      // Otherwise, use next-auth's getToken function to fetch and decode the token
+      token = await getToken({
+        req,
+        secret: process.env.NEXTAUTH_SECRET,
+      })
+
+      if (token) {
+        // Store the token in cookies for future requests
+        const response = NextResponse.next()
+        response.cookies.set('authToken', JSON.stringify(token), {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          path: '/',
+        })
+
+        console.log('Decoded token stored in cookie:', token)
+        return response
+      }
+    }
   } catch (error) {
-    console.error('Error decoding token:', error)
+    console.error('Error decoding or storing token:', error)
   }
 
   // Add your role-based access control logic here
