@@ -4,8 +4,6 @@ import React, { useEffect, useState } from 'react'
 import { useSession, signOut } from 'next-auth/react'
 import { Button } from '@nextui-org/button'
 import OrderHistory from '@/src/components/customer/OrderHistory'
-import ContactInfoCard from '@/src/components/Admin/Customers/ContactInfoCard'
-import MostBoughtProductsCard from '@/src/components/Admin/Customers/MostBoughtProductsCard'
 import BreadcrumbsUserProfile from '@/src/components/customer/BreadcrumbsProfile'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
