@@ -12,6 +12,7 @@ export async function middleware(req: NextRequest) {
     token = await getToken({
       req,
       secret: process.env.NEXTAUTH_SECRET,
+      encryption: true, // Ensure the token is encrypted correctly
     })
     console.log('Decoded token:', token)
   } catch (error) {
