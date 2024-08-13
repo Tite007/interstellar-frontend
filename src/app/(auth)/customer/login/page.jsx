@@ -70,11 +70,19 @@ export default function UserLoginPage() {
       >
         <h2 className="text-2xl text-center font-semibold mb-4">Log in</h2>
         <div className="mb-4">
-          <Input size="sm" label="Email" name="email" type="email" required />
+          <Input
+            size="sm"
+            className="text-base"
+            label="Email"
+            name="email"
+            type="email"
+            required
+          />
         </div>
         <div className="mb-4 relative">
           <Input
             name="password"
+            className="text-base"
             type={showPassword ? 'text' : 'password'}
             required
             label="Password"
