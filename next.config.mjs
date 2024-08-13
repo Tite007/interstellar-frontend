@@ -9,6 +9,10 @@ const nextConfig = {
       },
     ],
   },
+  experimental: {
+    runtime: 'edge', // Correctly placed under the top-level experimental key
+  },
 }
 
+// Correct placement of export
 export default nextConfig
