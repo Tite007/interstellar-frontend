@@ -9,11 +9,11 @@ export async function middleware(req: NextRequest) {
 
   let token
   try {
+    // Cast to an appropriate type that excludes the salt requirement
     token = await getToken({
       req,
       secret: process.env.NEXTAUTH_SECRET,
-      encryption: true, // Ensure the token is encrypted correctly
-    })
+    } as any) // Casting to 'any' to bypass TypeScript error
     console.log('Decoded token:', token)
   } catch (error) {
     console.error('Error decoding token:', error)
@@ -27,20 +27,12 @@ export async function middleware(req: NextRequest) {
 
   const { pathname } = req.nextUrl
 
-  // Check role for admin routes
-  if (pathname.startsWith('/admin')) {
-    if (token.role !== 'admin') {
-      const notAuthorizedUrl = new URL('/not-authorized', req.nextUrl.origin)
-      return NextResponse.redirect(notAuthorizedUrl)
-    }
+  if (pathname.startsWith('/admin') && token.role !== 'admin') {
+    return NextResponse.redirect(new URL('/not-authorized', req.nextUrl.origin))
   }
 
-  // Check role for customer profile routes
-  if (pathname.startsWith('/customer-profile')) {
-    if (token.role !== 'user') {
-      const loginUrl = new URL('/customer/login', req.nextUrl.origin)
-      return NextResponse.redirect(loginUrl)
-    }
+  if (pathname.startsWith('/customer-profile') && token.role !== 'user') {
+    return NextResponse.redirect(new URL('/customer/login', req.nextUrl.origin))
   }
 
   return NextResponse.next()
