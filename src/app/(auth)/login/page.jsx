@@ -86,7 +86,7 @@ export default function AdminLoginPage() {
     >
       <form
         onSubmit={handleSubmit}
-        className="max-w-md p-6 bg-white w-full border shadow-xl rounded-xl flex flex-col justify-between"
+        className="absolute max-w-md p-6 bg-white w-full border shadow-xl rounded-xl flex flex-col justify-between"
       >
         <h2 className="text-3xl text-center font-semibold mb-6">Admin Login</h2>
         <div className="mb-4">
