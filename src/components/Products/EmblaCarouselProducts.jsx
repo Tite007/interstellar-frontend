@@ -10,6 +10,7 @@ import {
 } from '@/src/components/Products/EmblaCarouselSelectedSnapDisplay'
 import useEmblaCarousel from 'embla-carousel-react'
 import ProductCard from '@/src/components/Products/ProductCard'
+import Link from 'next/link' // Import Link for navigation
 
 const EmblaCarouselProducts = (props) => {
   const { products = [], options } = props // Set a default empty array for products
@@ -31,7 +32,9 @@ const EmblaCarouselProducts = (props) => {
           {products.length > 0 ? (
             products.map((product, index) => (
               <div className="embla-product__slide" key={index}>
-                <ProductCard product={product} />
+                <Link href={`/products/${product._id}`}>
+                  <ProductCard product={product} />
+                </Link>
               </div>
             ))
           ) : (
