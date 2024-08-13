@@ -6,6 +6,15 @@ export async function middleware(req) {
   console.log('Incoming Request URL:', req.url)
   console.log('Request Headers:', JSON.stringify(req.headers))
 
+  if (
+    !req.cookies.has('next-auth.session-token') &&
+    req.cookies.has('__Secure-next-auth.session-token')
+  ) {
+    req.cookies.set({
+      ...req.cookies.get('__Secure-next-auth.session-token'),
+      name: 'next-auth.session-token',
+    })
+  }
   // Fetch the token using the NEXTAUTH_SECRET
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
   const { pathname } = req.nextUrl
