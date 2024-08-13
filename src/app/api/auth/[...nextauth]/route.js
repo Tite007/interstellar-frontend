@@ -138,4 +138,5 @@ export const {
       return token
     },
   },
+  debug: true, // Enable this temporarily to get detailed logs in production
 })
