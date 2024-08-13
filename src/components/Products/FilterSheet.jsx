@@ -6,7 +6,7 @@ import {
   SheetContent,
   SheetHeader,
   SheetTitle,
-} from '@/src/components/ui/sheet'
+} from '../../components/ui/Sheet'
 import { Button } from '@nextui-org/button'
 import { Filter } from 'lucide-react' // Import a filter icon
 import Sidebar from '@/src/components/Products/Sidebar'
