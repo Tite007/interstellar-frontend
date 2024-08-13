@@ -3,6 +3,7 @@ import Providers from '@/src/app/providers'
 import { Roboto } from 'next/font/google'
 import AuthProvider from '@/src/components/AuthProvider'
 import { Toaster } from '@/src/components/ui/Toaster'
+import Head from 'next/head'
 
 const roboto = Roboto({
   weight: ['300', '400', '500', '700'],
@@ -19,6 +20,13 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={roboto.className}>
+      <Head>
+        {/* Prevent zoom on mobile input focus */}
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+      </Head>
       <body>
         <AuthProvider>
           <Providers>

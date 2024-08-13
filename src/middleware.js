@@ -5,9 +5,6 @@ export default auth((req) =>{
 const { pathname } = req.nextUrl
 const authentication = req.auth.user?.role;
 
-
-console.log('auth', authentication)
-
   // Protect the admin routes
   if (pathname.startsWith('/admin')) {
     if (!req.auth || authentication !== 'admin') {

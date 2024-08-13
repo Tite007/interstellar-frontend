@@ -127,7 +127,6 @@ export const {
       return session
     },
     async jwt({ token, user }) {
-      console.log('JWY callback token:', token)
       if (user) {
         token.id = user.id
         token.name = user.name
@@ -138,8 +137,7 @@ export const {
     },
 
     authorized: async ({ auth }) => {
-        return !!auth
+      return !!auth
     },
   },
-  debug: true, // Enable this temporarily to get detailed logs in production
 })
