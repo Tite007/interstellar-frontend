@@ -11,6 +11,7 @@ import {
 import useEmblaCarousel from 'embla-carousel-react'
 import ProductCard from '@/src/components/Products/ProductCard'
 import Link from 'next/link' // Import Link for navigation
+import SimilarProductsCard from './SimilarProductsCard'
 
 const EmblaCarouselProducts = (props) => {
   const { products = [], options } = props // Set a default empty array for products
@@ -33,7 +34,7 @@ const EmblaCarouselProducts = (props) => {
             products.map((product, index) => (
               <div className="embla-product__slide" key={index}>
                 <Link href={`/products/${product._id}`}>
-                  <ProductCard product={product} />
+                  <SimilarProductsCard product={product} />
                 </Link>
               </div>
             ))

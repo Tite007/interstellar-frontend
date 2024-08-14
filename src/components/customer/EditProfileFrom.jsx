@@ -21,9 +21,9 @@ export default function CustomerProfilePage() {
     city: '',
     province: '',
     postalCode: '',
+    password: '',
     country: '',
     phone: '',
-    password: '',
     emailSubscribed: false,
     smsSubscribed: false,
     role: 'user', // Default role
@@ -52,7 +52,6 @@ export default function CustomerProfilePage() {
             postalCode: userData.postalCode || '',
             country: userData.country || '',
             phone: userData.phone || '',
-            password: userData.password || '',
             emailSubscribed: userData.emailSubscribed || false,
             smsSubscribed: userData.smsSubscribed || false,
             role: userData.role || 'user', // Initialize role
@@ -295,6 +294,11 @@ export default function CustomerProfilePage() {
                 onChange={handleChange}
               />
             </div>
+            <div>
+              <h1 className="col-span-3 text-lg font-semibold text-gray-700">
+                Change Password
+              </h1>
+            </div>
             <div className="grid grid-cols-1 border bg-white pr-4 pl-4 rounded-2xl pt-10 pb-10 md:grid-cols-2 gap-6">
               <Input
                 clearable
@@ -303,7 +307,6 @@ export default function CustomerProfilePage() {
                 name="password"
                 onChange={handleChange}
                 type="password"
-                value={user.password}
               />
             </div>
 
