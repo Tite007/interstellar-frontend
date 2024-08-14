@@ -14,7 +14,7 @@ export default function BreadcrumbsUserProfileOrdersDetails() {
         </Link>
         🔹
         <Link
-          href="/orders"
+          href="/customer-profile/orders"
           className="pr-2 pl-2 text-blue-500 hover:underline"
         >
           Orders History

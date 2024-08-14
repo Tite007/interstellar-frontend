@@ -9,7 +9,7 @@ const OrderCard = ({ order }) => {
   const totalItems = order.items.reduce((acc, item) => acc + item.quantity, 0)
 
   return (
-    <div className="grid grid-cols-4 gap-4 p-4 bg-gray-50 border rounded-lg shadow-sm mb-4 hover:shadow-md transition-shadow cursor-pointer">
+    <div className="grid grid-cols-4 gap-4 p-4  border rounded-lg shadow-sm mb-4 hover:shadow-md transition-shadow cursor-pointer">
       {/* Image Column */}
       <div className="flex justify-center items-center">
         <Image
@@ -38,9 +38,6 @@ const OrderCard = ({ order }) => {
       <div className="flex flex-col justify-center items-end">
         <p className="text-md md:text-md lg:text-md font-bold">
           Total: ${order.totalPrice.toFixed(2)}
-        </p>
-        <p className="text-gray-500 text-sm md:text-base lg:text-md">
-          {order.paymentStatus}
         </p>
       </div>
     </div>

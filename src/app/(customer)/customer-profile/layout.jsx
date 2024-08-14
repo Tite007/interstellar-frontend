@@ -30,7 +30,7 @@ const CustomerProfileLayout = ({ children }) => {
       </nav>
 
       {/* Main Content */}
-      <div className="flex-1 p-6 bg-gray-100">{children}</div>
+      <div className="flex-1 p-6 ">{children}</div>
     </div>
   )
 }
