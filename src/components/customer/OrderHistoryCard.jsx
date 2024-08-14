@@ -5,7 +5,7 @@ import { Pagination } from '@nextui-org/pagination'
 
 const ITEMS_PER_PAGE = 5
 
-const OrderHistoryCard = ({ userOrders }) => {
+const OrderHistoryCard = ({ userOrders, onCardClick }) => {
   const [currentPage, setCurrentPage] = useState(1)
 
   const handlePageChange = (page) => {
@@ -22,7 +22,11 @@ const OrderHistoryCard = ({ userOrders }) => {
       <div className="order-history">
         {paginatedOrders.map((order, index) => (
           <Link key={index} href={`/customer-profile/orders/${order._id}`}>
-            <OrderCard item={order} />
+            <OrderCard
+              key={order._id}
+              order={order}
+              onCardClick={onCardClick}
+            />
           </Link>
         ))}
       </div>

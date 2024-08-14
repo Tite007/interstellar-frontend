@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react'
 import BreadcrumbsUserProfile from '@/src/components/customer/BreadcrumbsProfile'
 import OrderHistoryCard from '@/src/components/customer/OrderHistoryCard'
 import { useRouter } from 'next/navigation'
+import BreadcrumbsUserProfileOrders from '@/src/components/customer/BreadcrumbsProfileOrders'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
@@ -14,8 +15,6 @@ export default function CustomerOrdersPage() {
   const router = useRouter()
 
   const handleCardClick = (order) => {
-    // Log the order to verify if _id is defined
-    console.log('Clicked order:', order)
     if (order && order._id) {
       router.push(`/customer-profile/orders/${order._id}`)
     } else {
@@ -44,27 +43,12 @@ export default function CustomerOrdersPage() {
           }
           const ordersData = await ordersResponse.json()
 
-          const productMap = {}
-          ordersData.forEach((order) => {
-            order.items.forEach((item) => {
-              if (productMap[item.product]) {
-                productMap[item.product].quantity += item.quantity
-              } else {
-                productMap[item.product] = {
-                  name: item.name,
-                  quantity: item.quantity,
-                  productImage: item.productImage, // Add image URL
-                  subtotal: item.quantity * item.price, // Calculate subtotal
-                  _id: order._id, // Add the order _id here
-                }
-              }
-            })
-          })
-
-          const sortedProducts = Object.values(productMap).sort(
-            (a, b) => b.quantity - a.quantity,
+          // Sort orders by most recent
+          const sortedOrders = ordersData.sort(
+            (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
           )
-          setUserOrders(sortedProducts)
+
+          setUserOrders(sortedOrders)
         } catch (error) {
           console.error('Failed to fetch data:', error)
         }
@@ -84,7 +68,7 @@ export default function CustomerOrdersPage() {
 
   return (
     <div className="mb-10">
-      <BreadcrumbsUserProfile />
+      <BreadcrumbsUserProfileOrders />
       {user ? (
         <>
           <div>
