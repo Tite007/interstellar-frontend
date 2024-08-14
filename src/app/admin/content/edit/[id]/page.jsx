@@ -128,7 +128,7 @@ export default function EditContentPage() {
         }),
       })
       if (!res.ok) throw new Error('Failed to save content')
-      router.push('/content')
+      router.push('/admin/content')
     } catch (error) {
       console.error('Error saving content:', error)
     }

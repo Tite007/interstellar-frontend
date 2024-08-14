@@ -90,7 +90,7 @@ export default function NewContentPage() {
         const errorMessage = await res.text()
         throw new Error(`Failed to save content: ${errorMessage}`)
       }
-      router.push('/content')
+      router.push('/admin/content')
     } catch (error) {
       console.error('Error saving content:', error)
     }
