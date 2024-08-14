@@ -1,10 +1,9 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { useSession, signOut } from 'next-auth/react'
-import { Button } from '@nextui-org/button'
-import OrderHistory from '@/src/components/customer/OrderHistory'
+import { useSession } from 'next-auth/react'
 import BreadcrumbsUserProfile from '@/src/components/customer/BreadcrumbsProfile'
 import OrderHistoryCard from '@/src/components/customer/OrderHistoryCard'
+import { useRouter } from 'next/navigation'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
@@ -12,6 +11,17 @@ export default function CustomerOrdersPage() {
   const { data: session, status } = useSession()
   const [user, setUser] = useState(null)
   const [userOrders, setUserOrders] = useState([])
+  const router = useRouter()
+
+  const handleCardClick = (order) => {
+    // Log the order to verify if _id is defined
+    console.log('Clicked order:', order)
+    if (order && order._id) {
+      router.push(`/customer-profile/orders/${order._id}`)
+    } else {
+      console.error('Order ID is undefined!')
+    }
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,6 +55,7 @@ export default function CustomerOrdersPage() {
                   quantity: item.quantity,
                   productImage: item.productImage, // Add image URL
                   subtotal: item.quantity * item.price, // Calculate subtotal
+                  _id: order._id, // Add the order _id here
                 }
               }
             })
@@ -88,7 +99,10 @@ export default function CustomerOrdersPage() {
           <div className="flex gap-4 mt-6 flex-col md:flex-row">
             <div className="flex-1">
               <h1 className="font-semibold text-xl mb-2">Your Order History</h1>
-              <OrderHistoryCard userOrders={userOrders} />
+              <OrderHistoryCard
+                userOrders={userOrders}
+                onCardClick={handleCardClick}
+              />
             </div>
           </div>
         </>

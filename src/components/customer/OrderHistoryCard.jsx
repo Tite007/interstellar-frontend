@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import Link from 'next/link'
 import OrderCard from '@/src/components/customer/OrderCard' // Adjust the import path as necessary
 import { Pagination } from '@nextui-org/pagination'
 
@@ -20,7 +21,9 @@ const OrderHistoryCard = ({ userOrders }) => {
     <div>
       <div className="order-history">
         {paginatedOrders.map((order, index) => (
-          <OrderCard key={index} item={order} />
+          <Link key={index} href={`/customer-profile/orders/${order._id}`}>
+            <OrderCard item={order} />
+          </Link>
         ))}
       </div>
       <div className="pagination">
