@@ -1,17 +1,17 @@
 'use client'
-
 import React, { useEffect, useState } from 'react'
 import { useSession, signOut } from 'next-auth/react'
 import { Button } from '@nextui-org/button'
 import OrderHistory from '@/src/components/customer/OrderHistory'
 import BreadcrumbsUserProfile from '@/src/components/customer/BreadcrumbsProfile'
+import OrderHistoryCard from '@/src/components/customer/OrderHistoryCard'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
 export default function CustomerOrdersPage() {
   const { data: session, status } = useSession()
   const [user, setUser] = useState(null)
-  const [mostBoughtProducts, setMostBoughtProducts] = useState([])
+  const [userOrders, setUserOrders] = useState([])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,13 +26,14 @@ export default function CustomerOrdersPage() {
           const userData = await userResponse.json()
           setUser(userData)
 
-          const productsResponse = await fetch(
+          const ordersResponse = await fetch(
             `${API_BASE_URL}/orders/getUserOrders/${session.user.id}`,
           )
-          if (!productsResponse.ok) {
+          if (!ordersResponse.ok) {
             throw new Error('Network response was not ok')
           }
-          const ordersData = await productsResponse.json()
+          const ordersData = await ordersResponse.json()
+
           const productMap = {}
           ordersData.forEach((order) => {
             order.items.forEach((item) => {
@@ -42,6 +43,8 @@ export default function CustomerOrdersPage() {
                 productMap[item.product] = {
                   name: item.name,
                   quantity: item.quantity,
+                  productImage: item.productImage, // Add image URL
+                  subtotal: item.quantity * item.price, // Calculate subtotal
                 }
               }
             })
@@ -50,7 +53,7 @@ export default function CustomerOrdersPage() {
           const sortedProducts = Object.values(productMap).sort(
             (a, b) => b.quantity - a.quantity,
           )
-          setMostBoughtProducts(sortedProducts.slice(0, 5))
+          setUserOrders(sortedProducts)
         } catch (error) {
           console.error('Failed to fetch data:', error)
         }
@@ -68,18 +71,6 @@ export default function CustomerOrdersPage() {
     return <p>Access Denied</p>
   }
 
-  const handleSignOut = () => {
-    signOut({ callbackUrl: '/' })
-  }
-
-  const calculateDurationInDays = (time) => {
-    const startDate = new Date(time)
-    const currentDate = new Date()
-    const differenceInTime = currentDate.getTime() - startDate.getTime()
-    const days = Math.floor(differenceInTime / (1000 * 3600 * 24))
-    return `${days} days`
-  }
-
   return (
     <div className="mb-10">
       <BreadcrumbsUserProfile />
@@ -94,9 +85,10 @@ export default function CustomerOrdersPage() {
               {calculateDurationInDays(user.time)}
             </p>
           </div>
-          <div className="flex gap-4 flex-col md:flex-row">
+          <div className="flex gap-4 mt-6 flex-col md:flex-row">
             <div className="flex-1">
-              <OrderHistory user={user} />
+              <h1 className="font-semibold text-xl mb-2">Your Order History</h1>
+              <OrderHistoryCard userOrders={userOrders} />
             </div>
           </div>
         </>
@@ -105,4 +97,12 @@ export default function CustomerOrdersPage() {
       )}
     </div>
   )
+}
+
+const calculateDurationInDays = (time) => {
+  const startDate = new Date(time)
+  const currentDate = new Date()
+  const differenceInTime = currentDate.getTime() - startDate.getTime()
+  const days = Math.floor(differenceInTime / (1000 * 3600 * 24))
+  return `${days} days`
 }
