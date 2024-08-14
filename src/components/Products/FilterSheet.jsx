@@ -1,5 +1,4 @@
-// src/components/Products/FilterSheet.jsx
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Sheet,
   SheetTrigger,
@@ -8,7 +7,7 @@ import {
   SheetTitle,
 } from '../../components/ui/Sheet'
 import { Button } from '@nextui-org/button'
-import { Filter } from 'lucide-react' // Import a filter icon
+import { Filter } from 'lucide-react'
 import Sidebar from '@/src/components/Products/Sidebar'
 
 const FilterSheet = ({
@@ -17,14 +16,30 @@ const FilterSheet = ({
   countries,
   onSelectCategory,
   onClearFilter,
-  selectedCategory, // Pass down the selected state
-  selectedRoastLevel, // Pass down the selected state
-  selectedCountry, // Pass down the selected state
+  selectedCategory,
+  selectedRoastLevel,
+  selectedCountry,
 }) => {
+  const [isOpen, setIsOpen] = useState(false)
+
+  const handleOpenChange = (open) => {
+    setIsOpen(open)
+  }
+
+  const handleSelectCategory = (type, value) => {
+    onSelectCategory(type, value)
+    setIsOpen(false) // Close the Sheet after selecting or unselecting a filter
+  }
+
+  const handleClearFilter = (type) => {
+    onClearFilter(type)
+    setIsOpen(false) // Close the Sheet after clearing the filter
+  }
+
   return (
-    <Sheet>
+    <Sheet open={isOpen} onOpenChange={handleOpenChange}>
       <SheetTrigger asChild>
-        <Button variant="flat" color="primary">
+        <Button variant="flat" color="primary" onClick={() => setIsOpen(true)}>
           <Filter size={24} strokeWidth={1.5} />
           Filters
         </Button>
@@ -37,11 +52,11 @@ const FilterSheet = ({
           categories={categories}
           roastLevels={roastLevels}
           countries={countries}
-          onSelectCategory={onSelectCategory}
-          onClearFilter={onClearFilter}
-          selectedCategory={selectedCategory} // Pass the state
-          selectedRoastLevel={selectedRoastLevel} // Pass the state
-          selectedCountry={selectedCountry} // Pass the state
+          onSelectCategory={handleSelectCategory} // Use the updated handler
+          onClearFilter={handleClearFilter} // Use the updated handler
+          selectedCategory={selectedCategory}
+          selectedRoastLevel={selectedRoastLevel}
+          selectedCountry={selectedCountry}
         />
       </SheetContent>
     </Sheet>
