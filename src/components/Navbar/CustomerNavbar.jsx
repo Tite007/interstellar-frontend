@@ -21,26 +21,24 @@ import {
 import { useSession, signOut } from 'next-auth/react'
 import { Avatar } from '@nextui-org/avatar'
 import { Badge } from '@nextui-org/badge'
-import ShoppingCartSheet from '@/src/components/Product-details/ShoppingCartSheet' // Adjust path as needed
-import { CartContext } from '@/src/context/CartContext' // Import CartContext
+import ShoppingCartSheet from '@/src/components/Product-details/ShoppingCartSheet'
+import { CartContext } from '@/src/context/CartContext'
 import { User } from 'lucide-react'
 
 export default function MainNavbarCustomer() {
   const { data: session, status } = useSession()
-  const { cart } = useContext(CartContext) // Use CartContext to get cart items
+  const { cart } = useContext(CartContext)
   const [hydrated, setHydrated] = useState(false)
-  const [isMenuOpen, setIsMenuOpen] = useState(false) // State to control menu toggle
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
-  // Ensure the component is fully hydrated before rendering dynamic content
   useEffect(() => {
     setHydrated(true)
   }, [])
 
   const isUser = session?.user?.role === 'user'
-  const cartItemCount = cart.length // Get the number of items in the cart
+  const cartItemCount = cart.length
 
   if (!hydrated) {
-    // Prevent server/client mismatch during initial render
     return null
   }
 
@@ -53,7 +51,7 @@ export default function MainNavbarCustomer() {
     <Navbar
       maxWidth="2xl"
       className="bg-gray-200 shadow-lg"
-      onMenuOpenChange={setIsMenuOpen}
+      onMenuOpenChange={(isOpen) => setIsMenuOpen(isOpen)}
     >
       <NavbarContent>
         <NavbarMenuToggle
@@ -112,11 +110,11 @@ export default function MainNavbarCustomer() {
         )}
         <NavbarItem>
           <Badge
-            content={cartItemCount} // Display the number of items in the cart
+            content={cartItemCount}
             color="danger"
             variant="solid"
             showOutline={false}
-            isInvisible={cartItemCount === 0} // Hide badge if the cart is empty
+            isInvisible={cartItemCount === 0}
           >
             <ShoppingCartSheet />
           </Badge>
@@ -168,7 +166,8 @@ export default function MainNavbarCustomer() {
         )}
       </NavbarContent>
 
-      <NavbarMenu isOpen={isMenuOpen}>
+      {/* Modify NavbarMenu to use data attributes instead of passing isOpen directly */}
+      <NavbarMenu data-menu-open={isMenuOpen}>
         {menuItems.map((item, index) => (
           <NavbarMenuItem key={index}>
             <Link

@@ -1,10 +1,12 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext, useCallback } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { Button } from '@nextui-org/button'
+import { CartContext } from '@/src/context/CartContext' // Import the CartContext
 
 const PaymentSuccessPage = () => {
+  const { clearCart } = useContext(CartContext) // Access the clearCart function
   const pathname = usePathname()
   const router = useRouter()
   const [items, setItems] = useState([])
@@ -24,26 +26,32 @@ const PaymentSuccessPage = () => {
     }
   }, [])
 
-  const fetchSessionDetails = async (sessionId) => {
-    try {
-      const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL
-      const response = await fetch(
-        `${baseURL}/payment/stripe/sessions/${sessionId}`,
-      )
-      if (!response.ok) {
-        throw new Error('Failed to fetch session details')
-      }
-      const sessionData = await response.json()
-      setSessionDetails(sessionData)
+  const fetchSessionDetails = useCallback(
+    async (sessionId) => {
+      try {
+        const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL
+        const response = await fetch(
+          `${baseURL}/payment/stripe/sessions/${sessionId}`,
+        )
+        if (!response.ok) {
+          throw new Error('Failed to fetch session details')
+        }
+        const sessionData = await response.json()
+        setSessionDetails(sessionData)
 
-      // After fetching session details, fetch the line items
-      fetchItems(sessionId)
-    } catch (error) {
-      console.error('Fetch error:', error)
-      setError(`Error: ${error.message}`)
-      setIsLoading(false)
-    }
-  }
+        // After fetching session details, fetch the line items
+        await fetchItems(sessionId)
+
+        // Clear the cart after successfully fetching session details and items
+        clearCart()
+      } catch (error) {
+        console.error('Fetch error:', error)
+        setError(`Error: ${error.message}`)
+        setIsLoading(false)
+      }
+    },
+    [clearCart],
+  ) // Memoize the function to avoid infinite loops
 
   const fetchItems = async (sessionId) => {
     try {
@@ -67,6 +75,7 @@ const PaymentSuccessPage = () => {
       setIsLoading(false)
     }
   }
+
   const calculateSubtotal = () => {
     return items.reduce(
       (total, item) => total + (item.price.unit_amount / 100) * item.quantity,
@@ -81,7 +90,7 @@ const PaymentSuccessPage = () => {
   }
 
   const handleGoToOrders = () => {
-    router.push('/admin/orders')
+    router.push('/customer/orders')
   }
 
   return (
