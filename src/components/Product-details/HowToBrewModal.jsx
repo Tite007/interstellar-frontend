@@ -1,30 +1,37 @@
 // src/components/Product-details/HowToBrewModal.jsx
 
-import React, { useState } from "react";
+import React, { useState } from 'react'
 import {
   Modal,
   ModalContent,
   ModalHeader,
   ModalBody,
   ModalFooter,
-} from "@nextui-org/modal"; // Ensure the correct path
-import { Button } from "@nextui-org/button"; // Ensure the correct path
-import { Coffee, Weight, Filter, Beaker, Droplet } from "lucide-react";
-import Image from "next/image";
+} from '@nextui-org/modal' // Ensure the correct path
+import { Button } from '@nextui-org/button' // Ensure the correct path
+import { Coffee, Weight, Filter, Beaker, Droplet } from 'lucide-react'
+import Image from 'next/image'
 
 export default function HowToBrewModal() {
-  const [isOpen, setIsOpen] = useState(false);
-  const openModal = () => setIsOpen(true);
-  const closeModal = () => setIsOpen(false);
+  const [isOpen, setIsOpen] = useState(false)
+  const openModal = () => setIsOpen(true)
+  const closeModal = () => setIsOpen(false)
 
   return (
     <>
-      <Button onPress={openModal}>How to Brew</Button>
+      <Button
+        startContent={<Coffee strokeWidth={1.5} />}
+        onPress={openModal}
+        className=" bg-yellow-200"
+      >
+        How to Brew
+      </Button>
       <Modal
         isOpen={isOpen}
         size="lg"
         scrollBehavior="inside"
-        onOpenChange={setIsOpen}>
+        onOpenChange={setIsOpen}
+      >
         <ModalContent>
           <>
             <ModalHeader className="flex flex-col gap-1">
@@ -132,5 +139,5 @@ export default function HowToBrewModal() {
         </ModalContent>
       </Modal>
     </>
-  );
+  )
 }

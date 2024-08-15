@@ -18,7 +18,13 @@ export default function TechnicalDataModal({ product }) {
 
   return (
     <>
-      <Button onPress={openModal}>Technical Data</Button>
+      <Button
+        startContent={<FlaskConical strokeWidth={1.5} />}
+        onPress={openModal}
+        className=" bg-yellow-200"
+      >
+        Technical Data
+      </Button>
       <Modal isOpen={isOpen} size="lg" onOpenChange={setIsOpen}>
         <ModalContent>
           {(onClose) => (

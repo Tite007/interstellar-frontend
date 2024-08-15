@@ -8,6 +8,7 @@ import {
   ModalFooter,
 } from '@nextui-org/modal'
 import { Button } from '@nextui-org/button'
+import { CircleUser } from 'lucide-react'
 
 export default function AboutModal({ product }) {
   const [isOpen, setIsOpen] = useState(false)
@@ -17,7 +18,13 @@ export default function AboutModal({ product }) {
 
   return (
     <>
-      <Button onPress={openModal}>About</Button>
+      <Button
+        startContent={<CircleUser strokeWidth={1.5} />}
+        onPress={openModal}
+        className=" bg-yellow-200"
+      >
+        About
+      </Button>
       <Modal isOpen={isOpen} onOpenChange={setIsOpen}>
         <ModalContent>
           {(onClose) => (

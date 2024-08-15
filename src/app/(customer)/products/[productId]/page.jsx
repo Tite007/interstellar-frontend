@@ -240,7 +240,7 @@ export default function ProductDetails({ params, products }) {
       </div>
       <div className="text-center p-4 mt-10 text-black rounded-lg">
         <h2 className="text-left mb-4 text-2xl font-semibold">Highlights</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <AboutModal product={product} />
           <TechnicalDataModal product={product} />
           <HowToBrewModal />
