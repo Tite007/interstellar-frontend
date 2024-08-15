@@ -21,6 +21,9 @@ import { getGrindLabel } from '@/src/utils/grindUtils' // Import the helper func
 import { Toaster, toast } from 'sonner' // Import Sonner
 import BreadcrumdsProduct from '@/src/components/Product-details/Breadcrumbs'
 import ProductCarouselContainer from '@/src/components/Products/ProductCarouselContainer'
+import { ReviewProvider } from '@/src/context/ReviewContext'
+
+import ReviewSection from '@/src/components/Product-details/ReviewSection' // Import ReviewSection
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
@@ -246,6 +249,10 @@ export default function ProductDetails({ params, products }) {
           <HowToBrewModal />
           <BeanTypeModal />
         </div>
+        {/* Add the ReviewSection below the product details */}
+        <ReviewProvider productId={productId}>
+          <ReviewSection productId={productId} />
+        </ReviewProvider>
         <h2 className="text-2xl mt-16 font-bold">
           Brewed from the Heart of Volcanoes: Where Every Sip Tells a Story
         </h2>
