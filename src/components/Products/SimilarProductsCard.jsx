@@ -8,7 +8,7 @@ const SimilarProductsCard = ({ product }) => {
       <Image
         src={product.images[0]}
         alt={product.name}
-        className="w-full h-auto max-w-xs mx-auto mb-4"
+        className="w-full h-auto max-w-xs mx-auto rounded-t-md mb-4"
         width={300}
         height={300}
         priority

@@ -120,7 +120,7 @@ const ProductsPage = () => {
               selectedCountry={selectedCountry}
             />
           </div>
-          <div className=" container grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  p-4 ">
+          <div className=" xl:container lg:container md:container sm:container sm:mt-5 md:mt-10 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 ">
             {filteredProducts.map((product) => (
               <Link key={product._id} href={`/products/${product._id}`}>
                 <ProductCard product={product} />

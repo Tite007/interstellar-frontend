@@ -1,5 +1,4 @@
 'use client'
-
 import React, { useEffect, useState } from 'react'
 import { useSession, signOut } from 'next-auth/react'
 import { Button } from '@nextui-org/button'
@@ -21,13 +20,15 @@ export default function CustomerProfilePage() {
     city: '',
     province: '',
     postalCode: '',
-    password: '',
     country: '',
     phone: '',
     emailSubscribed: false,
     smsSubscribed: false,
     role: 'user', // Default role
+    password: '', // Added to handle password
   })
+
+  const [initialPassword, setInitialPassword] = useState('')
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,8 +55,11 @@ export default function CustomerProfilePage() {
             phone: userData.phone || '',
             emailSubscribed: userData.emailSubscribed || false,
             smsSubscribed: userData.smsSubscribed || false,
-            role: userData.role || 'user', // Initialize role
+            role: userData.role || 'user',
+            password: '', // Initialize password as an empty string
           })
+
+          setInitialPassword('') // Set the initial password to empty
         } catch (error) {
           console.error('Failed to fetch data:', error)
         }
@@ -65,12 +69,18 @@ export default function CustomerProfilePage() {
     fetchData()
   }, [session])
 
-  if (status === 'loading') {
-    return <p>Loading...</p>
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setUser({ ...user, [name]: value })
   }
 
-  if (status === 'unauthenticated' || session?.user.role !== 'user') {
-    return <p>Access Denied</p>
+  const handlePhoneChange = (e) => {
+    const formattedPhoneNumber = formatPhoneNumber(e.target.value)
+    setUser({ ...user, phone: formattedPhoneNumber })
+  }
+
+  const handleCheckboxChange = (name, isChecked) => {
+    setUser({ ...user, [name]: isChecked })
   }
 
   const formatPhoneNumber = (value) => {
@@ -88,11 +98,6 @@ export default function CustomerProfilePage() {
     )}-${phoneNumber.slice(6, 10)}`
   }
 
-  const handlePhoneChange = (e) => {
-    const formattedPhoneNumber = formatPhoneNumber(e.target.value)
-    setUser({ ...user, phone: formattedPhoneNumber })
-  }
-
   const calculateDurationInDays = (time) => {
     const startDate = new Date(time)
     const currentDate = new Date()
@@ -101,19 +106,10 @@ export default function CustomerProfilePage() {
     return `${days} days`
   }
 
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setUser({ ...user, [name]: value })
-  }
-
-  const handleCheckboxChange = (name, isChecked) => {
-    setUser({ ...user, [name]: isChecked })
-  }
-
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    const requiredFields = ['name', 'email', 'password']
+    const requiredFields = ['name', 'email']
     for (const field of requiredFields) {
       if (!user[field]) {
         console.error(`${field} is required.`)
@@ -122,6 +118,13 @@ export default function CustomerProfilePage() {
         })
         return
       }
+    }
+
+    const userData = { ...user }
+
+    // Remove password from the user object if it hasn't been changed
+    if (userData.password === initialPassword) {
+      delete userData.password
     }
 
     try {
@@ -133,7 +136,7 @@ export default function CustomerProfilePage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(user),
+        body: JSON.stringify(userData),
       })
 
       if (!response.ok) {
@@ -154,6 +157,14 @@ export default function CustomerProfilePage() {
         description: error.toString(),
       })
     }
+  }
+
+  if (status === 'loading') {
+    return <p>Loading...</p>
+  }
+
+  if (status === 'unauthenticated' || session?.user.role !== 'user') {
+    return <p>Access Denied</p>
   }
 
   return (
@@ -311,7 +322,7 @@ export default function CustomerProfilePage() {
             </div>
 
             <Button onClick={handleSubmit} type="submit" color="primary">
-              Upadate Profile
+              Update Profile
             </Button>
           </form>
         </div>
