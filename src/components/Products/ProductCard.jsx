@@ -4,8 +4,8 @@ import React from 'react'
 
 const ProductCard = ({ product }) => {
   return (
-    <div className="border border-gray-200 rounded-lg p-4 m-1 shadow-md text-left sm:min-w-[220px] h-[355px] md:h-[400px] sm:max-w-[260px] lg:max-w-[285px] md:max-w-[350]">
-      <div className="relative w-full h-[200px] md:h-[250px] lg:h-[260px] ">
+    <div className="border border-gray-200 rounded-lg p-4 m-1 shadow-md text-left sm:min-w-[220px] h-[330px] md:h-[390px] sm:max-w-[260px] lg:max-w-[285px] md:max-w-[350]">
+      <div className="relative w-full h-[200px] md:h-[250px] lg:h-[250px] ">
         <Image
           src={product.images[0]}
           alt={product.name}
@@ -15,7 +15,7 @@ const ProductCard = ({ product }) => {
           priority
         />
       </div>
-      <h3 className="text-md font-semibold mt-2 sm:text-md md:text-lg ">
+      <h3 className="text-md line-clamp-1 font-semibold mt-2 sm:text-md md:text-lg ">
         {product.name}
       </h3>
       <p className="text-xs md:text-md lg:text-md xl:text-md text-gray-500">
