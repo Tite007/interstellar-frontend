@@ -34,36 +34,47 @@ const ReviewSection = ({ productId }) => {
   const renderReviews = (reviews, isReply = false) => {
     return reviews.map((review) => (
       <div key={review._id} style={{ marginLeft: isReply ? '20px' : '0' }}>
-        <div className="review-item border rounded-lg mb-4 text-left p-4">
+        <div className="review-item border shadow-md rounded-lg mb-4 text-left p-4">
           <div className="flex justify-between">
             <div>
-              <p>
-                <strong>{review.user.name}</strong>{' '}
-                {isReply ? null : 'rated it'}{' '}
+              <div className="flex items-center mt-1">
+                <p className="m-0">
+                  <strong>{review.user.name}</strong>
+                </p>
                 {!isReply && (
-                  <StarRating maxStars={5} value={review.rating} readOnly />
+                  <span className="ml-2 text-yellow-500">
+                    <StarRating maxStars={5} value={review.rating} readOnly />
+                  </span>
                 )}
-              </p>
-              <p className="text-sm text-gray-500">
+              </div>
+              <p className="text-sm mt-1 text-gray-500">
                 {format(new Date(review.time), 'PPpp')}
               </p>
-              <p>{review.comment}</p>
+              <p className="mt-2">{review.comment}</p>
             </div>
             {status === 'authenticated' &&
               session.user.id === review.user._id && (
                 <Button
                   size="sm"
                   auto
+                  variant="flat"
+                  isIconOnly
                   light
-                  color="error"
+                  color="danger"
                   onClick={() => deleteReview(review._id)}
                 >
-                  <Trash className="mr-2" /> Delete
+                  <Trash strokeWidth={1.5} size={18} />
                 </Button>
               )}
           </div>
           {status === 'authenticated' && !isReply && (
-            <Button size="sm" auto light onClick={() => setReplyTo(review._id)}>
+            <Button
+              className=" mt-4"
+              size="sm"
+              auto
+              light
+              onClick={() => setReplyTo(review._id)}
+            >
               Reply
             </Button>
           )}
@@ -92,21 +103,27 @@ const ReviewSection = ({ productId }) => {
   return (
     <div className="review-section">
       <Toaster position="top-right" richColors />
-      <h2>Customer Reviews</h2>
+      <h2 className=" text-xl font-semibold mb-2">Customer Reviews</h2>
       {renderReviews(reviews)}
 
       {status === 'authenticated' && !replyTo ? (
         <div className="new-review">
-          <p className="text-left mb-4">Rate this Product</p>
+          <p className="text-left text-lg font-semibold mb-4">
+            Rate this Product
+          </p>
           <StarRating maxStars={5} onRatingChange={setNewRating} />
-          <h3>Add a Review</h3>
+          <h3 className=" text-left mt-4 mb-2 text-lg font-semibold">
+            Add a Review
+          </h3>
           <Textarea
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
             placeholder="Write your review here"
             rows={4}
           />
-          <Button onClick={handleSubmit}>Submit</Button>
+          <Button sise="sm" className=" mt-4" onClick={handleSubmit}>
+            Submit
+          </Button>
         </div>
       ) : (
         status === 'authenticated' &&
