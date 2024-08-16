@@ -21,7 +21,8 @@ export default function AboutModal({ product }) {
       <Button
         startContent={<CircleUser strokeWidth={1.5} />}
         onPress={openModal}
-        className=" bg-yellow-200"
+        className=" bg-yellow-100"
+        variant="flat"
       >
         About
       </Button>

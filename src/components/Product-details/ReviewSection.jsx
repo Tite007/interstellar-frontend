@@ -24,7 +24,7 @@ const ReviewSection = ({ productId }) => {
   return (
     <div className="review-section">
       <Toaster position="top-right" richColors />
-      <h2 className=" text-xl font-semibold mb-2">Customer Reviews</h2>
+      <h2 className=" text-2xl font-semibold mb-3">Customer Reviews</h2>
       {reviews.map((review) => (
         <ReviewItem
           key={review._id}
@@ -36,7 +36,7 @@ const ReviewSection = ({ productId }) => {
 
       {status === 'authenticated' && (
         <div className="new-review">
-          <p className="text-left text-lg font-semibold mb-4">
+          <p className="text-left mt-4 text-xl font-semibold mb-4">
             Rate this Product
           </p>
           <StarRating maxStars={5} onRatingChange={setNewRating} />
@@ -48,8 +48,14 @@ const ReviewSection = ({ productId }) => {
             onChange={(e) => setNewComment(e.target.value)}
             placeholder="Write your review here"
             rows={4}
+            className=" text-[17px]"
           />
-          <Button size="sm" className=" mt-4" onClick={handleSubmit}>
+          <Button
+            color="primary"
+            size="sm"
+            className=" mt-4"
+            onClick={handleSubmit}
+          >
             Submit
           </Button>
         </div>

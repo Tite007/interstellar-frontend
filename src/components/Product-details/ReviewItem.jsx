@@ -21,7 +21,7 @@ const ReviewItem = ({ review, addReply, deleteReview, isReply = false }) => {
 
   return (
     <div style={{ marginLeft: isReply ? '20px' : '0' }}>
-      <div className="review-item border shadow-md rounded-lg mb-4 text-left p-4">
+      <div className="review-item border shadow-md rounded-lg mb-2 text-left p-4">
         <div className="flex justify-between">
           <div>
             {/** User Info */}
@@ -30,16 +30,18 @@ const ReviewItem = ({ review, addReply, deleteReview, isReply = false }) => {
                 name={review.user.name}
                 description={review.user.role || 'Customer'}
                 avatarProps={{
-                  src: review.user.avatarUrl || '/default-avatar.jpg',
+                  src: review.user.avatarUrl || '/default-avatar.png',
                 }}
               />
+              {/** Rating Component */}
               {!isReply && review.rating !== null && (
                 <span className="ml-2 text-yellow-500">
                   <StarRating maxStars={5} value={review.rating} readOnly />
                 </span>
               )}
             </div>
-            <p className="text-sm mt-1 text-gray-500">
+            {/** Time and Comment */}
+            <p className="text-xs mt-1 text-gray-500">
               {format(new Date(review.time), 'PPpp')}
             </p>
             <p className="mt-2">{review.comment}</p>

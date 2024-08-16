@@ -21,7 +21,8 @@ export default function TechnicalDataModal({ product }) {
       <Button
         startContent={<FlaskConical strokeWidth={1.5} />}
         onPress={openModal}
-        className=" bg-yellow-200"
+        className=" bg-yellow-100"
+        variant="flat"
       >
         Technical Data
       </Button>
