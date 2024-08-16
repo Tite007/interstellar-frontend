@@ -10,21 +10,21 @@ const FullStar = () => (
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
     fill="#FFD700"
-    width="20px"
-    height="20px"
+    width="16px"
+    height="16px"
   >
     <path d="M12 17.27L18.18 21 16.54 14.81 22 10.24 15.81 9.63 12 3.5 8.19 9.63 2 10.24 7.46 14.81 5.82 21z" />
   </svg>
 )
 
 const HalfStar = () => (
-  <div style={{ position: 'relative', width: '20px', height: '20px' }}>
+  <div style={{ position: 'relative', width: '16px', height: '16px' }}>
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       fill="#FFD700"
-      width="20px"
-      height="20px"
+      width="16px"
+      height="16px"
       style={{
         position: 'absolute',
         left: '0',
@@ -38,8 +38,8 @@ const HalfStar = () => (
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       fill="#d3d3d3"
-      width="20px"
-      height="20px"
+      width="16px"
+      height="16px"
       style={{
         position: 'absolute',
         left: '0',
@@ -57,14 +57,14 @@ const EmptyStar = () => (
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
     fill="#d3d3d3"
-    width="20px"
-    height="20px"
+    width="16px"
+    height="16px"
   >
     <path d="M22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-6.97L22 9.24z" />
   </svg>
 )
 
-const ProductRating = ({ productId }) => {
+const ProductRatingCards = ({ productId }) => {
   const [averageRating, setAverageRating] = useState(null)
   const [totalReviews, setTotalReviews] = useState(0)
   const [error, setError] = useState(null)
@@ -103,7 +103,7 @@ const ProductRating = ({ productId }) => {
     const emptyStars = 5 - fullStars - (halfStar ? 1 : 0)
 
     return (
-      <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+      <div className="flex items-center gap-1">
         {Array(fullStars)
           .fill(null)
           .map((_, index) => (
@@ -115,14 +115,7 @@ const ProductRating = ({ productId }) => {
           .map((_, index) => (
             <EmptyStar key={index} />
           ))}
-        <span
-          style={{
-            marginLeft: '8px',
-            fontWeight: 'light',
-            fontSize: '14px',
-            color: '#666',
-          }}
-        >
+        <span className="ml-2 text-gray-600 text-xs sm:text-sm md:text-xs line-clamp-1">
           {rating.toFixed(1)} ({totalReviews} reviews)
         </span>
       </div>
@@ -144,4 +137,4 @@ const ProductRating = ({ productId }) => {
   )
 }
 
-export default ProductRating
+export default ProductRatingCards

@@ -1,23 +1,27 @@
 // components/ProductCard.js
 import Image from 'next/image'
 import React from 'react'
+import ProductRating from '@/src/components/Product-details/ProductRating'
+import ProductRatingCards from '../Product-details/RatingProductCards'
 
 const ProductCard = ({ product }) => {
   return (
     <div className="border border-gray-200 rounded-lg p-4 m-1 shadow-md text-left sm:min-w-[220px] h-[330px] md:h-[390px] sm:max-w-[260px] lg:max-w-[285px] md:max-w-[350]">
-      <div className="relative w-full h-[200px] md:h-[250px] lg:h-[250px] ">
+      <div className="relative w-full h-[200px] md:h-[250px] lg:h-[250px] mb-1">
         <Image
           src={product.images[0]}
           alt={product.name}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-          className="object-cover rounded-t-md"
+          className="object-cover rounded-t-md "
           priority
         />
       </div>
-      <h3 className="text-md line-clamp-1 font-semibold mt-2 sm:text-md md:text-lg ">
+
+      <h3 className="text-md line-clamp-1 font-semibold  sm:text-md md:text-lg ">
         {product.name}
       </h3>
+      <ProductRatingCards productId={product._id} />
       <p className="text-xs md:text-md line-clamp-1 lg:text-md xl:text-md text-gray-500">
         {product.technicalData?.tasteNotes}
       </p>
