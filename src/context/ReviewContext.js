@@ -26,7 +26,7 @@ export const ReviewProvider = ({ children, productId }) => {
     fetchReviews()
   }, [productId])
 
-  const addReview = async (newComment, newRating, replyTo = null) => {
+  const addReview = async (newComment, newRating) => {
     if (status === 'unauthenticated') {
       toast.error('You need to sign in to submit a review.')
       return
@@ -38,7 +38,6 @@ export const ReviewProvider = ({ children, productId }) => {
         rating: newRating,
         comment: newComment,
         userId: session.user.id,
-        replyTo,
       }
 
       const response = await axios.post(
@@ -51,24 +50,51 @@ export const ReviewProvider = ({ children, productId }) => {
         },
       )
 
-      if (replyTo) {
-        setReviews((prevReviews) =>
-          prevReviews.map((review) =>
-            review._id === replyTo
-              ? { ...review, replies: [...review.replies, response.data] }
-              : review,
-          ),
-        )
-      } else {
-        setReviews((prevReviews) => [...prevReviews, response.data])
-      }
+      setReviews((prevReviews) => [...prevReviews, response.data])
 
-      toast.success(
-        replyTo ? 'Reply added successfully.' : 'Review added successfully.',
-      )
+      toast.success('Review added successfully.')
     } catch (error) {
       console.error('Error submitting review:', error)
       toast.error('Failed to submit the review.')
+    }
+  }
+
+  const addReply = async (newComment, replyTo) => {
+    if (status === 'unauthenticated') {
+      toast.error('You need to sign in to submit a reply.')
+      return
+    }
+
+    try {
+      const payload = {
+        productId,
+        comment: newComment,
+        userId: session.user.id,
+        replyTo, // The ID of the review being replied to
+      }
+
+      const response = await axios.post(
+        `${API_BASE_URL}/reviews/addReview`, // The same endpoint, but handling reply via `replyTo`
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${session.token}`,
+          },
+        },
+      )
+
+      setReviews((prevReviews) =>
+        prevReviews.map((review) =>
+          review._id === replyTo
+            ? { ...review, replies: [...review.replies, response.data] }
+            : review,
+        ),
+      )
+
+      toast.success('Reply added successfully.')
+    } catch (error) {
+      console.error('Error submitting reply:', error)
+      toast.error('Failed to submit the reply.')
     }
   }
 
@@ -93,8 +119,11 @@ export const ReviewProvider = ({ children, productId }) => {
       toast.error('Failed to delete the review.')
     }
   }
+
   return (
-    <ReviewContext.Provider value={{ reviews, addReview, deleteReview }}>
+    <ReviewContext.Provider
+      value={{ reviews, addReview, addReply, deleteReview }}
+    >
       {children}
     </ReviewContext.Provider>
   )
