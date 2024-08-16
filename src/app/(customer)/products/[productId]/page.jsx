@@ -21,7 +21,7 @@ import { getGrindLabel } from '@/src/utils/grindUtils' // Import the helper func
 import { Toaster, toast } from 'sonner' // Import Sonner
 import BreadcrumdsProduct from '@/src/components/Product-details/Breadcrumbs'
 import ProductCarouselContainer from '@/src/components/Products/ProductCarouselContainer'
-import { ReviewProvider } from '@/src/context/ReviewContext'
+import { ReviewProvider } from '@/src/context/ReviewContext' // Import ReviewProvider
 
 import ReviewSection from '@/src/components/Product-details/ReviewSection' // Import ReviewSection
 
