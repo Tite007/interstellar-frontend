@@ -24,6 +24,7 @@ import ProductCarouselContainer from '@/src/components/Products/ProductCarouselC
 import { ReviewProvider } from '@/src/context/ReviewContext' // Import ReviewProvider
 
 import ReviewSection from '@/src/components/Product-details/ReviewSection' // Import ReviewSection
+import ProductRating from '@/src/components/Product-details/ProductRating'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
@@ -115,6 +116,12 @@ export default function ProductDetails({ params, products }) {
     setSelectedGrind(keys.anchorKey)
   }
 
+  // Callback to handle the average rating from the ProductRating component
+  const handleFilterRating = (rating) => {
+    setAverageRating(rating)
+    console.log('Received average rating from ProductRating:', rating)
+  }
+
   const images = product.images || []
 
   return (
@@ -123,8 +130,12 @@ export default function ProductDetails({ params, products }) {
       {/* Add the Toaster component here */}
       <Toaster position="top-right" richColors />
       <div className="block md:hidden text-left mb-4">
-        <h1 className="text-2xl font-semibold ">{product.name || 'N/A'}</h1>
-        <h2 className="text-md font-semi-bold mb-2">
+        {/* Include the ProductRating component */}
+        <ProductRating productId={productId} />
+        <h1 className="text-2xl mt-1 font-semibold ">
+          {product.name || 'N/A'}
+        </h1>
+        <h2 className="text-md font-semi-bold text-stone-500 mb-2">
           {product.technicalData.tasteNotes || 'No taste notes available'}
         </h2>
         <p className="text-2xl font-bold mb-4">${price}</p>{' '}
@@ -141,11 +152,15 @@ export default function ProductDetails({ params, products }) {
             <p>No images available</p>
           )}
         </div>
-
+        {/* Desktop product details section */}
         <div className="w-full md:w-1/2 md:ml-20 md:text-left">
           <div className="hidden md:block">
-            <h1 className="text-2xl font-semibold ">{product.name || 'N/A'}</h1>
-            <p className="text-md font-semi-bold mb-2">
+            <h1 className="text-2xl mb-1 font-semibold ">
+              {product.name || 'N/A'}
+            </h1>
+            {/* Include the ProductRating component */}
+            <ProductRating productId={productId} />
+            <p className="text-md mt-1 font-semi-bold text-stone-600 mb-2">
               {product.technicalData.tasteNotes || 'No taste notes available'}
             </p>
             <p className="text-2xl font-bold mb-4">${price}</p>{' '}
