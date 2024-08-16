@@ -1,6 +1,7 @@
 // components/ProductCard.js
 import Image from 'next/image'
 import React from 'react'
+import ProductRatingCards from '../Product-details/RatingProductCards'
 
 const SimilarProductsCard = ({ product }) => {
   return (
@@ -15,7 +16,9 @@ const SimilarProductsCard = ({ product }) => {
         style={{ objectFit: 'cover', width: '260px', height: '260px' }} // Ensure the image fills the space
       />
       <h3 className="text-lg font-semibold">{product.name}</h3>
-      <p className=" text-sm text-gray-500">
+      <ProductRatingCards productId={product._id} />
+
+      <p className="mt-1 text-sm text-gray-500">
         {product.technicalData?.tasteNotes}
       </p>
       <p className="text-black">{product.category}</p>

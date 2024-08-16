@@ -16,7 +16,6 @@ module.exports = {
         md: '768px',
         lg: '1024px',
         xl: '1280px',
-        '2xl': '1536px',
       },
       fontFamily: {
         mono: ['var(--font-roboto-mono)'],
@@ -48,7 +47,6 @@ module.exports = {
           md: '768px',
           lg: '1024px',
           xl: '1280px',
-          '2xl': '1536px',
         },
       },
     },

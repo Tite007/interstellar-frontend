@@ -22,11 +22,25 @@
   min-width: 0;
   padding-left: var(--slide-spacing);
 }
+/* Small screens: 640px and above */
+@media (min-width: 380px) {
+  .embla-product {
+    --slide-size: 73%; /* Adjust slide size for small screens */
+    --slide-spacing: 1.8rem; /* Adjust spacing for small screens */
+  }
+}
 
+/* Small screens: 640px and above */
+@media (min-width: 440px) {
+  .embla-product {
+    --slide-size: 52%; /* Adjust slide size for small screens */
+    --slide-spacing: 1.8rem; /* Adjust spacing for small screens */
+  }
+}
 /* Small screens: 640px and above */
 @media (min-width: 640px) {
   .embla-product {
-    --slide-size: 52%; /* Adjust slide size for small screens */
+    --slide-size: 50%; /* Adjust slide size for small screens */
     --slide-spacing: 0.8rem; /* Adjust spacing for small screens */
   }
 }
@@ -34,16 +48,16 @@
 /* Medium screens: 768px and above */
 @media (min-width: 768px) {
   .embla-product {
-    --slide-size: 42%; /* Adjust slide size for medium screens */
-    --slide-spacing: 0.8rem; /* Adjust spacing for medium screens */
+    --slide-size: 41%; /* Adjust slide size for medium screens */
+    --slide-spacing: 1.9rem; /* Adjust spacing for medium screens */
   }
 }
 
 /* Large screens: 1024px and above */
 @media (min-width: 1024px) {
   .embla-product {
-    --slide-size: 32%; /* Adjust slide size for large screens */
-    --slide-spacing: 0.8rem; /* Adjust spacing for large screens */
+    --slide-size: 30%; /* Adjust slide size for large screens */
+    --slide-spacing: 2.8rem; /* Adjust spacing for large screens */
   }
 }
 
@@ -58,7 +72,7 @@
 /* 2XL screens: 1536px and above */
 @media (min-width: 1536px) {
   .embla-product {
-    --slide-size: 21%; /* Adjust slide size for 2XL screens */
+    --slide-size: 25%; /* Adjust slide size for 2XL screens */
     --slide-spacing: 0.5rem; /* Adjust spacing for 2XL screens */
   }
 }
