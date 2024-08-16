@@ -1,6 +1,20 @@
 import React, { useState } from 'react'
-import { Checkbox } from '@nextui-org/checkbox'
-import { StarIcon } from '@/src/components/Product-details/StarIcon' // Import the updated StarIcon
+import { StarIcon } from '@/src/components/Product-details/StarIcon' // Assuming this imports the StarIcon correctly
+
+function StarCheckbox({ isSelected, onClick, disableAnimation }) {
+  return (
+    <div
+      className={`inline-block cursor-pointer ${isSelected ? 'text-yellow-500 ' : 'text-gray-400'}`}
+      onClick={onClick}
+    >
+      <StarIcon
+        size={19}
+        isSelected={isSelected}
+        disableAnimation={disableAnimation}
+      />
+    </div>
+  )
+}
 
 export default function StarRating({
   maxStars = 5,
@@ -23,18 +37,11 @@ export default function StarRating({
   return (
     <div className="flex mt-1">
       {Array.from({ length: maxStars }, (_, index) => (
-        <Checkbox
+        <StarCheckbox
           key={index + 1}
-          icon={
-            <StarIcon
-              isSelected={index + 1 <= selectedRating}
-              disableAnimation={disableAnimation}
-            />
-          } // Use the StarIcon
           isSelected={index + 1 <= selectedRating}
-          onClick={() => handleStarClick(index + 1)}
-          isReadOnly={readOnly}
           disableAnimation={disableAnimation}
+          onClick={() => handleStarClick(index + 1)}
         />
       ))}
     </div>

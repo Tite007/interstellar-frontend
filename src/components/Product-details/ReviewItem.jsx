@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react'
 import StarRating from '@/src/components/Product-details/StarRating'
 import { format } from 'date-fns'
 import { Trash, Send } from 'lucide-react'
+import { User } from '@nextui-org/user' // Import the User component
 
 const ReviewItem = ({ review, addReply, deleteReview, isReply = false }) => {
   const { data: session, status } = useSession()
@@ -23,10 +24,15 @@ const ReviewItem = ({ review, addReply, deleteReview, isReply = false }) => {
       <div className="review-item border shadow-md rounded-lg mb-4 text-left p-4">
         <div className="flex justify-between">
           <div>
-            <div className="flex items-center mt-1">
-              <p className="m-0">
-                <strong>{review.user.name}</strong>
-              </p>
+            {/** User Info */}
+            <div className="flex items-center mt-1 ">
+              <User
+                name={review.user.name}
+                description={review.user.role || 'Customer'}
+                avatarProps={{
+                  src: review.user.avatarUrl || '/default-avatar.jpg',
+                }}
+              />
               {!isReply && review.rating !== null && (
                 <span className="ml-2 text-yellow-500">
                   <StarRating maxStars={5} value={review.rating} readOnly />
@@ -38,6 +44,7 @@ const ReviewItem = ({ review, addReply, deleteReview, isReply = false }) => {
             </p>
             <p className="mt-2">{review.comment}</p>
           </div>
+          {/** Delete Button */}
           {status === 'authenticated' &&
             session.user.id === review.user._id && (
               <Button
@@ -53,6 +60,7 @@ const ReviewItem = ({ review, addReply, deleteReview, isReply = false }) => {
               </Button>
             )}
         </div>
+        {/** Reply Section  Button */}
         {status === 'authenticated' && !isReply && (
           <Button
             className="mt-4"
@@ -70,17 +78,18 @@ const ReviewItem = ({ review, addReply, deleteReview, isReply = false }) => {
             className="mt-2"
           >
             <Textarea
-              className="mb-4 mt-4"
+              className="mb-4 mt-4 text-[17px]"
               value={replyText}
               onChange={(e) => setReplyText(e.target.value)}
               placeholder="Write your reply here"
-              rows={2}
+              rows={3}
             />
             <Button size="sm" onClick={handleReplySubmit}>
               <Send strokeWidth={1.5} size={18} className="mr-2" /> Send Reply
             </Button>
           </div>
         )}
+        {/** Replies Box Message*/}
         {review.replies &&
           review.replies.length > 0 &&
           review.replies.map((reply) => (

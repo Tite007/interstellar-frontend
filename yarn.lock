@@ -881,7 +881,7 @@
   resolved "https://registry.npmjs.org/@nextui-org/use-update-effect/-/use-update-effect-2.0.6.tgz"
   integrity sha512-n5Qiv3ferKn+cSxU3Vv+96LdG8I/00mzc7Veoan+P9GL0aCTrsPB6RslTsiblaiAXQcqTiFXd8xwsK309DXOXA==
 
-"@nextui-org/user@^2.0.25":
+"@nextui-org/user@^2.0.33":
   version "2.0.33"
   resolved "https://registry.npmjs.org/@nextui-org/user/-/user-2.0.33.tgz"
   integrity sha512-v6gGTlsaqM7Ndwtx9N/AAQFRICcIE5DuFxRZRqPfLa+jbZhJuWG2OSIATPeUOxgr8pKWpeV78nETdFKEKcsUPA==

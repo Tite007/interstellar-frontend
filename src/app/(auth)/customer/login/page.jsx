@@ -72,7 +72,7 @@ export default function UserLoginPage() {
         <div className="mb-4">
           <Input
             size="sm"
-            className="text-[16px]"
+            className="text-[17px]"
             label="Email"
             name="email"
             type="email"
@@ -82,7 +82,7 @@ export default function UserLoginPage() {
         <div className="mb-4 relative">
           <Input
             name="password"
-            className="text-[16px] "
+            className="text-[17px] "
             type={showPassword ? 'text' : 'password'}
             required
             label="Password"
