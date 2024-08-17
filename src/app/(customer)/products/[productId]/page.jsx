@@ -37,6 +37,7 @@ export default function ProductDetails({ params, products }) {
   const [selectedDelivery, setSelectedDelivery] = useState('')
   const [price, setPrice] = useState(null) // Define price state
   const { addToCart } = useContext(CartContext) // Get addToCart from context
+  const [selectedImages, setSelectedImages] = useState([]) // New state for images
 
   // Fetch product details
   useEffect(() => {
@@ -47,10 +48,12 @@ export default function ProductDetails({ params, products }) {
             `${API_BASE_URL}/products/findProduct/${productId}`,
           )
           const productData = response.data
-          console.log('Product data:', productData)
           setProduct(productData)
-          setSelectedPackage(productData.size) // Set initial selected package to main product size
-          setPrice(productData.price) // Set initial price to main product price
+
+          // Set defaults to the main product
+          setSelectedPackage(productData.size)
+          setPrice(productData.price)
+          setSelectedImages(productData.images) // Set initial images to main product images
         } catch (error) {
           console.error('Error fetching product details:', error)
         }
@@ -72,37 +75,35 @@ export default function ProductDetails({ params, products }) {
   const handleAddToCart = () => {
     const cartItem = {
       productId: product._id,
-      productImage: product.images[0], // Assuming the first image is the product image
+      productImage: selectedImages[0], // Should use the variant-specific image
       productName: product.name,
-      productVariant: selectedPackage, // Assuming this is a state
-      productPrice: price, // Assuming this is a state
+      productVariant: selectedPackage,
+      productPrice: price,
       quantity: parseInt(selectedQuantity, 10) || 1,
-      grindType: getGrindLabel(selectedGrind), // Convert to human-readable format before adding to cart
+      grindType: getGrindLabel(selectedGrind),
     }
 
-    addToCart(cartItem) // Use the addToCart function from context
-
-    // Trigger a success toast notification
-    toast.success(`${product.name} added to the cart!`)
+    addToCart(cartItem)
+    toast.success(`${product.name} ${selectedPackage} added to the cart!`)
   }
 
   // Handle package change
   const handlePackageChange = (value) => {
     setSelectedPackage(value)
 
-    // Find the selected variant using the value
     const selectedVariant = product.variants.find((variant) =>
       variant.optionValues.some((option) => option.value === value),
     )
 
     if (selectedVariant) {
-      // Assuming price is within optionValues
       const variantOption = selectedVariant.optionValues.find(
         (option) => option.value === value,
       )
-      setPrice(variantOption.price) // Set price to variant price if variant is selected
+      setPrice(variantOption.price)
+      setSelectedImages(selectedVariant.images) // Update images based on the selected variant
     } else {
-      setPrice(product.price) // Set price to main product price if main product is selected
+      setPrice(product.price)
+      setSelectedImages(product.images) // Revert to main product images if no variant selected
     }
   }
 
@@ -114,12 +115,6 @@ export default function ProductDetails({ params, products }) {
   // Handle grind change
   const handleGrindChange = (keys) => {
     setSelectedGrind(keys.anchorKey)
-  }
-
-  // Callback to handle the average rating from the ProductRating component
-  const handleFilterRating = (rating) => {
-    setAverageRating(rating)
-    console.log('Received average rating from ProductRating:', rating)
   }
 
   const images = product.images || []
@@ -145,8 +140,8 @@ export default function ProductDetails({ params, products }) {
         <div className="w-full md:w-1/2">
           {images.length > 0 ? (
             <>
-              <EmblaCarousel slides={images} options={{ loop: true }} />
-              <EmblaCarouselDesktop slides={images} />
+              <EmblaCarousel slides={selectedImages} options={{ loop: true }} />
+              <EmblaCarouselDesktop slides={selectedImages} />
             </>
           ) : (
             <p>No images available</p>
