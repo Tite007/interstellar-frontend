@@ -1,12 +1,19 @@
 'use client'
 
-import React, { useEffect, useState, useContext, useCallback } from 'react'
+import React, {
+  useEffect,
+  useState,
+  useContext,
+  useCallback,
+  useMemo,
+} from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { Button } from '@nextui-org/button'
-import { CartContext } from '@/src/context/CartContext' // Import the CartContext
+import { CartContext } from '@/src/context/CartContext'
+import Image from 'next/image'
 
 const PaymentSuccessPage = () => {
-  const { clearCart } = useContext(CartContext) // Access the clearCart function
+  const { clearCart } = useContext(CartContext)
   const pathname = usePathname()
   const router = useRouter()
   const [items, setItems] = useState([])
@@ -16,7 +23,6 @@ const PaymentSuccessPage = () => {
   const [sessionId, setSessionId] = useState(null)
 
   useEffect(() => {
-    // Extract the session_id from the URL query
     const query = new URLSearchParams(window.location.search)
     const session = query.get('session_id')
     setSessionId(session)
@@ -39,10 +45,7 @@ const PaymentSuccessPage = () => {
         const sessionData = await response.json()
         setSessionDetails(sessionData)
 
-        // After fetching session details, fetch the line items
         await fetchItems(sessionId)
-
-        // Clear the cart after successfully fetching session details and items
         clearCart()
       } catch (error) {
         console.error('Fetch error:', error)
@@ -51,7 +54,7 @@ const PaymentSuccessPage = () => {
       }
     },
     [clearCart],
-  ) // Memoize the function to avoid infinite loops
+  )
 
   const fetchItems = async (sessionId) => {
     try {
@@ -63,10 +66,15 @@ const PaymentSuccessPage = () => {
         throw new Error('Failed to fetch items')
       }
       const jsonResponse = await response.json()
-      const itemsData = jsonResponse.data
-      if (!Array.isArray(itemsData)) {
-        throw new Error('Data fetched is not an array')
-      }
+      const itemsData = await Promise.all(
+        jsonResponse.data.map(async (item) => {
+          const productDetails = await fetchProductDetails(item.price.product)
+          return {
+            ...item,
+            productDetails,
+          }
+        }),
+      )
       setItems(itemsData)
       setIsLoading(false)
     } catch (error) {
@@ -76,25 +84,46 @@ const PaymentSuccessPage = () => {
     }
   }
 
-  const calculateSubtotal = () => {
+  const fetchProductDetails = async (productId) => {
+    try {
+      const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL
+      const response = await fetch(
+        `${baseURL}/payment/stripe/products/${productId}`,
+      )
+      if (!response.ok) {
+        throw new Error(`Product not found: ${response.statusText}`)
+      }
+      const productData = await response.json()
+
+      if (!productData.active) {
+        console.warn(`Product with ID ${productId} is inactive`)
+      }
+
+      return productData
+    } catch (error) {
+      console.error('Fetch product details error:', error)
+      return null // or handle error accordingly
+    }
+  }
+
+  const calculateSubtotal = useMemo(() => {
     return items.reduce(
       (total, item) => total + (item.price.unit_amount / 100) * item.quantity,
       0,
     )
-  }
+  }, [items])
 
-  const calculateTotal = () => {
-    const subtotal = calculateSubtotal()
+  const calculateTotal = useMemo(() => {
     const shipping = (sessionDetails?.shipping_cost?.amount_total || 0) / 100
-    return subtotal + shipping
-  }
+    return calculateSubtotal + shipping
+  }, [calculateSubtotal, sessionDetails])
 
   const handleGoToOrders = () => {
-    router.push('/customer/orders')
+    router.push('/')
   }
 
   return (
-    <div className="container  p-10 font-sans text-gray-800">
+    <div className="container p-10 font-sans text-gray-800">
       <h1 className="text-2xl font-bold mb-6">Payment Success</h1>
       {isLoading ? (
         <p>Loading your order details...</p>
@@ -129,6 +158,7 @@ const PaymentSuccessPage = () => {
               <table className="w-full table-auto text-left">
                 <thead>
                   <tr className="border-b-2 border-gray-200">
+                    <th className="px-4 py-2 font-medium">Image</th>
                     <th className="px-4 py-2 font-medium">Description</th>
                     <th className="px-4 py-2 font-medium text-right">Qty</th>
                     <th className="px-4 py-2 font-medium text-right">
@@ -140,6 +170,15 @@ const PaymentSuccessPage = () => {
                 <tbody>
                   {items.map((item, index) => (
                     <tr key={index} className="border-b border-gray-200">
+                      <td className="px-4 py-">
+                        <Image
+                          src={item.productDetails?.images?.[0]}
+                          alt={item.description}
+                          width={50}
+                          height={50}
+                          className=" rounded-md object-cover"
+                        />
+                      </td>
                       <td className="px-4 py-2">{item.description}</td>
                       <td className="px-4 py-2 text-right">{item.quantity}</td>
                       <td className="px-4 py-2 text-right">
@@ -159,18 +198,18 @@ const PaymentSuccessPage = () => {
                   <tr>
                     <td
                       className="px-4 py-2 font-medium text-right"
-                      colSpan="3"
+                      colSpan="4"
                     >
                       Subtotal:
                     </td>
                     <td className="px-4 py-2 text-right">
-                      ${calculateSubtotal().toFixed(2)}
+                      ${calculateSubtotal.toFixed(2)}
                     </td>
                   </tr>
                   <tr>
                     <td
                       className="px-4 py-2 font-medium text-right"
-                      colSpan="3"
+                      colSpan="4"
                     >
                       Shipping (Standard Shipping):
                     </td>
@@ -184,12 +223,12 @@ const PaymentSuccessPage = () => {
                   <tr>
                     <td
                       className="px-4 py-2 font-medium text-right"
-                      colSpan="3"
+                      colSpan="4"
                     >
                       Total:
                     </td>
                     <td className="px-4 py-2 text-right">
-                      ${calculateTotal().toFixed(2)}
+                      ${calculateTotal.toFixed(2)}
                     </td>
                   </tr>
                 </tfoot>

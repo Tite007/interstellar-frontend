@@ -51,7 +51,7 @@
 }
 @media (min-width: 576px) {
   .embla-thumbs__slide {
-    flex: 0 0 20%;
+    flex: 0 0 18%;
   }
 }
 .embla-thumbs__slide__number {
