@@ -22,7 +22,6 @@ import { Toaster, toast } from 'sonner' // Import Sonner
 import BreadcrumdsProduct from '@/src/components/Product-details/Breadcrumbs'
 import ProductCarouselContainer from '@/src/components/Products/ProductCarouselContainer'
 import { ReviewProvider } from '@/src/context/ReviewContext' // Import ReviewProvider
-
 import ReviewSection from '@/src/components/Product-details/ReviewSection' // Import ReviewSection
 import ProductRating from '@/src/components/Product-details/ProductRating'
 
@@ -38,6 +37,7 @@ export default function ProductDetails({ params, products }) {
   const [price, setPrice] = useState(null) // Define price state
   const { addToCart } = useContext(CartContext) // Get addToCart from context
   const [selectedImages, setSelectedImages] = useState([]) // New state for images
+  const [isOutOfStock, setIsOutOfStock] = useState(false) // State to track out of stock status
 
   // Fetch product details
   useEffect(() => {
@@ -54,6 +54,11 @@ export default function ProductDetails({ params, products }) {
           setSelectedPackage(productData.size)
           setPrice(productData.price)
           setSelectedImages(productData.images) // Set initial images to main product images
+
+          // Check if the parent product is out of stock
+          if (productData.currentStock === 0) {
+            setIsOutOfStock(true)
+          }
         } catch (error) {
           console.error('Error fetching product details:', error)
         }
@@ -62,6 +67,50 @@ export default function ProductDetails({ params, products }) {
       fetchProduct()
     }
   }, [productId])
+
+  // Handle package change
+  const handlePackageChange = (value) => {
+    setSelectedPackage(value)
+
+    const selectedVariant = product.variants.find((variant) =>
+      variant.optionValues.some((option) => option.value === value),
+    )
+
+    if (selectedVariant) {
+      const variantOption = selectedVariant.optionValues.find(
+        (option) => option.value === value,
+      )
+      setPrice(variantOption.price)
+      setSelectedImages(selectedVariant.images) // Update images based on the selected variant
+
+      // Check if the selected variant is out of stock
+      if (variantOption.quantity === 0) {
+        setIsOutOfStock(true)
+      } else {
+        setIsOutOfStock(false)
+      }
+    } else {
+      setPrice(product.price)
+      setSelectedImages(product.images) // Revert to main product images if no variant selected
+
+      // Check if the parent product is out of stock
+      if (product.currentStock === 0) {
+        setIsOutOfStock(true)
+      } else {
+        setIsOutOfStock(false)
+      }
+    }
+  }
+
+  // Handle quantity change
+  const handleQuantityChange = (keys) => {
+    setSelectedQuantity(keys.anchorKey)
+  }
+
+  // Handle grind change
+  const handleGrindChange = (keys) => {
+    setSelectedGrind(keys.anchorKey)
+  }
 
   if (!product) {
     return (
@@ -96,35 +145,6 @@ export default function ProductDetails({ params, products }) {
     addToCart(cartItem)
     toast.success(`${product.name} ${selectedPackage} added to the cart!`)
   }
-  // Handle package change
-  const handlePackageChange = (value) => {
-    setSelectedPackage(value)
-
-    const selectedVariant = product.variants.find((variant) =>
-      variant.optionValues.some((option) => option.value === value),
-    )
-
-    if (selectedVariant) {
-      const variantOption = selectedVariant.optionValues.find(
-        (option) => option.value === value,
-      )
-      setPrice(variantOption.price)
-      setSelectedImages(selectedVariant.images) // Update images based on the selected variant
-    } else {
-      setPrice(product.price)
-      setSelectedImages(product.images) // Revert to main product images if no variant selected
-    }
-  }
-
-  // Handle quantity change
-  const handleQuantityChange = (keys) => {
-    setSelectedQuantity(keys.anchorKey)
-  }
-
-  // Handle grind change
-  const handleGrindChange = (keys) => {
-    setSelectedGrind(keys.anchorKey)
-  }
 
   const images = product.images || []
 
@@ -142,6 +162,9 @@ export default function ProductDetails({ params, products }) {
         <h2 className="text-md font-semi-bold text-stone-500 mb-2">
           {product.technicalData.tasteNotes || 'No taste notes available'}
         </h2>
+        {isOutOfStock && (
+          <p className="text-red-600 font-semibold mb-1">Out of Stock</p>
+        )}
         <p className="text-2xl font-bold mb-4">${price}</p>{' '}
         {/* Display the dynamic price */}
       </div>
@@ -167,6 +190,9 @@ export default function ProductDetails({ params, products }) {
             <p className="text-md mt-1 font-semi-bold text-stone-600 mb-2">
               {product.technicalData.tasteNotes || 'No taste notes available'}
             </p>
+            {isOutOfStock && (
+              <p className="text-red-600 font-semibold mb-1">Out of Stock</p>
+            )}
             <p className="text-2xl font-bold mb-4">${price}</p>{' '}
             {/* Display the dynamic price */}
           </div>
@@ -231,8 +257,11 @@ export default function ProductDetails({ params, products }) {
               color="danger"
               className="mt-9 hidden md:block text-white"
               onClick={handleAddToCart}
+              disabled={isOutOfStock} // Disable button if out of stock
             >
-              Add {selectedQuantity ? selectedQuantity : ''} Item to Cart
+              {isOutOfStock
+                ? 'Out of Stock'
+                : `Add ${selectedQuantity ? selectedQuantity : ''} Item to Cart`}
             </Button>
             <Select
               label="Quantity"
@@ -294,6 +323,7 @@ export default function ProductDetails({ params, products }) {
         selectedQuantity={selectedQuantity}
         setSelectedQuantity={setSelectedQuantity}
         handleAddToCart={handleAddToCart}
+        disabled={isOutOfStock} // Disable sticky button if out of stock
       />{' '}
     </main>
   )
