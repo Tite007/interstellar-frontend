@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Button } from '@nextui-org/button'
 import { Select, SelectItem } from '@nextui-org/select'
 
@@ -7,6 +7,7 @@ const StickyAddToCartButton = ({
   selectedQuantity,
   setSelectedQuantity,
   handleAddToCart,
+  isOutOfStock,
 }) => {
   const handleQuantityChange = (keys) => {
     setSelectedQuantity(keys.anchorKey)
@@ -25,6 +26,7 @@ const StickyAddToCartButton = ({
           }
           onSelectionChange={handleQuantityChange}
           className="max-w-xs w-1/2"
+          disabled={isOutOfStock} // Disable select if out of stock
         >
           {[1, 2, 3, 4, 5].map((quantity) => (
             <SelectItem
@@ -41,9 +43,11 @@ const StickyAddToCartButton = ({
           size="lg"
           className="w-1/2 text-md"
           onClick={handleAddToCart}
-          disabled={!selectedQuantity}
+          disabled={isOutOfStock || !selectedQuantity} // Disable button if out of stock
         >
-          Add {selectedQuantity ? selectedQuantity : ''} to Cart
+          {isOutOfStock
+            ? 'Out of Stock'
+            : `Add ${selectedQuantity ? selectedQuantity : ''} to Cart`}
         </Button>
       </div>
     </div>

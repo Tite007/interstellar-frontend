@@ -323,8 +323,8 @@ export default function ProductDetails({ params, products }) {
         selectedQuantity={selectedQuantity}
         setSelectedQuantity={setSelectedQuantity}
         handleAddToCart={handleAddToCart}
-        disabled={isOutOfStock} // Disable sticky button if out of stock
-      />{' '}
+        isOutOfStock={isOutOfStock} // Pass the out of stock condition
+      />
     </main>
   )
 }
