@@ -71,22 +71,31 @@ export default function ProductDetails({ params, products }) {
     )
   }
 
-  // Add to cart function
   const handleAddToCart = () => {
+    const selectedVariant = product.variants.find((variant) =>
+      variant.optionValues.some((option) => option.value === selectedPackage),
+    )
+
+    const variantOption = selectedVariant?.optionValues.find(
+      (option) => option.value === selectedPackage,
+    )
+
     const cartItem = {
       productId: product._id,
-      productImage: selectedImages[0], // Should use the variant-specific image
+      variantId: variantOption ? variantOption._id : null, // Capture variantId here
+      productImage: selectedVariant?.images?.[0] || product.images[0], // Use the variant-specific image if available
       productName: product.name,
       productVariant: selectedPackage,
-      productPrice: price,
+      productPrice: variantOption ? variantOption.price : product.price,
       quantity: parseInt(selectedQuantity, 10) || 1,
       grindType: getGrindLabel(selectedGrind),
     }
 
+    console.log('Cart Item:', cartItem) // Ensure variantId is present
+
     addToCart(cartItem)
     toast.success(`${product.name} ${selectedPackage} added to the cart!`)
   }
-
   // Handle package change
   const handlePackageChange = (value) => {
     setSelectedPackage(value)

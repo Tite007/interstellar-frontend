@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import BreadcrumbsUserProfileOrdersDetails from '@/src/components/customer/BreadcrumbsProfileOrdersDetails'
+import Image from 'next/image'
 
 const OrderDetailsPage = () => {
   const pathname = usePathname()
@@ -28,9 +29,53 @@ const OrderDetailsPage = () => {
       }
 
       const orderData = await response.json()
-      console.log('Order data:', orderData)
+
+      // Fetch product and variant images
+      const itemsWithImages = await Promise.all(
+        orderData.items.map(async (item) => {
+          try {
+            // Fetch the product data
+            const productResponse = await fetch(
+              `${baseURL}/products/findProduct/${item.productId}`,
+            )
+            if (!productResponse.ok) {
+              console.warn(`Product not found for productId: ${item.productId}`)
+              return { ...item, image: null }
+            }
+
+            const productData = await productResponse.json()
+
+            let variantImage = null
+            if (item.variantId) {
+              // Fetch the variant data using the new findVariant API
+              const variantResponse = await fetch(
+                `${baseURL}/products/findVariant/${item.variantId}`,
+              )
+              if (variantResponse.ok) {
+                const variantData = await variantResponse.json()
+                // Use the first image from the variant's images array
+                variantImage = variantData.images?.[0] || null
+              } else {
+                console.warn(
+                  `Variant not found for variantId: ${item.variantId}`,
+                )
+              }
+            }
+
+            // Use the first image from the product's images array if variant image is not available
+            return {
+              ...item,
+              image: variantImage || productData.images?.[0] || null,
+            }
+          } catch (err) {
+            console.error('Error fetching product or variant:', err)
+            return { ...item, image: null }
+          }
+        }),
+      )
+
       setOrderDetails(orderData)
-      setItems(orderData.items || [])
+      setItems(itemsWithImages || [])
       setIsLoading(false)
     } catch (error) {
       console.error('Fetch error:', error)
@@ -102,6 +147,7 @@ const OrderDetailsPage = () => {
               <table className="min-w-full table-auto text-left">
                 <thead>
                   <tr className="border-b-2 border-gray-200">
+                    <th className="px-4 py-2 font-medium">Image</th>
                     <th className="px-4 py-2 font-medium">Description</th>
                     <th className="px-4 py-2 font-medium text-right">Qty</th>
                     <th className="px-4 py-2 font-medium text-right">
@@ -113,6 +159,17 @@ const OrderDetailsPage = () => {
                 <tbody>
                   {items.map((item, index) => (
                     <tr key={index} className="border-b border-gray-200">
+                      <td className="px-4 py-2">
+                        {item.image && (
+                          <Image
+                            src={item.image}
+                            alt={item.name}
+                            width={64}
+                            height={64}
+                            className="object-cover"
+                          />
+                        )}
+                      </td>
                       <td className="px-4 py-2">{item.name}</td>
                       <td className="px-4 py-2 text-right">{item.quantity}</td>
                       <td className="px-4 py-2 text-right">
@@ -128,7 +185,7 @@ const OrderDetailsPage = () => {
                   <tr>
                     <td
                       className="px-4 py-2 font-medium text-right"
-                      colSpan="3"
+                      colSpan="4"
                     >
                       Subtotal:
                     </td>
@@ -139,7 +196,7 @@ const OrderDetailsPage = () => {
                   <tr>
                     <td
                       className="px-4 py-2 font-medium text-right"
-                      colSpan="3"
+                      colSpan="4"
                     >
                       Shipping:
                     </td>
@@ -153,7 +210,7 @@ const OrderDetailsPage = () => {
                   <tr>
                     <td
                       className="px-4 py-2 font-medium text-right"
-                      colSpan="3"
+                      colSpan="4"
                     >
                       Total:
                     </td>

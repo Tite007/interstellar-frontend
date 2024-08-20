@@ -26,19 +26,14 @@ const ShoppingCart = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          items: cart.map((item) => {
-            const variant = item.productVariant
-
-            return {
-              productId: item._id,
-              name: variant
-                ? `${item.productName} - ${variant}`
-                : item.productName,
-              price: item.productPrice,
-              quantity: item.quantity,
-              variantId: item.variantId || null,
-            }
-          }),
+          items: cart.map((item) => ({
+            productId: item.productId,
+            variantId: item.variantId || null, // Ensure variantId is included, use null if not applicable
+            quantity: item.quantity,
+            productPrice: item.productPrice, // Include productPrice for parent products
+            productImage: item.productImage, // Include productImage if available
+            // Add additional fields if necessary for metadata
+          })),
           YOUR_DOMAIN: window.location.origin,
         }),
       })
@@ -64,7 +59,6 @@ const ShoppingCart = () => {
       console.error('Error redirecting to Stripe Checkout:', error)
     }
   }
-
   const cartTotal = cart.reduce(
     (acc, item) => acc + item.productPrice * item.quantity,
     0,
