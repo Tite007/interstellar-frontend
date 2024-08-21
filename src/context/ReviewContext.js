@@ -10,6 +10,7 @@ export const ReviewContext = createContext()
 export const ReviewProvider = ({ children, productId }) => {
   const { data: session, status } = useSession()
   const [reviews, setReviews] = useState([])
+  const [hasPurchased, setHasPurchased] = useState(false)
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -23,12 +24,37 @@ export const ReviewProvider = ({ children, productId }) => {
       }
     }
 
+    const checkPurchaseStatus = async () => {
+      if (status === 'authenticated') {
+        try {
+          const response = await axios.get(
+            `${API_BASE_URL}/reviews/hasPurchased/${productId}`,
+            {
+              params: { userId: session.user.id },
+            },
+          )
+          setHasPurchased(response.data.hasPurchased)
+        } catch (error) {
+          console.error('Error checking purchase status:', error)
+          toast.error('Failed to verify purchase status.')
+        }
+      }
+    }
+
     fetchReviews()
-  }, [productId])
+    checkPurchaseStatus()
+  }, [productId, status, session])
 
   const addReview = async (newComment, newRating) => {
     if (status === 'unauthenticated') {
       toast.error('You need to sign in to submit a review.')
+      return
+    }
+
+    if (!hasPurchased) {
+      toast.error(
+        'Only users who have purchased this product can write a review.',
+      )
       return
     }
 
@@ -37,17 +63,12 @@ export const ReviewProvider = ({ children, productId }) => {
         productId,
         rating: newRating,
         comment: newComment,
-        userId: session.user.id,
+        userId: session.user.id, // Using session to get the user ID
       }
 
       const response = await axios.post(
         `${API_BASE_URL}/reviews/addReview`,
         payload,
-        {
-          headers: {
-            Authorization: `Bearer ${session.token}`,
-          },
-        },
       )
 
       setReviews((prevReviews) => [...prevReviews, response.data])
@@ -65,22 +86,24 @@ export const ReviewProvider = ({ children, productId }) => {
       return
     }
 
+    if (!hasPurchased) {
+      toast.error(
+        'Only users who have purchased this product can reply to a review.',
+      )
+      return
+    }
+
     try {
       const payload = {
         productId,
         comment: newComment,
-        userId: session.user.id,
+        userId: session.user.id, // Using session to get the user ID
         replyTo, // The ID of the review being replied to
       }
 
       const response = await axios.post(
-        `${API_BASE_URL}/reviews/addReview`, // The same endpoint, but handling reply via `replyTo`
+        `${API_BASE_URL}/reviews/addReview`,
         payload,
-        {
-          headers: {
-            Authorization: `Bearer ${session.token}`,
-          },
-        },
       )
 
       setReviews((prevReviews) =>
@@ -122,7 +145,7 @@ export const ReviewProvider = ({ children, productId }) => {
 
   return (
     <ReviewContext.Provider
-      value={{ reviews, addReview, addReply, deleteReview }}
+      value={{ reviews, addReview, addReply, deleteReview, hasPurchased }}
     >
       {children}
     </ReviewContext.Provider>

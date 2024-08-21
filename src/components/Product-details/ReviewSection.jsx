@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext } from 'react' // Add useState here
 import { Button } from '@nextui-org/button'
 import { Textarea } from '@nextui-org/input'
 import { useSession } from 'next-auth/react'
@@ -10,7 +10,7 @@ import { ReviewContext } from '@/src/context/ReviewContext'
 
 const ReviewSection = ({ productId }) => {
   const { data: session, status } = useSession()
-  const { reviews, addReview, addReply, deleteReview } =
+  const { reviews, addReview, addReply, deleteReview, hasPurchased } =
     useContext(ReviewContext)
   const [newComment, setNewComment] = useState('')
   const [newRating, setNewRating] = useState(0)
@@ -34,7 +34,7 @@ const ReviewSection = ({ productId }) => {
         />
       ))}
 
-      {status === 'authenticated' && (
+      {status === 'authenticated' && hasPurchased && (
         <div className="new-review">
           <p className="text-left mt-4 text-xl font-semibold mb-4">
             Rate this Product
@@ -59,6 +59,18 @@ const ReviewSection = ({ productId }) => {
             Submit
           </Button>
         </div>
+      )}
+
+      {status === 'authenticated' && !hasPurchased && (
+        <p className="text-left mt-4 text-md font-semibold mb-4">
+          You must purchase this product to leave a review.
+        </p>
+      )}
+
+      {status === 'unauthenticated' && (
+        <p className="text-left mt-4 text-md font-semibold mb-4">
+          Please sign in to leave a review.
+        </p>
       )}
     </div>
   )
