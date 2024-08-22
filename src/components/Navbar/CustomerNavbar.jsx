@@ -149,6 +149,14 @@ export default function MainNavbarCustomer() {
                   <p className="font-semibold">Order History</p>
                 </Link>
               </DropdownItem>
+              <DropdownItem key="reviws" className="gap-2">
+                <Link
+                  href="/customer-profile/my-reviews"
+                  className="flex flex-col items-start"
+                >
+                  <p className="font-semibold">My Reviews</p>
+                </Link>
+              </DropdownItem>
               <DropdownItem
                 className="mt-2"
                 key="logout"
