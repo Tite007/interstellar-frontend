@@ -62,13 +62,13 @@ const ReviewSection = ({ productId }) => {
       )}
 
       {status === 'authenticated' && !hasPurchased && (
-        <p className="text-left mt-4 text-md font-semibold mb-4">
+        <p className="text-center mt-4 text-md font-semibold mb-4">
           You must purchase this product to leave a review.
         </p>
       )}
 
       {status === 'unauthenticated' && (
-        <p className="text-left mt-4 text-md font-semibold mb-4">
+        <p className="text-center mt-4 text-md font-semibold mb-4">
           Please sign in to leave a review.
         </p>
       )}

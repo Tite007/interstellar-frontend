@@ -34,10 +34,11 @@ export default function ProductDetails({ params, products }) {
   const [selectedGrind, setSelectedGrind] = useState('whole_bean')
   const [selectedPackage, setSelectedPackage] = useState(null)
   const [selectedDelivery, setSelectedDelivery] = useState('')
-  const [price, setPrice] = useState(null) // Define price state
-  const { addToCart } = useContext(CartContext) // Get addToCart from context
-  const [selectedImages, setSelectedImages] = useState([]) // New state for images
-  const [isOutOfStock, setIsOutOfStock] = useState(false) // State to track out of stock status
+  const [price, setPrice] = useState(null)
+  const [compareAtPrice, setCompareAtPrice] = useState(null)
+  const { addToCart } = useContext(CartContext)
+  const [selectedImages, setSelectedImages] = useState([])
+  const [isOutOfStock, setIsOutOfStock] = useState(false)
 
   // Fetch product details
   useEffect(() => {
@@ -53,7 +54,8 @@ export default function ProductDetails({ params, products }) {
           // Set defaults to the main product
           setSelectedPackage(productData.size)
           setPrice(productData.price)
-          setSelectedImages(productData.images) // Set initial images to main product images
+          setCompareAtPrice(productData.compareAtPrice)
+          setSelectedImages(productData.images)
 
           // Check if the parent product is out of stock
           if (productData.currentStock === 0) {
@@ -80,8 +82,9 @@ export default function ProductDetails({ params, products }) {
       const variantOption = selectedVariant.optionValues.find(
         (option) => option.value === value,
       )
-      setPrice(variantOption.price)
-      setSelectedImages(selectedVariant.images) // Update images based on the selected variant
+      setPrice(variantOption.price || product.price)
+      setCompareAtPrice(variantOption.compareAtPrice || product.compareAtPrice)
+      setSelectedImages(selectedVariant.images || product.images)
 
       // Check if the selected variant is out of stock
       if (variantOption.quantity === 0) {
@@ -91,7 +94,8 @@ export default function ProductDetails({ params, products }) {
       }
     } else {
       setPrice(product.price)
-      setSelectedImages(product.images) // Revert to main product images if no variant selected
+      setCompareAtPrice(product.compareAtPrice)
+      setSelectedImages(product.images)
 
       // Check if the parent product is out of stock
       if (product.currentStock === 0) {
@@ -131,16 +135,15 @@ export default function ProductDetails({ params, products }) {
 
     const cartItem = {
       productId: product._id,
-      variantId: variantOption ? variantOption._id : null, // Capture variantId here
-      productImage: selectedVariant?.images?.[0] || product.images[0], // Use the variant-specific image if available
+      variantId: variantOption ? variantOption._id : null,
+      productImage: selectedVariant?.images?.[0] || product.images[0],
       productName: product.name,
       productVariant: selectedPackage,
-      productPrice: variantOption ? variantOption.price : product.price,
+      productPrice: price,
+      compareAtPrice: compareAtPrice,
       quantity: parseInt(selectedQuantity, 10) || 1,
       grindType: getGrindLabel(selectedGrind),
     }
-
-    console.log('Cart Item:', cartItem) // Ensure variantId is present
 
     addToCart(cartItem)
     toast.success(`${product.name} ${selectedPackage} added to the cart!`)
@@ -151,10 +154,8 @@ export default function ProductDetails({ params, products }) {
   return (
     <main className="container flex-col items-center justify-between mt-5 p-4">
       <BreadcrumdsProduct product={product} />
-      {/* Add the Toaster component here */}
       <Toaster position="top-right" richColors />
       <div className="block md:hidden text-left mb-4">
-        {/* Include the ProductRating component */}
         <ProductRating productId={productId} />
         <h1 className="text-2xl mt-1 font-semibold ">
           {product.name || 'N/A'}
@@ -165,8 +166,20 @@ export default function ProductDetails({ params, products }) {
         {isOutOfStock && (
           <p className="text-red-600 font-semibold mb-1">Out of Stock</p>
         )}
-        <p className="text-2xl font-bold mb-4">${price}</p>{' '}
-        {/* Display the dynamic price */}
+        <p className="text-2xl font-bold mb-4">
+          ${price.toFixed(2)}
+          {compareAtPrice && compareAtPrice > price && (
+            <>
+              <span className="text-gray-500 text-lg font-normal line-through ml-2">
+                ${compareAtPrice.toFixed(2)}
+              </span>
+              <span className="text-red-500 text-lg font-normal ml-2">
+                ({Math.round(((compareAtPrice - price) / compareAtPrice) * 100)}
+                % off)
+              </span>
+            </>
+          )}
+        </p>
       </div>
       <div className="flex flex-col mt-6 items-center md:flex-row md:items-start">
         <div className="w-full md:w-1/2">
@@ -179,13 +192,11 @@ export default function ProductDetails({ params, products }) {
             <p>No images available</p>
           )}
         </div>
-        {/* Desktop product details section */}
         <div className="w-full md:w-1/2 md:ml-20 md:text-left">
           <div className="hidden md:block">
             <h1 className="text-2xl mb-1 font-semibold ">
               {product.name || 'N/A'}
             </h1>
-            {/* Include the ProductRating component */}
             <ProductRating productId={productId} />
             <p className="text-md mt-1 font-semi-bold text-stone-600 mb-2">
               {product.technicalData.tasteNotes || 'No taste notes available'}
@@ -193,8 +204,23 @@ export default function ProductDetails({ params, products }) {
             {isOutOfStock && (
               <p className="text-red-600 font-semibold mb-1">Out of Stock</p>
             )}
-            <p className="text-2xl font-bold mb-4">${price}</p>{' '}
-            {/* Display the dynamic price */}
+            <p className="text-2xl font-bold mb-4">
+              ${price.toFixed(2)}
+              {compareAtPrice && compareAtPrice > price && (
+                <>
+                  <span className="text-gray-500 text-lg font-normal line-through ml-2">
+                    ${compareAtPrice.toFixed(2)}
+                  </span>
+                  <span className="text-red-500 text-lg font-normal ml-2">
+                    (
+                    {Math.round(
+                      ((compareAtPrice - price) / compareAtPrice) * 100,
+                    )}
+                    % off)
+                  </span>
+                </>
+              )}
+            </p>
           </div>
 
           <div>
@@ -202,7 +228,6 @@ export default function ProductDetails({ params, products }) {
               Which is the Best for You:
             </h3>
             <div className="grid grid-cols-2 gap-4">
-              {/* Include the main product as the first option */}
               <CustomPackageCheckbox
                 key="main-product"
                 title={product.size}
@@ -227,14 +252,13 @@ export default function ProductDetails({ params, products }) {
             </p>
           </div>
 
-          <h3 className=" mt-4 font-semibold text-md ">Grind Type:</h3>
+          <h3 className="mt-4 font-semibold text-md">Grind Type:</h3>
           <GrindTypeSelect
-            selectedGrind={selectedGrind} // Pass selectedGrind state
+            selectedGrind={selectedGrind}
             onGrindChange={handleGrindChange}
           />
           <p className="mt-2 text-sm">
-            Grind Type: {getGrindLabel(selectedGrind)}{' '}
-            {/* Convert to human-readable format */}
+            Grind Type: {getGrindLabel(selectedGrind)}
           </p>
 
           <div className="mt-4">
@@ -257,11 +281,11 @@ export default function ProductDetails({ params, products }) {
               color="danger"
               className="mt-9 hidden md:block text-white"
               onClick={handleAddToCart}
-              disabled={isOutOfStock} // Disable button if out of stock
+              disabled={isOutOfStock}
             >
               {isOutOfStock
                 ? 'Out of Stock'
-                : `Add ${selectedQuantity ? selectedQuantity : ''} Item to Cart`}
+                : `Add ${selectedQuantity ? selectedQuantity : ''} Item(s) to Cart`}
             </Button>
             <Select
               label="Quantity"
@@ -289,7 +313,7 @@ export default function ProductDetails({ params, products }) {
           </div>
         </div>
       </div>
-      <div className="text-center  mt-10 text-black rounded-lg">
+      <div className="text-center mt-10 text-black rounded-lg">
         <h2 className="text-left mb-4 text-2xl font-semibold">Highlights</h2>
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <AboutModal product={product} />
@@ -297,7 +321,6 @@ export default function ProductDetails({ params, products }) {
           <HowToBrewModal />
           <BeanTypeModal />
         </div>
-        {/* Add the ReviewSection below the product details */}
         <ReviewProvider productId={productId}>
           <ReviewSection productId={productId} />
         </ReviewProvider>
@@ -309,10 +332,8 @@ export default function ProductDetails({ params, products }) {
         </p>
       </div>
       <ImageCollage />
-      {/* Similar Products Carousel */}
       <div className="mt-16">
         <h2 className="text-2xl font-semibold mb-6">Similar Products</h2>
-
         <ProductCarouselContainer
           products={products}
           options={{ loop: true }}
@@ -323,7 +344,7 @@ export default function ProductDetails({ params, products }) {
         selectedQuantity={selectedQuantity}
         setSelectedQuantity={setSelectedQuantity}
         handleAddToCart={handleAddToCart}
-        isOutOfStock={isOutOfStock} // Pass the out of stock condition
+        isOutOfStock={isOutOfStock}
       />
     </main>
   )
