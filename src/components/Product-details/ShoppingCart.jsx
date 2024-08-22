@@ -28,11 +28,10 @@ const ShoppingCart = () => {
         body: JSON.stringify({
           items: cart.map((item) => ({
             productId: item.productId,
-            variantId: item.variantId || null, // Ensure variantId is included, use null if not applicable
+            variantId: item.variantId || null,
             quantity: item.quantity,
-            productPrice: item.productPrice, // Include productPrice for parent products
-            productImage: item.productImage, // Include productImage if available
-            // Add additional fields if necessary for metadata
+            productPrice: item.productPrice,
+            productImage: item.productImage,
           })),
           YOUR_DOMAIN: window.location.origin,
         }),
@@ -59,17 +58,31 @@ const ShoppingCart = () => {
       console.error('Error redirecting to Stripe Checkout:', error)
     }
   }
-  const cartTotal = cart.reduce(
-    (acc, item) => acc + item.productPrice * item.quantity,
-    0,
+
+  // Calculate cart total, discount, and final subtotal
+  const cartSummary = cart.reduce(
+    (acc, item) => {
+      const itemSubtotal = item.productPrice * item.quantity
+      const itemDiscount =
+        item.compareAtPrice && item.compareAtPrice > item.productPrice
+          ? (item.compareAtPrice - item.productPrice) * item.quantity
+          : 0
+
+      return {
+        total: acc.total + itemSubtotal,
+        discount: acc.discount + itemDiscount,
+      }
+    },
+    { total: 0, discount: 0 },
   )
+
+  const finalSubtotal = cartSummary.total
 
   return (
     <div className="mt-7">
       {cart.length > 0 && (
         <div className="mb-5">
-          {/* Place the FreeShippingProgress at the top */}
-          <FreeShippingProgress cartTotal={cartTotal} />
+          <FreeShippingProgress cartTotal={finalSubtotal} />
         </div>
       )}
 
@@ -79,6 +92,10 @@ const ShoppingCart = () => {
         <ul>
           {cart.map((item, index) => {
             const itemSubtotal = item.productPrice * item.quantity
+            const itemDiscount =
+              item.compareAtPrice && item.compareAtPrice > item.productPrice
+                ? (item.compareAtPrice - item.productPrice) * item.quantity
+                : 0
 
             return (
               <li key={index} className="mb-4 bg-gray-50">
@@ -106,9 +123,14 @@ const ShoppingCart = () => {
                       <p className="text-sm font-bold">
                         ${item.productPrice.toFixed(2)}
                       </p>
-                      <p className="text-sm font-bold text-blakc">
+                      <p className="text-sm font-bold text-black">
                         Subtotal: ${itemSubtotal.toFixed(2)}
                       </p>
+                      {itemDiscount > 0 && (
+                        <p className="text-sm text-green-600">
+                          You save: ${itemDiscount.toFixed(2)}
+                        </p>
+                      )}
                     </div>
                   </div>
 
@@ -138,19 +160,24 @@ const ShoppingCart = () => {
           })}
         </ul>
       )}
+
       {cart.length > 0 && (
         <>
-          <div className="mt-5 text-right">
+          <div className="mt-6 text-right">
+            {cartSummary.discount > 0 && (
+              <p className="text-lg mb-2 font-bold text-green-600">
+                Total Savings: ${cartSummary.discount.toFixed(2)}
+              </p>
+            )}
             <p className="text-lg font-bold">
-              {' '}
-              SubTotal: ${cartTotal.toFixed(2)}
+              Subtotal: ${finalSubtotal.toFixed(2)}
             </p>
           </div>
           <Button
             onClick={handleSubmitStripePayment}
             variant="solid"
             color="success"
-            className="mt-4"
+            className="mt-6 w-full"
           >
             Proceed to Checkout
           </Button>
