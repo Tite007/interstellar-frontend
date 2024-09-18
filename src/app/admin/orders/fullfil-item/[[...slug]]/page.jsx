@@ -26,6 +26,7 @@ export default function Orderfullfill() {
   const [userDetails, setUserDetails] = useState(null)
   const [trackingNumber, setTrackingNumber] = useState('')
   const [carrier, setCarrier] = useState('')
+  const [sendEmailToCustomer, setSendEmailToCustomer] = useState(false) // Checkbox state to send email
   const router = useRouter()
 
   useEffect(() => {
@@ -60,35 +61,7 @@ export default function Orderfullfill() {
     fetchOrderDetails()
   }, [orderId])
 
-  const handleFulfillment = async () => {
-    try {
-      const response = await fetch(
-        `${API_BASE_URL}/orders/updateOrderTracking/${orderId}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ trackingNumber, carrier }),
-        },
-      )
-      if (response.ok) {
-        alert('Order fulfilled successfully')
-        setOrder((prevOrder) => ({
-          ...prevOrder,
-          trackingNumber,
-          carrier,
-          fulfillmentStatus: 'fulfilled',
-        }))
-      } else {
-        throw new Error('Failed to fulfill order')
-      }
-    } catch (error) {
-      console.error('Error fulfilling order:', error)
-      alert('Error fulfilling order')
-    }
-  }
-
+  // Function to update the tracking information
   const handleUpdateTrackingInfo = async () => {
     try {
       const response = await fetch(
@@ -114,6 +87,72 @@ export default function Orderfullfill() {
     }
   }
 
+  // Function to fulfill the order
+  const handleFulfillment = async () => {
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/orders/updateOrderTracking/${orderId}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ trackingNumber, carrier }),
+        },
+      )
+      if (response.ok) {
+        alert('Order fulfilled successfully')
+        setOrder((prevOrder) => ({
+          ...prevOrder,
+          trackingNumber,
+          carrier,
+          fulfillmentStatus: 'fulfilled',
+        }))
+
+        // If checkbox is selected, send email to the customer
+        if (sendEmailToCustomer) {
+          console.log('Send email checkbox is selected, triggering email...')
+          await sendFulfillmentEmail()
+        } else {
+          console.log(
+            'Send email checkbox is not selected, email will not be sent.',
+          )
+        }
+      } else {
+        throw new Error('Failed to fulfill order')
+      }
+    } catch (error) {
+      console.error('Error fulfilling order:', error)
+      alert('Error fulfilling order')
+    }
+  }
+
+  // Function to trigger fulfillment email
+  const sendFulfillmentEmail = async () => {
+    try {
+      console.log('Sending fulfillment email...')
+      const emailResponse = await fetch(
+        `${API_BASE_URL}/orders/sendFulfillmentEmail/${order._id}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ userDetails, trackingNumber, carrier }), // Send the required data
+        },
+      )
+
+      if (emailResponse.ok) {
+        console.log('Fulfillment email sent successfully')
+      } else {
+        console.error('Failed to send fulfillment email')
+      }
+    } catch (error) {
+      console.error('Error sending fulfillment email:', error)
+    }
+  }
+
+  // Show a loading state while the order details are being fetched
   if (!order || !userDetails) {
     return <div>Loading...</div>
   }
@@ -191,7 +230,11 @@ export default function Orderfullfill() {
             </div>
             <div className="flex-1 border-t-1 pt-4 mt-10">
               <h1 className="font-medium">Additional Information</h1>
-              <Checkbox className="mt-1 font-light">
+              <Checkbox
+                className="mt-1 font-light"
+                isSelected={sendEmailToCustomer}
+                onChange={setSendEmailToCustomer}
+              >
                 Send Shipment details to customer
               </Checkbox>
             </div>
