@@ -67,7 +67,7 @@ export default function CustomerOrdersPage() {
   }
 
   return (
-    <div className="mb-10 ">
+    <div className=" container mb-10 ">
       <BreadcrumbsUserProfileOrders />
       {user ? (
         <>
