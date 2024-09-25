@@ -130,7 +130,28 @@ export default function Orderfullfill() {
   // Function to trigger fulfillment email
   const sendFulfillmentEmail = async () => {
     try {
-      console.log('Sending fulfillment email...')
+      const orderData = {
+        _id: order._id,
+        subtotal: order.subtotal,
+        shippingInfo: order.shippingInfo,
+        totalPrice: order.totalPrice,
+      }
+
+      // Ensure that the product images are included in lineItems
+      const lineItems = order.items.map((item) => ({
+        description: item.name,
+        quantity: item.quantity,
+        price: {
+          unit_amount: item.price * 100, // Convert to cents if needed
+        },
+        productDetails: {
+          size: item.size || 'N/A',
+          sku: item.sku || 'N/A',
+          images: [item.imageUrl], // Ensure you pass the image URL here
+          color: item.color || 'N/A',
+        },
+      }))
+
       const emailResponse = await fetch(
         `${API_BASE_URL}/orders/sendFulfillmentEmail/${order._id}`,
         {
@@ -138,7 +159,13 @@ export default function Orderfullfill() {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ userDetails, trackingNumber, carrier }), // Send the required data
+          body: JSON.stringify({
+            userDetails,
+            trackingNumber,
+            carrier,
+            orderData,
+            lineItems,
+          }),
         },
       )
 
