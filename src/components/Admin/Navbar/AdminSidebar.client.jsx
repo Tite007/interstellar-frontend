@@ -13,6 +13,7 @@ import {
 } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import { usePathname } from 'next/navigation' // Assuming this is available in your project
+import { FolderOpen } from 'lucide-react'
 
 // Example structure updated to include potential dropdown items
 const navigation = [
@@ -34,7 +35,7 @@ const navigation = [
   {
     name: 'Categories',
     href: '/admin/categories',
-    icon: <Box strokeWidth={1.5} className="mr-4 h-5 w-5" />,
+    icon: <FolderOpen strokeWidth={1.5} className="mr-4 h-5 w-5" />,
   },
   {
     name: 'Transactions',

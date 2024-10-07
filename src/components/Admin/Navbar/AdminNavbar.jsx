@@ -22,6 +22,7 @@ import {
   Menu,
 } from 'lucide-react'
 import { Button } from '@nextui-org/button'
+import { FolderOpen } from 'lucide-react'
 
 const navigation = [
   {
@@ -42,7 +43,7 @@ const navigation = [
   {
     name: 'Categories',
     href: '/admin/categories',
-    icon: <Box strokeWidth={1.5} className="mr-4 h-5 w-5" />,
+    icon: <FolderOpen strokeWidth={1.5} className="mr-4 h-5 w-5" />,
   },
   {
     name: 'Transactions',
