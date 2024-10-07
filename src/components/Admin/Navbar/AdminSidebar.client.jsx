@@ -32,6 +32,11 @@ const navigation = [
     icon: <Box strokeWidth={1.5} className="mr-4 h-5 w-5" />,
   },
   {
+    name: 'Categories',
+    href: '/admin/categories',
+    icon: <Box strokeWidth={1.5} className="mr-4 h-5 w-5" />,
+  },
+  {
     name: 'Transactions',
     href: '/admin/transactions',
     icon: <ArrowRightLeft strokeWidth={1.5} className="mr-4 h-5 w-5" />,
