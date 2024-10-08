@@ -1,8 +1,7 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Input, Textarea } from '@nextui-org/input'
 import { Button } from '@nextui-org/button'
-import { categories } from '@/src/components/Admin/Products/data'
 import { Select, SelectItem } from '@nextui-org/select'
 import { RadioGroup, Radio } from '@nextui-org/radio'
 import { toast } from 'sonner'
@@ -19,11 +18,12 @@ const ProductAddForm = () => {
   const [product, setProduct] = useState({
     name: '',
     description: '',
-    category: '',
+    parentCategory: '', // Parent category
+    subcategory: '', // Subcategory
     sku: '',
     price: '',
     stock: '',
-    size: '', // Added size field
+    size: '',
     images: [],
     costPrice: '',
     profit: '',
@@ -36,7 +36,7 @@ const ProductAddForm = () => {
     seoTitle: '',
     seoDescription: '',
     seoKeywords: '',
-    roastLevel: '', // Added roast level field
+    roastLevel: '',
     technicalData: {
       country: '',
       region: '',
@@ -47,17 +47,36 @@ const ProductAddForm = () => {
       tasteNotes: '',
     },
   })
+
+  const [categories, setCategories] = useState([]) // State for parent categories
+  const [subcategories, setSubcategories] = useState([]) // State for subcategories
   const [inventoryType, setInventoryType] = useState('track')
   const [images, setImages] = useState([])
   const [variants, setVariants] = useState([])
 
   const router = useRouter()
 
+  // Fetch categories on mount
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/categories/categories`)
+        const data = await response.json()
+        setCategories(data)
+      } catch (error) {
+        console.error('Error fetching categories:', error)
+      }
+    }
+
+    fetchCategories()
+  }, [])
+
+  // Handle inventory type change
   const handleInventoryTypeChange = (value) => {
     setInventoryType(value)
   }
 
-  //Handle change function to update the product state
+  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target
     let newFields = { [name]: value }
@@ -78,7 +97,7 @@ const ProductAddForm = () => {
     }))
   }
 
-  //Handle technical data change function to update the technical data state
+  // Handle technical data change function to update the technical data state
   const handleTechnicalDataChange = (name, value) => {
     setProduct((prev) => ({
       ...prev,
@@ -89,29 +108,45 @@ const ProductAddForm = () => {
     }))
   }
 
-  const calculateProfit = (price, costPrice) => {
-    return Number(price) - Number(costPrice)
-  }
+  // Handle parent category change
+  const handleParentCategoryChange = async (selectedKey) => {
+    setProduct((prevState) => ({
+      ...prevState,
+      parentCategory: selectedKey.currentKey,
+      subcategory: '', // Reset subcategory when parent category changes
+    }))
 
-  const calculateMargin = (price, profit) => {
-    if (price > 0) {
-      const marginPercentage = (profit / Number(price)) * 100
-      return marginPercentage
+    // Fetch subcategories based on parent category
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/categories/categories?parent=${selectedKey.currentKey}`,
+      )
+      const data = await response.json()
+      setSubcategories(data)
+    } catch (error) {
+      console.error('Error fetching subcategories:', error)
     }
-    return 0
   }
 
-  //Handle category change function to update the category state
+  // Handle subcategory change
+  const handleSubcategoryChange = (selectedKey) => {
+    setProduct((prevState) => ({
+      ...prevState,
+      subcategory: selectedKey.currentKey,
+    }))
+  }
+
+  // Handle category change
   const handleCategoryChange = (value) => {
     setProduct({ ...product, category: value })
   }
 
-  //Handle variants change function to update the variants state
+  // Handle variants change
   const handleVariantsChange = (newVariants) => {
     setVariants(newVariants)
   }
 
-  //Handle delete image function to delete the image
+  // Handle image deletion
   const handleDeleteImage = async (image) => {
     const imageUrl = typeof image === 'string' ? image : image.url
     if (!imageUrl) {
@@ -137,13 +172,24 @@ const ProductAddForm = () => {
     }
   }
 
-  //Handle save function to save the product
+  // Calculate profit and margin
+  const calculateProfit = (price, costPrice) => {
+    return Number(price) - Number(costPrice)
+  }
+
+  const calculateMargin = (price, profit) => {
+    if (price > 0) {
+      const marginPercentage = (profit / Number(price)) * 100
+      return marginPercentage
+    }
+    return 0
+  }
+
+  // Handle save function - save product to the database
   const handleSave = async (e) => {
     e.preventDefault()
 
     try {
-      console.log('Starting save process')
-
       const newImages = images.filter((image) => image.file)
       const formImageData = new FormData()
       newImages.forEach((image) => {
@@ -152,7 +198,6 @@ const ProductAddForm = () => {
 
       let uploadedImages = []
       if (newImages.length > 0) {
-        console.log('Uploading product images')
         const uploadRes = await fetch(`${API_BASE_URL}/upload`, {
           method: 'POST',
           body: formImageData,
@@ -160,7 +205,6 @@ const ProductAddForm = () => {
 
         if (!uploadRes.ok) throw new Error('Failed to upload images')
         uploadedImages = await uploadRes.json()
-        console.log('Uploaded product images:', uploadedImages)
       }
 
       const allImages = [
@@ -168,15 +212,11 @@ const ProductAddForm = () => {
         ...uploadedImages.map((image) => ({ url: image.url })),
       ]
 
-      console.log('All images:', allImages)
-
       const formData = {
         ...product,
         images: allImages.map((image) => image.url),
         variants,
       }
-
-      console.log('Payload being sent:', JSON.stringify(formData, null, 2))
 
       const res = await fetch(`${API_BASE_URL}/products/addProduct`, {
         method: 'POST',
@@ -236,7 +276,7 @@ const ProductAddForm = () => {
               labelPlacement="outside"
               clearable
               bordered
-              label="Size" // Added size field
+              label="Size"
               name="size"
               onChange={handleChange}
               className="col-span-1"
@@ -246,25 +286,46 @@ const ProductAddForm = () => {
               labelPlacement="outside"
               clearable
               bordered
-              label="Roast Level" // Added size field
+              label="Roast Level"
               name="roastLevel"
               onChange={handleChange}
               className="col-span-1"
               value={product.roastLevel}
             />
+
             <Select
               labelPlacement="outside"
-              isRequired
-              value={product.category}
-              onChange={(e) => handleCategoryChange(e.target.value)}
+              onSelectionChange={handleParentCategoryChange}
               placeholder="Select a category"
+              selectedKeys={
+                product.parentCategory
+                  ? new Set([product.parentCategory])
+                  : new Set()
+              }
             >
               {categories.map((category) => (
-                <SelectItem key={category.value} value={category.value}>
-                  {category.label}
+                <SelectItem key={category._id} value={category._id}>
+                  {category.name}
                 </SelectItem>
               ))}
             </Select>
+
+            <Select
+              labelPlacement="outside"
+              onSelectionChange={handleSubcategoryChange}
+              placeholder="Select a subcategory"
+              selectedKeys={
+                product.subcategory ? new Set([product.subcategory]) : new Set()
+              }
+              isDisabled={!product.parentCategory}
+            >
+              {subcategories.map((subcategory) => (
+                <SelectItem key={subcategory._id} value={subcategory._id}>
+                  {subcategory.name}
+                </SelectItem>
+              ))}
+            </Select>
+
             <Textarea
               isRequired
               clearable
@@ -321,7 +382,6 @@ const ProductAddForm = () => {
             <h1 className="col-span-3 text-lg font-semibold text-gray-700">
               Price
             </h1>
-
             <Input
               labelPlacement="outside"
               isRequired

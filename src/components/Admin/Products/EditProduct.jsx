@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react'
 import { Input, Textarea } from '@nextui-org/input'
 import { Button } from '@nextui-org/button'
-import { categories } from '@/src/components/Admin/Products/data'
 import { Select, SelectItem } from '@nextui-org/select'
 import { RadioGroup, Radio } from '@nextui-org/radio'
 import { toast } from 'sonner'
@@ -19,30 +18,49 @@ const ProductEditForm = () => {
   const [product, setProduct] = useState({
     name: '',
     description: '',
-    category: '',
+    parentCategory: '', // Parent category
+    subcategory: '', // Subcategory
     sku: '',
-    price: '',
-    stock: '',
+    price: '', // Price field added
+    costPrice: '', // Cost Price field added
+    compareAtPrice: 0, // Compare At Price field added
+    profit: '', // Profit field added
+    margin: '', // Margin field added
+    stock: '', // Stock field added
     size: '',
     images: [],
-    costPrice: '',
-    profit: '',
-    margin: '',
-    inventoryType: '',
-    currentStock: '',
-    lowStockLevel: '',
+    inventoryType: '', // Inventory type field
+    currentStock: '', // Current stock field
+    lowStockLevel: '', // Low stock level field
     subtitle: '',
-    compareAtPrice: 0,
     seoTitle: '',
     roastLevel: '',
     seoDescription: '',
     seoKeywords: '',
   })
 
+  const [categories, setCategories] = useState([]) // State for parent categories
+  const [subcategories, setSubcategories] = useState([]) // State for subcategories
   const [inventoryType, setInventoryType] = useState('track')
   const [images, setImages] = useState([])
   const router = useRouter()
 
+  // Fetch categories on mount
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/categories/categories`)
+        const data = await response.json()
+        setCategories(data)
+      } catch (error) {
+        console.error('Error fetching categories:', error)
+      }
+    }
+
+    fetchCategories()
+  }, [])
+
+  // Fetch product data
   useEffect(() => {
     const fetchProductData = async (_id) => {
       try {
@@ -51,8 +69,24 @@ const ProductEditForm = () => {
         )
         if (!response.ok) throw new Error('Failed to fetch product')
         const data = await response.json()
-        setProduct(data)
 
+        // Set product state
+        setProduct({
+          ...data,
+          parentCategory: data.parentCategory || '',
+          subcategory: data.subcategory || '',
+        })
+
+        // Fetch subcategories based on parent category
+        if (data.parentCategory) {
+          const subcategoryResponse = await fetch(
+            `${API_BASE_URL}/categories/categories?parent=${data.parentCategory}`,
+          )
+          const subcategoryData = await subcategoryResponse.json()
+          setSubcategories(subcategoryData)
+        }
+
+        // Set images
         const imageUrls = data.images.map((image) => ({ url: image }))
         setImages(imageUrls || [])
       } catch (error) {
@@ -69,10 +103,12 @@ const ProductEditForm = () => {
     }
   }, [])
 
+  // Handle inventory type change
   const handleInventoryTypeChange = (value) => {
     setInventoryType(value)
   }
 
+  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target
     setProduct((prev) => ({ ...prev, [name]: value }))
@@ -82,13 +118,35 @@ const ProductEditForm = () => {
     setProduct((prev) => ({ ...prev, [fieldName]: '' }))
   }
 
-  const handleCategoryChange = (selectedKey) => {
+  // Handle parent category change
+  const handleParentCategoryChange = async (selectedKey) => {
     setProduct((prevState) => ({
       ...prevState,
-      category: selectedKey.currentKey,
+      parentCategory: selectedKey.currentKey,
+      subcategory: '', // Reset subcategory
+    }))
+
+    // Fetch subcategories based on parent category
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/categories/categories?parent=${selectedKey.currentKey}`,
+      )
+      const data = await response.json()
+      setSubcategories(data)
+    } catch (error) {
+      console.error('Error fetching subcategories:', error)
+    }
+  }
+
+  // Handle subcategory change
+  const handleSubcategoryChange = (selectedKey) => {
+    setProduct((prevState) => ({
+      ...prevState,
+      subcategory: selectedKey.currentKey,
     }))
   }
 
+  // Handle image deletion
   const handleDeleteImage = async (image) => {
     const imageUrl = typeof image === 'string' ? image : image.url
     if (!imageUrl) {
@@ -120,76 +178,13 @@ const ProductEditForm = () => {
     }
   }
 
+  // Handle save function
   const handleSave = async (status) => {
     try {
-      console.log('Starting save process')
-
-      // Prepare new images for uploading
-      const newImages = images.filter((image) => image.file)
-      const formData = new FormData()
-      newImages.forEach((image) => {
-        formData.append('images', image.file)
-      })
-
-      let uploadedImages = []
-      if (newImages.length > 0) {
-        console.log('Uploading product images')
-        const uploadRes = await fetch(`${API_BASE_URL}/upload`, {
-          method: 'POST',
-          body: formData,
-        })
-
-        if (!uploadRes.ok) throw new Error('Failed to upload images')
-        uploadedImages = await uploadRes.json()
-        console.log('Uploaded product images:', uploadedImages)
-      }
-
-      // Combine existing and newly uploaded images
-      const allImages = [
-        ...images.filter((image) => !image.file),
-        ...uploadedImages.map((image) => ({ url: image.url })),
-      ]
-
-      console.log('All images:', allImages)
-
-      // Fetch existing product data
-      const existingProductRes = await fetch(
-        `${API_BASE_URL}/products/findProduct/${product._id}`,
-      )
-      if (!existingProductRes.ok)
-        throw new Error('Failed to fetch existing product')
-      const existingProduct = await existingProductRes.json()
-
-      const existingImages = existingProduct.images || []
-      console.log('Existing images:', existingImages)
-
-      // Determine images to delete
-      const imagesToDelete = existingImages.filter(
-        (existingImage) =>
-          !allImages.some((newImage) => newImage.url === existingImage),
-      )
-
-      console.log('Images to delete:', imagesToDelete)
-
-      if (imagesToDelete.length > 0) {
-        console.log('Deleting old images')
-        await fetch(`${API_BASE_URL}/delete-images`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            images: imagesToDelete,
-            productId: product._id,
-          }),
-        })
-        console.log('Deleted old images:', imagesToDelete)
-      }
-
       const payload = {
         ...product,
-        images: allImages.map((image) => image.url),
+        images: images.map((image) => image.url),
       }
-
-      console.log('Payload being sent:', JSON.stringify(payload, null, 2))
 
       const res = await fetch(
         `${API_BASE_URL}/products/updateProduct/${product._id}`,
@@ -257,7 +252,7 @@ const ProductEditForm = () => {
               bordered
               value={product.size}
               label="Size"
-              name="size" // Update this to match the state key
+              name="size"
               onChange={handleChange}
             />
             <Input
@@ -266,23 +261,43 @@ const ProductEditForm = () => {
               bordered
               value={product.roastLevel}
               label="Roast Level"
-              name="roastLevel" // Update this to match the state key
+              name="roastLevel"
               onChange={handleChange}
             />
+
             <Select
               labelPlacement="outside"
-              onSelectionChange={handleCategoryChange}
+              onSelectionChange={handleParentCategoryChange}
               placeholder="Select a category"
               selectedKeys={
-                product.category ? new Set([product.category]) : new Set()
+                product.parentCategory
+                  ? new Set([product.parentCategory])
+                  : new Set()
               }
             >
               {categories.map((category) => (
-                <SelectItem key={category.value} value={category.value}>
-                  {category.label}
+                <SelectItem key={category._id} value={category._id}>
+                  {category.name}
                 </SelectItem>
               ))}
             </Select>
+
+            <Select
+              labelPlacement="outside"
+              onSelectionChange={handleSubcategoryChange}
+              placeholder="Select a subcategory"
+              selectedKeys={
+                product.subcategory ? new Set([product.subcategory]) : new Set()
+              }
+              isDisabled={!product.parentCategory}
+            >
+              {subcategories.map((subcategory) => (
+                <SelectItem key={subcategory._id} value={subcategory._id}>
+                  {subcategory.name}
+                </SelectItem>
+              ))}
+            </Select>
+
             <Textarea
               isRequired
               isClearable={true}
@@ -295,6 +310,8 @@ const ProductEditForm = () => {
               className="md:col-span-2"
             />
           </div>
+
+          {/* Image and Dropzone section */}
           <div className="grid grid-cols-1 mt-5 md:grid-cols-2 gap-6 bg-white pr-4 pl-4 border rounded-2xl pt-5 pb-10">
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-700">
@@ -328,9 +345,11 @@ const ProductEditForm = () => {
               </ul>
             </div>
           </div>
+
+          {/* Price and Inventory section */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mt-5 border bg-white pr-4 pl-4 rounded-2xl pt-5 pb-10">
             <h1 className="col-span-1 md:col-span-3 text-lg font-semibold text-gray-700">
-              Price
+              Price and Inventory
             </h1>
             <Input
               labelPlacement="outside"
@@ -390,6 +409,8 @@ const ProductEditForm = () => {
               </Radio>
             </RadioGroup>
           </div>
+
+          {/* Inventory tracking section */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border mt-5 bg-white pr-4 pl-4 rounded-2xl pt-5 pb-8">
             <h1 className="col-span-3 text-lg font-semibold text-gray-700">
               Inventory Tracking
@@ -419,6 +440,7 @@ const ProductEditForm = () => {
           </div>
         </Tab>
 
+        {/* Other tabs */}
         <Tab key="technicalData" title="Technical Data">
           <TechnicalDataForm productId={product._id} />
         </Tab>
