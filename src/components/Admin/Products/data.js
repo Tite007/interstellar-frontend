@@ -15,7 +15,6 @@ export const products = [
 
 export const columns = [
   { name: 'Name', uid: 'name' },
-  { name: 'Category', uid: 'category' },
   { name: 'SKU', uid: 'sku' },
   { name: 'Current Stock', uid: 'currentStock' },
   { name: 'Price', uid: 'price' },
