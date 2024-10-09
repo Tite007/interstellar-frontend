@@ -181,11 +181,43 @@ const ProductEditForm = () => {
   // Handle save function
   const handleSave = async (status) => {
     try {
-      const payload = {
-        ...product,
-        images: images.map((image) => image.url),
+      // Filter new images (those that have a file object)
+      const newImages = images.filter((image) => image.file)
+
+      // Prepare FormData for uploading new images
+      const formImageData = new FormData()
+      newImages.forEach((image) => {
+        formImageData.append('images', image.file)
+      })
+
+      let uploadedImages = []
+
+      // Upload new images if any exist
+      if (newImages.length > 0) {
+        const uploadRes = await fetch(`${API_BASE_URL}/upload`, {
+          method: 'POST',
+          body: formImageData,
+        })
+
+        if (!uploadRes.ok) throw new Error('Failed to upload images')
+
+        // Get the URLs of uploaded images from the response
+        uploadedImages = await uploadRes.json()
       }
 
+      // Combine existing images (those that don't need uploading) and uploaded images
+      const allImages = [
+        ...images.filter((image) => !image.file), // Existing images
+        ...uploadedImages.map((image) => ({ url: image.url })), // Newly uploaded images
+      ]
+
+      // Prepare the payload with the correct image URLs
+      const payload = {
+        ...product,
+        images: allImages.map((image) => image.url), // Only save URLs, no blob URLs
+      }
+
+      // Make the request to update the product
       const res = await fetch(
         `${API_BASE_URL}/products/updateProduct/${product._id}`,
         {
@@ -194,11 +226,16 @@ const ProductEditForm = () => {
           body: JSON.stringify(payload),
         },
       )
-      if (!res.ok) throw new Error('Failed to save product')
+
+      if (!res.ok) {
+        throw new Error('Failed to save product')
+      }
+
       toast('Product updated successfully!', {})
       router.push('/admin/products')
     } catch (error) {
       console.error('Error saving product:', error)
+      toast.error('Failed to update product!')
     }
   }
 
