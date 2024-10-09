@@ -1,4 +1,3 @@
-// client/src/app/(customer)/products/page.jsx
 'use client'
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
@@ -122,9 +121,7 @@ const ProductsPage = () => {
           </div>
           <div className=" xl:container lg:container md:container sm:container mb-5 sm:mt-5 md:mt-10 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 ">
             {filteredProducts.map((product) => (
-              <Link key={product._id} href={`/products/${product._id}`}>
-                <ProductCard product={product} />
-              </Link>
+              <ProductCard key={product._id} product={product} />
             ))}
           </div>
         </>
