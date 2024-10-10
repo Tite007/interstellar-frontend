@@ -1,3 +1,4 @@
+// components/EmblaCarouselProducts.js
 import React from 'react'
 import {
   PrevButton,
@@ -9,21 +10,16 @@ import {
   useSelectedSnapDisplay,
 } from '@/src/components/Products/EmblaCarouselSelectedSnapDisplay'
 import useEmblaCarousel from 'embla-carousel-react'
-import ProductCard from '@/src/components/Products/ProductCard'
-import Link from 'next/link' // Import Link for navigation
 import SimilarProductsCard from './SimilarProductsCard'
 
-const EmblaCarouselProducts = (props) => {
-  const { products = [], options } = props // Set a default empty array for products
+const EmblaCarouselProducts = ({ products = [], options }) => {
   const [emblaRef, emblaApi] = useEmblaCarousel(options)
-
   const {
     prevBtnDisabled,
     nextBtnDisabled,
     onPrevButtonClick,
     onNextButtonClick,
   } = usePrevNextButtons(emblaApi)
-
   const { selectedSnap, snapCount } = useSelectedSnapDisplay(emblaApi)
 
   return (
@@ -33,23 +29,20 @@ const EmblaCarouselProducts = (props) => {
           {products.length > 0 ? (
             products.map((product, index) => (
               <div className="embla-product__slide" key={index}>
-                <Link href={`/products/${product._id}`}>
-                  <SimilarProductsCard product={product} />
-                </Link>
+                {/* No Link wrapping the whole card */}
+                <SimilarProductsCard product={product} />
               </div>
             ))
           ) : (
-            <p>No products available</p> // Fallback message
+            <p>No products available</p>
           )}
         </div>
       </div>
-
       <div className="embla-product__controls">
         <div className="embla-product__buttons">
           <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} />
           <NextButton onClick={onNextButtonClick} disabled={nextBtnDisabled} />
         </div>
-
         <SelectedSnapDisplay
           selectedSnap={selectedSnap}
           snapCount={snapCount}

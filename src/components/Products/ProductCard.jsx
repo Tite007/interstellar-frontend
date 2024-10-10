@@ -19,6 +19,7 @@ const ProductCard = ({ product }) => {
       productImage: product.images[0],
       productName: product.name,
       productPrice: product.price,
+      compareAtPrice: product.compareAtPrice,
       quantity: parseInt(selectedQuantity, 10),
     }
 
