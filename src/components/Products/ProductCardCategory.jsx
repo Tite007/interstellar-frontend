@@ -1,17 +1,35 @@
+import React, { useState, useEffect, useContext } from 'react'
+import Link from 'next/link'
 import Image from 'next/image'
-import React, { useState, useContext } from 'react'
 import ProductRatingCards from '../Product-details/RatingProductCards'
 import AddToCartButton from '@/src/components/Products/AddToCartButton'
 import { CartContext } from '@/src/context/CartContext'
-import Link from 'next/link'
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
 const ProductCardCategory = ({ product }) => {
   const { addToCart } = useContext(CartContext)
   const [selectedQuantity, setSelectedQuantity] = useState('1')
   const [isOutOfStock, setIsOutOfStock] = useState(product.currentStock === 0)
+  const [categories, setCategories] = useState([])
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/categories/categories`)
+        const data = await response.json()
+        console.log('Categories:', data) // Log the categories for debugging
+        setCategories(data)
+      } catch (err) {
+        console.error('Error fetching categories:', err)
+      }
+    }
+
+    fetchCategories()
+  }, [])
 
   const handleAddToCart = (event) => {
-    event.stopPropagation() // Prevents navigation on button click
+    event.stopPropagation()
     const cartItem = {
       productId: product._id,
       productImage: product.images[0],
@@ -24,29 +42,72 @@ const ProductCardCategory = ({ product }) => {
     alert(`${product.name} added to cart`)
   }
 
-  // Ensure category and subcategory are correctly provided from the backend
-  const category = product.category?.name
-    ? product.category.name.toLowerCase().replace(/\s+/g, '-')
-    : 'default-category'
+  // Updated mapping logic to handle subcategory separately
+  const mapCategoryAndSubcategory = (product) => {
+    let categoryName = 'default-category'
+    let subcategoryName = 'default-subcategory'
 
-  const subcategory = product.subcategory?.name
-    ? product.subcategory.name.toLowerCase().replace(/\s+/g, '-')
-    : 'default-subcategory'
+    // Use parentCategory and subcategory fields from the product
+    console.log('Product Parent Category:', product.parentCategory)
+    console.log('Product Subcategory:', product.subcategory)
+
+    // Find the parent category
+    if (product.parentCategory) {
+      const category = categories.find(
+        (cat) => String(cat._id) === String(product.parentCategory),
+      )
+
+      if (category) {
+        console.log('Matched Category:', category)
+        categoryName = category.name
+
+        // Find the subcategory separately in the categories list
+        if (product.subcategory) {
+          const subcategory = categories.find(
+            (cat) => String(cat._id) === String(product.subcategory),
+          )
+          if (subcategory) {
+            console.log('Matched Subcategory:', subcategory)
+            subcategoryName = subcategory.name
+          } else {
+            console.log(
+              'No matching subcategory found for:',
+              product.subcategory,
+            )
+          }
+        }
+      } else {
+        console.log('No matching category found for:', product.parentCategory)
+      }
+    } else {
+      console.log('No parent category ID found for the product.')
+    }
+
+    return { categoryName, subcategoryName }
+  }
+
+  // Use the mapping function
+  const { categoryName, subcategoryName } = mapCategoryAndSubcategory(product)
 
   const productName = product.name
     ? product.name.toLowerCase().replace(/\s+/g, '-')
     : 'default-product'
 
-  // Log for debugging
-  console.log('Category:', category)
-  console.log('Subcategory:', subcategory)
-  console.log('Product Name:', productName)
+  // Ensure the category and subcategory names are lowercase and replace spaces with dashes
+  const formattedCategoryName = categoryName.toLowerCase().replace(/\s+/g, '-')
+  const formattedSubcategoryName = subcategoryName
+    .toLowerCase()
+    .replace(/\s+/g, '-')
 
-  // Construct the product URL
   const productLink = {
-    pathname: `/categories/${category}/${subcategory}/${productName}`,
-    query: { productId: product._id }, // Pass correct productId
+    pathname: `/categories/${formattedCategoryName}/${formattedSubcategoryName}/${productName}`,
+    query: { productId: product._id },
   }
+
+  // Log for debugging
+  console.log('Category:', formattedCategoryName)
+  console.log('Subcategory:', formattedSubcategoryName)
+  console.log('Product Name:', productName)
 
   return (
     <div className="border border-gray-200 rounded-lg p-4 m-1 shadow-md text-left sm:min-w-[220px] h-[430px] md:h-[450px] sm:max-w-[260px] lg:max-w-[285px] md:max-w-[350px] flex flex-col justify-between">

@@ -1,4 +1,3 @@
-// src/components/Products/Sidebar.jsx
 import React from 'react'
 import { Checkbox } from '@nextui-org/checkbox'
 
@@ -37,8 +36,8 @@ const Sidebar = ({
           Clear
         </button>
         <ul>
-          {categories.map((category) => (
-            <li key={category} className="mb-2">
+          {categories.map((category, index) => (
+            <li key={`${category}-${index}`} className="mb-2">
               <Checkbox
                 isSelected={selectedCategory === category}
                 onChange={() => handleCheckboxChange('category', category)}
@@ -59,8 +58,8 @@ const Sidebar = ({
           Clear
         </button>
         <ul>
-          {roastLevels.map((level) => (
-            <li key={level} className="mb-2">
+          {roastLevels.map((level, index) => (
+            <li key={`${level}-${index}`} className="mb-2">
               <Checkbox
                 isSelected={selectedRoastLevel === level}
                 onChange={() => handleCheckboxChange('roastLevel', level)}
@@ -81,8 +80,8 @@ const Sidebar = ({
           Clear
         </button>
         <ul>
-          {countries.map((country) => (
-            <li key={country} className="mb-2">
+          {countries.map((country, index) => (
+            <li key={`${country}-${index}`} className="mb-2">
               <Checkbox
                 isSelected={selectedCountry === country}
                 onChange={() => handleCheckboxChange('country', country)}
