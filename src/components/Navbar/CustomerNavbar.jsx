@@ -112,7 +112,8 @@ export default function MainNavbarCustomer() {
           <p className="font-bold text-inherit"></p>
         </NavbarBrand>
       </NavbarContent>
-      <NavbarContent className="hidden sm:flex gap-4" justify="center">
+
+      <NavbarContent className="hidden sm:flex gap-4 " justify="center">
         {menuItems.map((item, index) => (
           <NavbarItem key={index}>
             <Link color="foreground" href={item.href}>
@@ -126,15 +127,16 @@ export default function MainNavbarCustomer() {
           <DropdownTrigger>
             <Button
               disableRipple
-              className="p-0 bg-transparent data-[hover=true]:bg-transparent"
-              endContent={<ChevronDown size={16} />}
+              className="p-0 text-md bg-transparent data-[hover=true]:bg-transparent"
+              endContent={<ChevronDown size={20} />}
               radius="sm"
               variant="light"
             >
               Shop
             </Button>
           </DropdownTrigger>
-          <DropdownMenu aria-label="Shop categories" className="w-[340px]">
+
+          <DropdownMenu aria-label="Shop categories" className="w-[240px]">
             {shopCategories.map((category) => (
               <DropdownItem
                 key={category.label}
@@ -153,12 +155,12 @@ export default function MainNavbarCustomer() {
                 {/* Subcategories menu: shown on hover */}
                 {activeCategory === category.label &&
                   category.subcategories.length > 0 && (
-                    <div className="absolute left-full top-0 bg-white shadow-lg p-4 w-48 flex flex-col">
+                    <div className="absolute left-full top-0 bg-white shadow-lg p-4 w-48 flex border rounded-xl flex-col">
                       {category.subcategories.map((subcategory) => (
                         <Link
                           key={subcategory.label}
                           href={subcategory.href}
-                          className="text-sm text-default-500 hover:text-primary w-full"
+                          className="text-sm mb-2 text-default-500 hover:text-primary w-full"
                           onClick={handleLinkClick} // Close the menu when a subcategory is clicked
                         >
                           {subcategory.label}
@@ -273,13 +275,13 @@ export default function MainNavbarCustomer() {
 
       {/* Modify NavbarMenu to conditionally render based on isMenuOpen */}
       {isMenuOpen && (
-        <NavbarMenu>
+        <NavbarMenu className="mt-6 text-center ">
           {menuItems.map((item, index) => (
             <NavbarMenuItem key={index}>
               <Link
                 color="foreground"
                 href={item.href}
-                className="w-full"
+                className="w-full "
                 size="lg"
                 onClick={handleLinkClick} // Close the menu after clicking a link
               >
@@ -294,10 +296,10 @@ export default function MainNavbarCustomer() {
               <DropdownTrigger>
                 <Button
                   disableRipple
-                  className="p-0 bg-transparent w-full text-left"
-                  endContent={<ChevronDown size={16} />}
+                  className="w-1/2 text-center text-lg mt-4"
+                  endContent={<ChevronDown size={20} />}
                   radius="sm"
-                  variant="light"
+                  variant="flat"
                 >
                   Shop
                 </Button>
@@ -315,12 +317,12 @@ export default function MainNavbarCustomer() {
 
                     {/* Subcategories menu for mobile */}
                     {category.subcategories.length > 0 && (
-                      <div className="pl-4 flex flex-col">
+                      <div className="pl-4  flex flex-col">
                         {category.subcategories.map((subcategory) => (
                           <Link
                             key={subcategory.label}
                             href={subcategory.href}
-                            className="text-sm text-default-500 hover:text-primary w-full"
+                            className="text-sm mt-4 text-default-500 hover:text-primary w-full"
                             onClick={handleLinkClick} // Close menu when clicking a subcategory link
                           >
                             {subcategory.label}
