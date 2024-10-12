@@ -23,40 +23,89 @@ import { Avatar } from '@nextui-org/avatar'
 import { Badge } from '@nextui-org/badge'
 import ShoppingCartSheet from '@/src/components/Product-details/ShoppingCartSheet'
 import { CartContext } from '@/src/context/CartContext'
-import { User } from 'lucide-react'
+import { User, ChevronDown } from 'lucide-react'
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
+
+// Utility function to format category or subcategory names for URLs
+const formatCategoryName = (name) => {
+  return name
+    .toLowerCase() // Convert to lowercase
+    .replace(/\s&\s/g, '-&-') // Replace spaces around '&' with '-&-'
+    .replace(/\s+/g, '-') // Replace remaining spaces with dashes
+    .replace(/[^\w-&]+/g, '') // Remove special characters except alphanumeric, dashes, and '&'
+}
 
 export default function MainNavbarCustomer() {
   const { data: session, status } = useSession()
   const { cart } = useContext(CartContext)
   const [hydrated, setHydrated] = useState(false)
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false) // Control mobile menu state
+  const [activeCategory, setActiveCategory] = useState(null)
+  const [shopCategories, setShopCategories] = useState([])
+
+  const isUser = session?.user?.role === 'user'
 
   useEffect(() => {
     setHydrated(true)
+
+    // Fetch categories from the API
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/categories/categories`)
+        const data = await response.json()
+
+        // Separate categories and subcategories
+        const parentCategories = data.filter(
+          (category) => category.parent === null,
+        )
+        const formattedCategories = parentCategories.map((category) => ({
+          label: category.name,
+          href: `/categories/${formatCategoryName(category.name)}`,
+          subcategories: data
+            .filter(
+              (subcategory) =>
+                subcategory.parent && subcategory.parent._id === category._id,
+            )
+            .map((subcategory) => ({
+              label: subcategory.name,
+              href: `/categories/${formatCategoryName(category.name)}/${formatCategoryName(subcategory.name)}?subcategoryId=${subcategory._id}`,
+            })),
+        }))
+        setShopCategories(formattedCategories)
+      } catch (error) {
+        console.error('Error fetching categories:', error)
+      }
+    }
+
+    fetchCategories()
   }, [])
 
-  const isUser = session?.user?.role === 'user'
   const cartItemCount = cart.length
 
   if (!hydrated) {
     return null
   }
 
-  const menuItems = [
-    { label: 'Home', href: '/' },
-    { label: 'Products', href: '/products' },
-  ]
+  const menuItems = [{ label: 'Home', href: '/' }]
+
+  const handleLinkClick = () => {
+    // Close the menu after clicking a link
+    setIsMenuOpen(false)
+  }
 
   return (
     <Navbar
       maxWidth="2xl"
       className="bg-gray-200 shadow-lg"
-      onMenuOpenChange={(isOpen) => setIsMenuOpen(isOpen)}
+      isMenuOpen={isMenuOpen} // Control menu visibility
+      onMenuOpenChange={(isOpen) => setIsMenuOpen(isOpen)} // Update state when toggling menu
     >
       <NavbarContent>
         <NavbarMenuToggle
           aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
           className="sm:hidden"
+          onClick={() => setIsMenuOpen((prev) => !prev)} // Toggle menu on click
         />
         <NavbarBrand>
           <AcmeLogo />
@@ -71,7 +120,58 @@ export default function MainNavbarCustomer() {
             </Link>
           </NavbarItem>
         ))}
+
+        {/* Shop Dropdown with dynamic categories for desktop */}
+        <Dropdown>
+          <DropdownTrigger>
+            <Button
+              disableRipple
+              className="p-0 bg-transparent data-[hover=true]:bg-transparent"
+              endContent={<ChevronDown size={16} />}
+              radius="sm"
+              variant="light"
+            >
+              Shop
+            </Button>
+          </DropdownTrigger>
+          <DropdownMenu aria-label="Shop categories" className="w-[340px]">
+            {shopCategories.map((category) => (
+              <DropdownItem
+                key={category.label}
+                className="relative gap-2"
+                onMouseEnter={() => setActiveCategory(category.label)}
+                onMouseLeave={() => setActiveCategory(null)}
+              >
+                <Link
+                  href={category.href}
+                  className="w-full flex items-center font-bold"
+                  onClick={handleLinkClick} // Close the menu when a category is clicked
+                >
+                  {category.label}
+                </Link>
+
+                {/* Subcategories menu: shown on hover */}
+                {activeCategory === category.label &&
+                  category.subcategories.length > 0 && (
+                    <div className="absolute left-full top-0 bg-white shadow-lg p-4 w-48 flex flex-col">
+                      {category.subcategories.map((subcategory) => (
+                        <Link
+                          key={subcategory.label}
+                          href={subcategory.href}
+                          className="text-sm text-default-500 hover:text-primary w-full"
+                          onClick={handleLinkClick} // Close the menu when a subcategory is clicked
+                        >
+                          {subcategory.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+              </DropdownItem>
+            ))}
+          </DropdownMenu>
+        </Dropdown>
       </NavbarContent>
+
       <NavbarContent justify="end" className="items-center gap-4">
         {status === 'unauthenticated' && (
           <Dropdown>
@@ -82,11 +182,14 @@ export default function MainNavbarCustomer() {
             </DropdownTrigger>
             <DropdownMenu aria-label="Login Actions" variant="flat">
               <DropdownItem key="login">
-                <Link href="/customer/login" className="w-full">
+                <Link
+                  href="/customer/login"
+                  className="w-full"
+                  onClick={handleLinkClick}
+                >
                   <Button
                     color="primary"
                     size="sm"
-                    variant="fl"
                     className="w-full text-left"
                   >
                     Login
@@ -94,11 +197,14 @@ export default function MainNavbarCustomer() {
                 </Link>
               </DropdownItem>
               <DropdownItem key="signup">
-                <Link href="/customer/sign-up" className="w-full">
+                <Link
+                  href="/customer/sign-up"
+                  className="w-full"
+                  onClick={handleLinkClick}
+                >
                   <Button
                     color="primary"
                     size="sm"
-                    variant="flat"
                     className="w-full text-left"
                   >
                     Sign Up
@@ -134,37 +240,28 @@ export default function MainNavbarCustomer() {
                 <Link
                   href="/customer-profile"
                   className="flex flex-col items-start"
+                  onClick={handleLinkClick}
                 >
                   <p className="font-semibold">Welcome</p>
-                  <p>
-                    {session.user.name} {session.user.lastName}
-                  </p>
+                  <p>{session.user.name}</p>
                 </Link>
               </DropdownItem>
               <DropdownItem key="orders" className="gap-2">
                 <Link
                   href="/customer-profile/orders"
                   className="flex flex-col items-start"
+                  onClick={handleLinkClick}
                 >
                   <p className="font-semibold">Order History</p>
                 </Link>
               </DropdownItem>
-              <DropdownItem key="reviws" className="gap-2">
-                <Link
-                  href="/customer-profile/my-reviews"
-                  className="flex flex-col items-start"
-                >
-                  <p className="font-semibold">My Reviews</p>
-                </Link>
-              </DropdownItem>
               <DropdownItem
-                className="mt-2"
                 key="logout"
                 color="danger"
                 variant="solid"
-                withDivider
                 onClick={() => {
                   signOut({ callbackUrl: '/' })
+                  setIsMenuOpen(false) // Close menu when logging out
                 }}
               >
                 Log Out
@@ -174,21 +271,70 @@ export default function MainNavbarCustomer() {
         )}
       </NavbarContent>
 
-      {/* Modify NavbarMenu to use data attributes instead of passing isOpen directly */}
-      <NavbarMenu data-menu-open={isMenuOpen}>
-        {menuItems.map((item, index) => (
-          <NavbarMenuItem key={index}>
-            <Link
-              color="foreground"
-              href={item.href}
-              className="w-full"
-              size="lg"
-            >
-              {item.label}
-            </Link>
+      {/* Modify NavbarMenu to conditionally render based on isMenuOpen */}
+      {isMenuOpen && (
+        <NavbarMenu>
+          {menuItems.map((item, index) => (
+            <NavbarMenuItem key={index}>
+              <Link
+                color="foreground"
+                href={item.href}
+                className="w-full"
+                size="lg"
+                onClick={handleLinkClick} // Close the menu after clicking a link
+              >
+                {item.label}
+              </Link>
+            </NavbarMenuItem>
+          ))}
+
+          {/* Mobile version of Shop Dropdown */}
+          <NavbarMenuItem>
+            <Dropdown>
+              <DropdownTrigger>
+                <Button
+                  disableRipple
+                  className="p-0 bg-transparent w-full text-left"
+                  endContent={<ChevronDown size={16} />}
+                  radius="sm"
+                  variant="light"
+                >
+                  Shop
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu aria-label="Shop categories" className="w-full">
+                {shopCategories.map((category) => (
+                  <DropdownItem key={category.label} className="relative gap-2">
+                    <Link
+                      href={category.href}
+                      className="w-full flex items-center font-bold"
+                      onClick={handleLinkClick} // Close menu when clicking a category link
+                    >
+                      {category.label}
+                    </Link>
+
+                    {/* Subcategories menu for mobile */}
+                    {category.subcategories.length > 0 && (
+                      <div className="pl-4 flex flex-col">
+                        {category.subcategories.map((subcategory) => (
+                          <Link
+                            key={subcategory.label}
+                            href={subcategory.href}
+                            className="text-sm text-default-500 hover:text-primary w-full"
+                            onClick={handleLinkClick} // Close menu when clicking a subcategory link
+                          >
+                            {subcategory.label}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </DropdownItem>
+                ))}
+              </DropdownMenu>
+            </Dropdown>
           </NavbarMenuItem>
-        ))}
-      </NavbarMenu>
+        </NavbarMenu>
+      )}
     </Navbar>
   )
 }
