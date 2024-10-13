@@ -24,6 +24,7 @@ import { Badge } from '@nextui-org/badge'
 import ShoppingCartSheet from '@/src/components/Product-details/ShoppingCartSheet'
 import { CartContext } from '@/src/context/CartContext'
 import { User, ChevronDown } from 'lucide-react'
+import CategoryMenuSheet from '@/src/components/Navbar/CategoryMenuSheet' // Import the new CategoryMenuSheet component
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
@@ -102,18 +103,23 @@ export default function MainNavbarCustomer() {
       onMenuOpenChange={(isOpen) => setIsMenuOpen(isOpen)} // Update state when toggling menu
     >
       <NavbarContent>
-        <NavbarMenuToggle
+        {/* <NavbarMenuToggle
           aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
           className="sm:hidden"
           onClick={() => setIsMenuOpen((prev) => !prev)} // Toggle menu on click
-        />
+        />*/}
         <NavbarBrand>
-          <AcmeLogo />
+          {/* Render the CategoryMenuSheet component */}
+          <NavbarContent>
+            <NavbarItem>
+              <CategoryMenuSheet shopCategories={shopCategories} />
+            </NavbarItem>
+          </NavbarContent>{' '}
           <p className="font-bold text-inherit"></p>
         </NavbarBrand>
       </NavbarContent>
 
-      <NavbarContent className="hidden sm:flex gap-4 " justify="center">
+      {/*<NavbarContent className="hidden sm:flex gap-4 " justify="center">
         {menuItems.map((item, index) => (
           <NavbarItem key={index}>
             <Link color="foreground" href={item.href}>
@@ -122,7 +128,6 @@ export default function MainNavbarCustomer() {
           </NavbarItem>
         ))}
 
-        {/* Shop Dropdown with dynamic categories for desktop */}
         <Dropdown>
           <DropdownTrigger>
             <Button
@@ -152,7 +157,6 @@ export default function MainNavbarCustomer() {
                   {category.label}
                 </Link>
 
-                {/* Subcategories menu: shown on hover */}
                 {activeCategory === category.label &&
                   category.subcategories.length > 0 && (
                     <div className="absolute left-full top-0 bg-white shadow-lg p-4 w-48 flex border rounded-xl flex-col">
@@ -172,8 +176,9 @@ export default function MainNavbarCustomer() {
             ))}
           </DropdownMenu>
         </Dropdown>
-      </NavbarContent>
+      </NavbarContent>*/}
 
+      {/* Modify NavbarContent to conditionally render based on isMenuOpen */}
       <NavbarContent justify="end" className="items-center gap-4">
         {status === 'unauthenticated' && (
           <Dropdown>
@@ -217,6 +222,7 @@ export default function MainNavbarCustomer() {
           </Dropdown>
         )}
         <NavbarItem>
+          {/* Render the ShoppingCartSheet component when the badge is clicked */}
           <Badge
             content={cartItemCount}
             color="danger"
@@ -291,7 +297,7 @@ export default function MainNavbarCustomer() {
           ))}
 
           {/* Mobile version of Shop Dropdown */}
-          <NavbarMenuItem>
+          {/*<NavbarMenuItem>
             <Dropdown>
               <DropdownTrigger>
                 <Button
@@ -315,7 +321,6 @@ export default function MainNavbarCustomer() {
                       {category.label}
                     </Link>
 
-                    {/* Subcategories menu for mobile */}
                     {category.subcategories.length > 0 && (
                       <div className="pl-4  flex flex-col">
                         {category.subcategories.map((subcategory) => (
@@ -334,7 +339,7 @@ export default function MainNavbarCustomer() {
                 ))}
               </DropdownMenu>
             </Dropdown>
-          </NavbarMenuItem>
+          </NavbarMenuItem>*/}
         </NavbarMenu>
       )}
     </Navbar>
