@@ -13,27 +13,24 @@ import { Search } from 'lucide-react'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
-//URL working with the API :) 1
 export default function SearchModal() {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure() // Control modal state
-  const [searchQuery, setSearchQuery] = useState('') // To hold the search input
-  const [suggestions, setSuggestions] = useState([]) // To hold suggestions for autocomplete
-  const [isLoading, setIsLoading] = useState(false) // To show loading state
-  const [error, setError] = useState(null) // To hold any errors
+  const { isOpen, onOpen, onOpenChange } = useDisclosure()
+  const [searchQuery, setSearchQuery] = useState('')
+  const [suggestions, setSuggestions] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState(null)
 
-  // Function to handle input change and fetch suggestions
   const handleInputChange = (e) => {
     const query = e.target.value
     setSearchQuery(query)
 
     if (query.length > 2) {
-      fetchSuggestions(query) // Fetch suggestions when input length > 2
+      fetchSuggestions(query)
     } else {
-      setSuggestions([]) // Clear suggestions when query is too short
+      setSuggestions([])
     }
   }
 
-  // Function to fetch suggestions for autocomplete
   const fetchSuggestions = async (query) => {
     try {
       const response = await fetch(
@@ -41,7 +38,6 @@ export default function SearchModal() {
       )
       const data = await response.json()
 
-      // Combine product, category, and subcategory suggestions
       const productSuggestions = data.products.map((product) => ({
         type: 'product',
         id: product._id,
@@ -63,7 +59,6 @@ export default function SearchModal() {
         category: subcategory.parent?.name || '',
       }))
 
-      // Set suggestions with combined data
       setSuggestions([
         ...productSuggestions,
         ...categorySuggestions,
@@ -75,29 +70,24 @@ export default function SearchModal() {
     }
   }
 
-  // Function to handle selecting a suggestion
   const handleSuggestionClick = (suggestion) => {
     if (suggestion.type === 'product') {
-      // Redirect to product page
       const productPath = `/categories/${suggestion.category.toLowerCase()}/${suggestion.subcategory.toLowerCase()}/${suggestion.name.toLowerCase()}?productId=${suggestion.id}`
       window.location.href = productPath
     } else if (suggestion.type === 'category') {
-      // Redirect to category page
       const categoryPath = `/categories/${suggestion.name.toLowerCase()}`
       window.location.href = categoryPath
     } else if (suggestion.type === 'subcategory') {
-      // Redirect to subcategory page
       const subcategoryPath = `/categories/${suggestion.category.toLowerCase()}/${suggestion.name.toLowerCase()}?subcategoryId=${suggestion.id}`
       window.location.href = subcategoryPath
     }
   }
 
-  // Function to clear search and suggestions when modal closes
   const handleModalClose = (onClose) => {
-    setSearchQuery('') // Clear the search input
-    setSuggestions([]) // Clear the suggestions
-    setError(null) // Clear any errors
-    onClose() // Close the modal
+    setSearchQuery('')
+    setSuggestions([])
+    setError(null)
+    onClose()
   }
 
   return (
@@ -111,7 +101,12 @@ export default function SearchModal() {
         Search Products...
       </Button>
 
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="lg">
+      <Modal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        size="lg"
+        placement="center" // Ensures the modal opens in the center of the screen
+      >
         <ModalContent>
           {(onClose) => (
             <>
@@ -119,16 +114,16 @@ export default function SearchModal() {
                 Search Products
               </ModalHeader>
               <ModalBody>
-                {/* Search input */}
                 <Input
                   clearable
+                  className="text-lg"
                   fullWidth
                   placeholder="Search by name, brand, category..."
                   value={searchQuery}
                   onChange={handleInputChange}
+                  style={{ fontSize: '16px' }} // Inline style to ensure 16px on all screen sizes
                 />
 
-                {/* Autocomplete suggestions */}
                 <ul className="suggestions-list">
                   {suggestions.map((suggestion) => (
                     <li
