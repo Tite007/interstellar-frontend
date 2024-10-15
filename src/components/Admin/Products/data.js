@@ -18,7 +18,6 @@ export const columns = [
   { name: 'SKU', uid: 'sku' },
   { name: 'Current Stock', uid: 'currentStock' },
   { name: 'Price', uid: 'price' },
-  { name: 'Actions', uid: 'actions' }, // Placeholder for action buttons
 ]
 
 // You can place this inside your ProductAddForm.js or in a separate file and import it.

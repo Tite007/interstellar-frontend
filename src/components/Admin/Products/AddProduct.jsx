@@ -237,7 +237,7 @@ const ProductAddForm = () => {
         Add New Product
       </h1>
 
-      <Tabs aria-label="Product Add Tabs">
+      <Tabs className="overflow-x-auto w-full" aria-label="Product Add Tabs">
         <Tab key="product" title="Product">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border bg-white pr-4 pl-4 rounded-2xl pt-10 pb-10">
             <Input

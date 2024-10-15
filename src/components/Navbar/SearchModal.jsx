@@ -9,7 +9,7 @@ import {
 } from '@nextui-org/modal'
 import { Button } from '@nextui-org/button'
 import { Input } from '@nextui-org/input'
-import { Search } from 'lucide-react'
+import { Search, SquareArrowOutUpLeft } from 'lucide-react'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
@@ -104,7 +104,7 @@ export default function SearchModal() {
       <Modal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
-        size="lg"
+        size="xl"
         placement="center" // Ensures the modal opens in the center of the screen
       >
         <ModalContent>
@@ -125,22 +125,29 @@ export default function SearchModal() {
                 />
 
                 <ul className="suggestions-list">
+                  <h1 className=" mb-4 text-lg font-semibold mt-2">
+                    Suggestions
+                  </h1>
                   {suggestions.map((suggestion) => (
                     <li
                       key={suggestion.id}
-                      className="suggestion-item"
+                      className="suggestion-item  mb-2 cursor-pointer hover:bg-blue-200 rounded-lg p-2 border-b-1 flex justify-between items-center" // Added flex for alignment
                       onClick={() => handleSuggestionClick(suggestion)}
                     >
-                      {suggestion.type === 'product' ? (
-                        <>
-                          <strong>{suggestion.name}</strong> -{' '}
-                          {suggestion.category} &gt; {suggestion.subcategory}
-                        </>
-                      ) : suggestion.type === 'category' ? (
-                        <strong>Category: {suggestion.name}</strong>
-                      ) : (
-                        <strong>Subcategory: {suggestion.name}</strong>
-                      )}
+                      <div>
+                        {suggestion.type === 'product' ? (
+                          <>
+                            <strong>{suggestion.name}</strong> -{' '}
+                            {suggestion.category} &gt; {suggestion.subcategory}
+                          </>
+                        ) : suggestion.type === 'category' ? (
+                          <strong>Category: {suggestion.name}</strong>
+                        ) : (
+                          <strong>Subcategory: {suggestion.name}</strong>
+                        )}
+                      </div>
+                      <SquareArrowOutUpLeft strokeWidth={1.5} />{' '}
+                      {/* Icon aligned to the right */}
                     </li>
                   ))}
                 </ul>
@@ -150,7 +157,7 @@ export default function SearchModal() {
               <ModalFooter>
                 <Button
                   color="danger"
-                  variant="light"
+                  variant="flat"
                   onPress={() => handleModalClose(onClose)}
                 >
                   Close

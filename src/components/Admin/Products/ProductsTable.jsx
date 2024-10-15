@@ -176,93 +176,109 @@ export default function ProductsTable() {
         </Link>
       </div>
 
-      <Table
-        isHeaderSticky
-        isStriped
-        isCompact
-        selectionMode="multiple"
-        aria-label="Product Table"
-        shadow="none"
-        className="xl:container bg-white overflow-x-auto shrink-0 p-2"
-      >
-        <TableHeader>
-          <TableColumn></TableColumn>
-          {columns.map((column) => (
-            <TableColumn key={column.uid}>{column.name}</TableColumn>
-          ))}
-          {/* Add new columns for Parent Category and Subcategory */}
-          <TableColumn>Parent Category</TableColumn>
-          <TableColumn>Subcategory</TableColumn>
-          <TableColumn>Actions</TableColumn>
-        </TableHeader>
-        <TableBody className="font-light">
-          {filteredProducts
-            .slice((page - 1) * rowsPerPage, page * rowsPerPage)
-            .map((product) => (
-              <TableRow
-                key={product.isVariant ? product.variantId : product._id}
+      <div className="overflow-x-auto">
+        <Table
+          isHeaderSticky
+          isStriped
+          isCompact
+          selectionMode="multiple"
+          aria-label="Product Table"
+          shadow="none"
+          className="xl:container bg-white shrink-0 p-2"
+        >
+          <TableHeader>
+            <TableColumn></TableColumn>
+            {columns.map((column) => (
+              <TableColumn
+                key={column.uid}
+                className={`min-w-[120px] lg:min-w-[150px] ${column.uid === 'price' || column.uid === 'currentStock' ? 'min-w-[80px] lg:min-w-[100px] ' : ''}`}
               >
-                <TableCell
-                  key={`${product.isVariant ? product.variantId : product._id}-empty`}
-                ></TableCell>
-                {columns.map((column) => (
-                  <TableCell
-                    key={`${product.isVariant ? product.variantId : product._id}-${column.uid}`}
-                  >
-                    {product.isVariant
-                      ? column.uid === 'name'
-                        ? product.variantName
-                        : column.uid === 'price'
-                          ? formatCurrency(product.variantPrice)
-                          : column.uid === 'currentStock'
-                            ? product.variantQuantity
-                            : product[column.uid]
-                      : column.uid === 'currentStock'
-                        ? product.currentStock
-                        : column.uid === 'price'
-                          ? formatCurrency(product[column.uid])
-                          : product[column.uid]}
-                  </TableCell>
-                ))}
-                {/* Render Parent Category and Subcategory columns */}
-                <TableCell>{product.parentCategoryName}</TableCell>
-                <TableCell>{product.subcategoryName}</TableCell>
-                {/* Render Action Button */}
-                <TableCell>
-                  <Dropdown size="small">
-                    <DropdownTrigger>
-                      <Button
-                        size="sm"
-                        endContent={<MoreVertical />}
-                        variant="light"
-                      />
-                    </DropdownTrigger>
-                    <DropdownMenu aria-label="Actions">
-                      <DropdownItem key="view">View</DropdownItem>
-                      <DropdownItem
-                        key="edit"
-                        onClick={() =>
-                          router.push(`/admin/products/edit/${product._id}`)
-                        }
-                      >
-                        Edit
-                      </DropdownItem>
-                      <DropdownItem
-                        key="delete"
-                        color="danger"
-                        onClick={() =>
-                          deleteProduct(product._id, product.images)
-                        }
-                      >
-                        Delete
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </Dropdown>
-                </TableCell>
-              </TableRow>
+                {column.name}
+              </TableColumn>
             ))}
-        </TableBody>
-      </Table>
+            <TableColumn className="min-w-[100px] lg:min-w-[100px]">
+              Parent Category
+            </TableColumn>
+            <TableColumn className="min-w-[100px] lg:min-w-[150px]">
+              Subcategory
+            </TableColumn>
+            <TableColumn className="min-w-[70px] lg:min-w-[80px]">
+              Actions
+            </TableColumn>
+          </TableHeader>
+          <TableBody className="font-light">
+            {filteredProducts
+              .slice((page - 1) * rowsPerPage, page * rowsPerPage)
+              .map((product) => (
+                <TableRow
+                  key={product.isVariant ? product.variantId : product._id}
+                >
+                  <TableCell
+                    key={`${product.isVariant ? product.variantId : product._id}-empty`}
+                  ></TableCell>
+                  {columns.map((column) => (
+                    <TableCell
+                      key={`${product.isVariant ? product.variantId : product._id}-${column.uid}`}
+                    >
+                      {product.isVariant
+                        ? column.uid === 'name'
+                          ? product.variantName
+                          : column.uid === 'price'
+                            ? formatCurrency(product.variantPrice)
+                            : column.uid === 'currentStock'
+                              ? product.variantQuantity
+                              : product[column.uid]
+                        : column.uid === 'currentStock'
+                          ? product.currentStock
+                          : column.uid === 'price'
+                            ? formatCurrency(product[column.uid])
+                            : product[column.uid]}
+                    </TableCell>
+                  ))}
+                  {/* Render Parent Category and Subcategory columns */}
+                  <TableCell className="min-w-[120px] lg:min-w-[180px]">
+                    {product.parentCategoryName}
+                  </TableCell>
+                  <TableCell className="min-w-[120px] lg:min-w-[180px]">
+                    {product.subcategoryName}
+                  </TableCell>
+                  {/* Render Action Button */}
+                  <TableCell className="min-w-[100px] lg:min-w-[150px]">
+                    <Dropdown size="small">
+                      <DropdownTrigger>
+                        <Button
+                          size="sm"
+                          endContent={<MoreVertical />}
+                          variant="light"
+                        />
+                      </DropdownTrigger>
+                      <DropdownMenu aria-label="Actions">
+                        <DropdownItem key="view">View</DropdownItem>
+                        <DropdownItem
+                          key="edit"
+                          onClick={() =>
+                            router.push(`/admin/products/edit/${product._id}`)
+                          }
+                        >
+                          Edit
+                        </DropdownItem>
+                        <DropdownItem
+                          key="delete"
+                          color="danger"
+                          onClick={() =>
+                            deleteProduct(product._id, product.images)
+                          }
+                        >
+                          Delete
+                        </DropdownItem>
+                      </DropdownMenu>
+                    </Dropdown>
+                  </TableCell>
+                </TableRow>
+              ))}
+          </TableBody>
+        </Table>
+      </div>
 
       <div className="flex xl:container bg-white rounded-b-xl justify-between items-center p-4">
         <Pagination
