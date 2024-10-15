@@ -169,6 +169,7 @@ const EditUserForm = () => {
           label="Company Name"
           name="companyName"
           onChange={handleChange}
+          style={{ fontSize: '16px' }}
         />
         <Input
           isClearable={true}
@@ -178,6 +179,7 @@ const EditUserForm = () => {
           label="Name"
           name="name"
           onChange={handleChange}
+          style={{ fontSize: '16px' }}
         />
         <Input
           isClearable={true}
@@ -187,6 +189,7 @@ const EditUserForm = () => {
           label="Last Name"
           name="lastName"
           onChange={handleChange}
+          style={{ fontSize: '16px' }}
         />
         <Input
           isClearable={true}
@@ -195,6 +198,7 @@ const EditUserForm = () => {
           label="Email"
           name="email"
           onChange={handleChange}
+          style={{ fontSize: '16px' }}
         />
         <Input
           isClearable={true}
@@ -203,6 +207,7 @@ const EditUserForm = () => {
           label="Phone"
           name="phone"
           onChange={handleChange}
+          style={{ fontSize: '16px' }}
         />
 
         <Checkbox
@@ -237,6 +242,7 @@ const EditUserForm = () => {
           label="Street Address"
           name="street"
           onChange={handleChange}
+          style={{ fontSize: '16px' }}
         />
         <Input
           isClearable={true}
@@ -245,6 +251,7 @@ const EditUserForm = () => {
           label="Apartment, suite, etc. (optional)"
           name="number"
           onChange={handleChange}
+          style={{ fontSize: '16px' }}
         />
         <Input
           isClearable={true}
@@ -253,6 +260,7 @@ const EditUserForm = () => {
           label="City"
           name="city"
           onChange={handleChange}
+          style={{ fontSize: '16px' }}
         />
         <Input
           isClearable={true}
@@ -261,6 +269,7 @@ const EditUserForm = () => {
           label="Province"
           name="province"
           onChange={handleChange}
+          style={{ fontSize: '16px' }}
         />
         <Input
           isClearable={true}
@@ -269,6 +278,7 @@ const EditUserForm = () => {
           label="Country"
           name="country"
           onChange={handleChange}
+          style={{ fontSize: '16px' }}
         />
         <Input
           isClearable={true}
@@ -277,6 +287,7 @@ const EditUserForm = () => {
           label="Postal Code"
           name="postalCode"
           onChange={handleChange}
+          style={{ fontSize: '16px' }}
         />
       </div>
       <div className="grid grid-cols-1 border bg-white pr-4 pl-4 rounded-2xl pt-10 pb-10 md:grid-cols-2 gap-6">
@@ -288,6 +299,7 @@ const EditUserForm = () => {
           onChange={handleChange}
           type="password"
           value={user.password}
+          style={{ fontSize: '16px' }}
         />
       </div>
       <div className="grid grid-cols-1 border bg-white pr-4 pl-4 rounded-2xl pt-10 pb-10 md:grid-cols-2 gap-6">

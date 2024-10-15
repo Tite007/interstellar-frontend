@@ -116,6 +116,7 @@ const SignUpPage = () => {
               label="First Name"
               name="name"
               onChange={handleChange}
+              style={{ fontSize: '16px' }}
             />
             <Input
               size="sm"
@@ -124,6 +125,7 @@ const SignUpPage = () => {
               label="Last Name"
               name="lastName"
               onChange={handleChange}
+              style={{ fontSize: '16px' }} // Inline style to ensure 16px on all screen sizes
             />
           </div>
           <Input
@@ -133,6 +135,7 @@ const SignUpPage = () => {
             label="Email"
             name="email"
             onChange={handleChange}
+            style={{ fontSize: '16px' }} // Inline style to ensure 16px on all screen sizes
           />
 
           <div className="relative">
@@ -144,6 +147,7 @@ const SignUpPage = () => {
               name="password"
               type={showPassword ? 'text' : 'password'}
               onChange={handleChange}
+              style={{ fontSize: '16px' }} // Inline style to ensure 16px on all screen sizes
             />
             <div
               className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"

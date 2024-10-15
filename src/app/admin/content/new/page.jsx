@@ -114,6 +114,7 @@ export default function NewContentPage() {
                 value={headline}
                 onChange={(e) => setHeadline(e.target.value)}
                 variant="faded"
+                style={{ fontSize: '16px' }}
               />
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Input
@@ -125,6 +126,7 @@ export default function NewContentPage() {
                   label="Date Published"
                   value={datePublished}
                   onChange={(e) => setDatePublished(e.target.value)}
+                  style={{ fontSize: '16px' }}
                 />
                 <Input
                   className="mt-4"
@@ -135,6 +137,7 @@ export default function NewContentPage() {
                   placeholder="Enter author name"
                   value={authorName}
                   onChange={(e) => setAuthorName(e.target.value)}
+                  style={{ fontSize: '16px' }}
                 />
                 <Input
                   variant="faded"
@@ -144,6 +147,7 @@ export default function NewContentPage() {
                   placeholder="Enter author URL"
                   value={authorUrl}
                   onChange={(e) => setAuthorUrl(e.target.value)}
+                  style={{ fontSize: '16px' }}
                 />
               </div>
               <Dropzone images={images} setImages={setImages} />
@@ -201,6 +205,7 @@ export default function NewContentPage() {
                 onChange={(e) => setKeywords(e.target.value)}
                 variant="faded"
                 className="mt-4"
+                style={{ fontSize: '16px' }}
               />
             </div>
           </Tab>

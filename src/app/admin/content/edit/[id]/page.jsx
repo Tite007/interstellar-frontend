@@ -190,6 +190,7 @@ export default function EditContentPage() {
                   label="Date Published"
                   value={datePublished}
                   onChange={(e) => setDatePublished(e.target.value)}
+                  style={{ fontSize: '16px' }}
                 />
                 <Input
                   className="mt-4"
@@ -200,6 +201,7 @@ export default function EditContentPage() {
                   placeholder="Enter author name"
                   value={authorName}
                   onChange={(e) => setAuthorName(e.target.value)}
+                  style={{ fontSize: '16px' }}
                 />
                 <Input
                   variant="faded"
@@ -209,6 +211,7 @@ export default function EditContentPage() {
                   placeholder="Enter author URL"
                   value={authorUrl}
                   onChange={(e) => setAuthorUrl(e.target.value)}
+                  style={{ fontSize: '16px' }}
                 />
               </div>
               <Dropzone images={images} setImages={setImages} />
@@ -257,6 +260,7 @@ export default function EditContentPage() {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 variant="faded"
+                style={{ fontSize: '16px' }}
               />
               <Textarea
                 label="Excerpt"

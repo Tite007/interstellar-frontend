@@ -284,6 +284,7 @@ const CategoryAdminPage = () => {
                 onChange={(e) => setNewCategory(e.target.value)}
                 placeholder="Enter category name"
                 clearable
+                style={{ fontSize: '16px' }}
               />
               <Button size="sm" type="submit" color="primary">
                 <Plus className="mr-2 h-4 w-4" /> Add Category
@@ -318,6 +319,7 @@ const CategoryAdminPage = () => {
                 onChange={(e) => setNewSubcategory(e.target.value)}
                 placeholder="Enter subcategory name"
                 clearable
+                style={{ fontSize: '16px' }}
               />
               <Button size="sm" type="submit" color="primary">
                 <Plus className="mr-2 h-4 w-4" /> Add Subcategory
@@ -348,6 +350,7 @@ const CategoryAdminPage = () => {
             <Input
               clearable
               label="Category Name"
+              style={{ fontSize: '16px' }}
               name="name"
               value={modalContent.name}
               onChange={(e) =>
