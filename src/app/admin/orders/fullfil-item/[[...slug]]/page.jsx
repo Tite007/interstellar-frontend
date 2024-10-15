@@ -240,6 +240,7 @@ export default function Orderfullfill() {
                 label="Tracking Number"
                 value={trackingNumber}
                 onChange={(e) => setTrackingNumber(e.target.value)}
+                style={{ fontSize: '16px' }} // Inline style to ensure 16px on all screen sizes
               />
               <Input
                 size="sm"
@@ -248,6 +249,7 @@ export default function Orderfullfill() {
                 label="Carrier"
                 value={carrier}
                 onChange={(e) => setCarrier(e.target.value)}
+                style={{ fontSize: '16px' }} // Inline style to ensure 16px on all screen sizes
               />
             </div>
             <div className="mt-5 flex justify-end">

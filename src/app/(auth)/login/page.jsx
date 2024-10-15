@@ -98,6 +98,7 @@ export default function AdminLoginPage() {
             type="email"
             required
             fullWidth
+            style={{ fontSize: '16px' }} // Inline style to ensure 16px on all screen sizes
           />
         </div>
         <div className="mb-6">
@@ -109,6 +110,7 @@ export default function AdminLoginPage() {
             type="password"
             required
             fullWidth
+            style={{ fontSize: '16px' }} // Inline style to ensure 16px on all screen sizes
           />
         </div>
         {error && (
