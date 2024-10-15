@@ -11,36 +11,59 @@ import { useRouter } from 'next/navigation'
 import { Tabs, Tab } from '@nextui-org/tabs'
 import TechnicalDataForm from '@/src/components/Admin/Products/TechnicalDataForm'
 import Image from 'next/image'
+import { DatePicker } from '@nextui-org/date-picker'
+import { parseDate, CalendarDate, toCalendar } from '@internationalized/date'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
+// Helper to parse date string (from backend) into CalendarDate (ignoring timezone)
+const parseToCalendarDate = (isoDateString) => {
+  if (!isoDateString) return null
+
+  // Parse the string directly without timezone manipulation
+  const [year, month, day] = isoDateString.split('T')[0].split('-')
+
+  // Convert to CalendarDate with correct year, month, and day
+  return new CalendarDate(Number(year), Number(month), Number(day))
+}
+
+// Helper to format CalendarDate into 'YYYY-MM-DD' string (for backend)
+const formatDateForBackend = (calendarDate) => {
+  if (!calendarDate) return null
+  const year = calendarDate.year
+  const month = String(calendarDate.month).padStart(2, '0')
+  const day = String(calendarDate.day).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
 const ProductEditForm = () => {
   const [product, setProduct] = useState({
     name: '',
     description: '',
-    parentCategory: '', // Parent category
-    subcategory: '', // Subcategory
+    parentCategory: '',
+    subcategory: '',
     sku: '',
-    price: '', // Price field added
-    costPrice: '', // Cost Price field added
-    compareAtPrice: 0, // Compare At Price field added
-    profit: '', // Profit field added
-    margin: '', // Margin field added
-    stock: '', // Stock field added
+    price: '',
+    costPrice: '',
+    compareAtPrice: 0,
+    profit: '',
+    margin: '',
+    stock: '',
     size: '',
     images: [],
-    inventoryType: '', // Inventory type field
-    currentStock: '', // Current stock field
-    lowStockLevel: '', // Low stock level field
+    inventoryType: '',
+    currentStock: '',
+    lowStockLevel: '',
     subtitle: '',
     seoTitle: '',
     roastLevel: '',
     seoDescription: '',
     seoKeywords: '',
+    brand: '',
+    expirationDate: null, // Use CalendarDate for DatePicker
   })
 
-  const [categories, setCategories] = useState([]) // State for parent categories
-  const [subcategories, setSubcategories] = useState([]) // State for subcategories
+  const [categories, setCategories] = useState([])
+  const [subcategories, setSubcategories] = useState([])
   const [inventoryType, setInventoryType] = useState('track')
   const [images, setImages] = useState([])
   const router = useRouter()
@@ -56,7 +79,6 @@ const ProductEditForm = () => {
         console.error('Error fetching categories:', error)
       }
     }
-
     fetchCategories()
   }, [])
 
@@ -70,14 +92,17 @@ const ProductEditForm = () => {
         if (!response.ok) throw new Error('Failed to fetch product')
         const data = await response.json()
 
-        // Set product state
+        // Set fetched product data, converting expirationDate to CalendarDate
         setProduct({
           ...data,
           parentCategory: data.parentCategory || '',
           subcategory: data.subcategory || '',
+          expirationDate: data.expirationDate
+            ? parseToCalendarDate(data.expirationDate)
+            : null,
         })
 
-        // Fetch subcategories based on parent category
+        // Fetch subcategories if parentCategory exists
         if (data.parentCategory) {
           const subcategoryResponse = await fetch(
             `${API_BASE_URL}/categories/categories?parent=${data.parentCategory}`,
@@ -86,7 +111,6 @@ const ProductEditForm = () => {
           setSubcategories(subcategoryData)
         }
 
-        // Set images
         const imageUrls = data.images.map((image) => ({ url: image }))
         setImages(imageUrls || [])
       } catch (error) {
@@ -114,6 +138,11 @@ const ProductEditForm = () => {
     setProduct((prev) => ({ ...prev, [name]: value }))
   }
 
+  // Handle expiration date change
+  const handleDateChange = (date) => {
+    setProduct((prev) => ({ ...prev, expirationDate: date }))
+  }
+
   const handleClear = (fieldName) => {
     setProduct((prev) => ({ ...prev, [fieldName]: '' }))
   }
@@ -123,10 +152,9 @@ const ProductEditForm = () => {
     setProduct((prevState) => ({
       ...prevState,
       parentCategory: selectedKey.currentKey,
-      subcategory: '', // Reset subcategory
+      subcategory: '',
     }))
 
-    // Fetch subcategories based on parent category
     try {
       const response = await fetch(
         `${API_BASE_URL}/categories/categories?parent=${selectedKey.currentKey}`,
@@ -181,10 +209,7 @@ const ProductEditForm = () => {
   // Handle save function
   const handleSave = async (status) => {
     try {
-      // Filter new images (those that have a file object)
       const newImages = images.filter((image) => image.file)
-
-      // Prepare FormData for uploading new images
       const formImageData = new FormData()
       newImages.forEach((image) => {
         formImageData.append('images', image.file)
@@ -192,32 +217,28 @@ const ProductEditForm = () => {
 
       let uploadedImages = []
 
-      // Upload new images if any exist
       if (newImages.length > 0) {
         const uploadRes = await fetch(`${API_BASE_URL}/upload`, {
           method: 'POST',
           body: formImageData,
         })
-
         if (!uploadRes.ok) throw new Error('Failed to upload images')
-
-        // Get the URLs of uploaded images from the response
         uploadedImages = await uploadRes.json()
       }
 
-      // Combine existing images (those that don't need uploading) and uploaded images
       const allImages = [
-        ...images.filter((image) => !image.file), // Existing images
-        ...uploadedImages.map((image) => ({ url: image.url })), // Newly uploaded images
+        ...images.filter((image) => !image.file),
+        ...uploadedImages.map((image) => ({ url: image.url })),
       ]
 
-      // Prepare the payload with the correct image URLs
       const payload = {
         ...product,
-        images: allImages.map((image) => image.url), // Only save URLs, no blob URLs
+        images: allImages.map((image) => image.url),
+        expirationDate: product.expirationDate
+          ? formatDateForBackend(product.expirationDate)
+          : null, // Save formatted as YYYY-MM-DD
       }
 
-      // Make the request to update the product
       const res = await fetch(
         `${API_BASE_URL}/products/updateProduct/${product._id}`,
         {
@@ -227,9 +248,7 @@ const ProductEditForm = () => {
         },
       )
 
-      if (!res.ok) {
-        throw new Error('Failed to save product')
-      }
+      if (!res.ok) throw new Error('Failed to save product')
 
       toast('Product updated successfully!', {})
       router.push('/admin/products')
@@ -301,6 +320,15 @@ const ProductEditForm = () => {
               name="roastLevel"
               onChange={handleChange}
             />
+            <Input
+              labelPlacement="outside"
+              clearable
+              bordered
+              label="Brand"
+              name="brand"
+              value={product.brand}
+              onChange={handleChange}
+            />
 
             <Select
               labelPlacement="outside"
@@ -334,6 +362,13 @@ const ProductEditForm = () => {
                 </SelectItem>
               ))}
             </Select>
+            <DatePicker
+              label="Expiration Date"
+              className="max-w-[284px]"
+              value={product.expirationDate}
+              onChange={handleDateChange}
+              placeholder="Select expiration date"
+            />
 
             <Textarea
               isRequired

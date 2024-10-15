@@ -156,11 +156,14 @@ export default function ProductDetails({ params, products }) {
       <BreadcrumdsProduct product={product} />
       <Toaster position="top-right" richColors />
       <div className="block md:hidden text-left mb-4">
-        <ProductRating productId={productId} />
-        <h1 className="text-2xl mt-1 font-semibold ">
+        <p className="tex-lg font-semibold mt-1"> {product.brand || 'N/A'}</p>
+
+        <h1 className="text-2xl mt-1 mb-1 font-semibold ">
           {product.name || 'N/A'}
         </h1>
-        <h2 className="text-md font-semi-bold text-stone-500 mb-2">
+        <ProductRating productId={productId} />
+
+        <h2 className="text-md font-semi-bold text-stone-500 mb-2 mt-1">
           {product.technicalData.tasteNotes || 'No taste notes available'}
         </h2>
         {isOutOfStock && (
@@ -194,6 +197,7 @@ export default function ProductDetails({ params, products }) {
         </div>
         <div className="w-full md:w-1/2 md:ml-20 md:text-left">
           <div className="hidden md:block">
+            <p className="tex-lg font-semibold"> {product.brand || 'N/A'}</p>
             <h1 className="text-2xl mb-1 font-semibold ">
               {product.name || 'N/A'}
             </h1>

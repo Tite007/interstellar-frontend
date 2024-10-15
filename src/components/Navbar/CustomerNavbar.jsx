@@ -23,8 +23,9 @@ import { Avatar } from '@nextui-org/avatar'
 import { Badge } from '@nextui-org/badge'
 import ShoppingCartSheet from '@/src/components/Product-details/ShoppingCartSheet'
 import { CartContext } from '@/src/context/CartContext'
-import { User, ChevronDown } from 'lucide-react'
+import { User, ChevronDown, Search } from 'lucide-react'
 import CategoryMenuSheet from '@/src/components/Navbar/CategoryMenuSheet' // Import the new CategoryMenuSheet component
+import SearchModal from '@/src/components/Navbar/SearchModal' // Import the new SearchModal component
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
@@ -177,6 +178,8 @@ export default function MainNavbarCustomer() {
           </DropdownMenu>
         </Dropdown>
       </NavbarContent>*/}
+
+      <SearchModal />
 
       {/* Modify NavbarContent to conditionally render based on isMenuOpen */}
       <NavbarContent justify="end" className="items-center gap-4">

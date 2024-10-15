@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Card, CardHeader, CardBody } from '@nextui-org/card'
 import Image from 'next/image'
+import BreadcrumdsCategory from '@/src/components/Product-details/BreadcrumbsCategories'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
@@ -31,6 +32,7 @@ const CategoriesPage = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <BreadcrumdsCategory />
       <h1 className="text-3xl font-bold mb-6">Product Categories</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {categories.map((category) => (

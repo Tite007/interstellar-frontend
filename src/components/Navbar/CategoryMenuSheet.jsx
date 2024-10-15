@@ -9,7 +9,7 @@ import {
   SheetTitle,
 } from '../../components/ui/Sheet' // Adjust the path to your Sheet component
 import { Button } from '@nextui-org/button'
-import { ChevronLeft, Menu } from 'lucide-react' // Import back arrow icon
+import { ChevronLeft, Menu, Home } from 'lucide-react' // Import back arrow and home icons
 
 export function CategoryMenuSheet({ shopCategories }) {
   const [activeCategory, setActiveCategory] = useState(null) // Track active category
@@ -28,6 +28,18 @@ export function CategoryMenuSheet({ shopCategories }) {
           <SheetTitle>Main Categories</SheetTitle>
         </SheetHeader>
         <div className="mt-4 p-4">
+          <Button
+            className="w-full mb-2"
+            variant="flat"
+            color="primary"
+            onClick={() => {
+              // Redirect to home when clicked
+              window.location.href = '/'
+            }}
+            startContent={<Home />} // Home icon
+          >
+            Home
+          </Button>
           {shopCategories.map((category) => (
             <Button
               key={category.label}
@@ -53,6 +65,18 @@ export function CategoryMenuSheet({ shopCategories }) {
             >
               Go Back
             </Button>
+            {/*   <Button
+              className="mt-4 text-left mb-4"
+              variant="flat"
+              color="primary"
+              onClick={() => {
+                // Redirect to home when clicked
+                window.location.href = '/'
+              }}
+              startContent={<Home />} // Home icon
+            >
+              Home
+            </Button>*/}
           </SheetHeader>
           <div className="p-4">
             {activeCategory.subcategories.length > 0 ? (

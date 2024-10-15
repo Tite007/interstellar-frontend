@@ -29,7 +29,7 @@ export default function MainProductDetails() {
   const searchParams = useSearchParams() // To extract query parameters
   const { addToCart } = useContext(CartContext)
 
-  // State to store product data
+  // State to store product data -GOOD TO GO
   const [product, setProduct] = useState(null)
   const [selectedQuantity, setSelectedQuantity] = useState('1')
   const [selectedGrind, setSelectedGrind] = useState('whole_bean')
@@ -159,10 +159,13 @@ export default function MainProductDetails() {
       <BreadcrumdsProduct product={product} />
       <Toaster position="top-right" richColors />
       <div className="block md:hidden text-left mb-4">
-        <ProductRating productId={product._id} />
-        <h1 className="text-2xl mt-1 font-semibold ">
+        <p className="tex-lg font-semibold mt-1"> {product.brand}</p>
+
+        <h1 className="text-2xl mt-1 mb-1 font-semibold ">
           {product.name || 'N/A'}
         </h1>
+        <ProductRating productId={product._id} />
+
         <h2 className="text-md font-semi-bold text-stone-500 mb-2">
           {product.technicalData?.tasteNotes || 'No taste notes available'}
         </h2>
@@ -199,6 +202,8 @@ export default function MainProductDetails() {
 
         <div className="w-full md:w-1/2 md:ml-20 md:text-left">
           <div className="hidden md:block">
+            <p className="tex-lg font-semibold mt-1"> {product.brand}</p>
+
             <h1 className="text-2xl mb-1 font-semibold ">
               {product.name || 'N/A'}
             </h1>

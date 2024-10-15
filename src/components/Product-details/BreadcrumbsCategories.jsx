@@ -1,13 +1,12 @@
 import React from 'react'
 import { Breadcrumbs, BreadcrumbItem } from '@nextui-org/breadcrumbs'
 
-export default function BreadcrumdsProduct({ product }) {
+export default function BreadcrumdsCategory() {
   return (
     <div className="mb-2">
       <Breadcrumbs color="primary">
         <BreadcrumbItem href="/">Home</BreadcrumbItem>
-        <BreadcrumbItem href="/products">Products</BreadcrumbItem>
-        <BreadcrumbItem href="/#">{product.name}</BreadcrumbItem>
+        <BreadcrumbItem href="/Categories">Categories</BreadcrumbItem>
       </Breadcrumbs>
     </div>
   )

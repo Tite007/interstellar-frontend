@@ -1,19 +1,25 @@
 'use client'
 import React, { useState, useEffect } from 'react'
-import { useSearchParams } from 'next/navigation' // To get query parameters
+import { usePathname, useSearchParams } from 'next/navigation' // To get query parameters
 import axios from 'axios'
 import Sidebar from '@/src/components/Products/Sidebar'
 import ProductCardCategory from '@/src/components/Products/ProductCardCategory'
 import FilterSheet from '@/src/components/Products/FilterSheet'
 import SkeletonProductCard from '@/src/components/Products/SkeletonProductCard'
 import SkeletonSidebar from '@/src/components/Products/SkeletonSidebar'
-import ProductCard from '@/src/components/Products/ProductCard'
+import BreadcrumdsSubcategoryList from '@/src/components/Product-details/BreadcrumdsSubcategoryList'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
-const SubcategoryProductsPage = () => {
+const SubcategoryProductsListPage = () => {
+  const pathname = usePathname()
   const searchParams = useSearchParams()
   const subcategoryId = searchParams.get('subcategoryId') // Extract subcategoryId from query parameters
+
+  // Extract category and subcategory from pathname
+  const pathParts = pathname.split('/')
+  const category = pathParts[2] // This gets 'grocery'
+  const subcategory = pathParts[3] // This gets 'bakery-goods'
 
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
@@ -140,6 +146,7 @@ const SubcategoryProductsPage = () => {
               selectedCountry={selectedCountry}
             />
           </div>
+
           <div className=" xl:container lg:container md:container sm:container mb-5 sm:mt-5 md:mt-10 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 ">
             {filteredProducts.map((product) => (
               <ProductCardCategory key={product._id} product={product} />
@@ -151,4 +158,4 @@ const SubcategoryProductsPage = () => {
   )
 }
 
-export default SubcategoryProductsPage
+export default SubcategoryProductsListPage

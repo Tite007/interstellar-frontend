@@ -5,10 +5,11 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Card, CardHeader, CardBody } from '@nextui-org/card'
 import Image from 'next/image'
+import BreadcrumdsSubcategory from '@/src/components/Product-details/BreadcrumbsSubcategory'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
-const CategoryPage = () => {
+const SubcategoryPage = () => {
   const pathname = usePathname()
   const category = pathname.split('/').pop().toLowerCase() // Ensure lowercase category name
   const [data, setData] = useState([])
@@ -54,6 +55,7 @@ const CategoryPage = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <BreadcrumdsSubcategory category={category} />
       <h1 className="text-3xl font-bold mb-6">
         {category.charAt(0).toUpperCase() + category.slice(1)}{' '}
         {isParentCategory ? 'Subcategories' : 'Products'}
@@ -94,4 +96,4 @@ const CategoryPage = () => {
   )
 }
 
-export default CategoryPage
+export default SubcategoryPage
