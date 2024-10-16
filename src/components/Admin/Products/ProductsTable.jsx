@@ -200,7 +200,7 @@ export default function ProductsTable() {
             <TableColumn className="min-w-[100px] lg:min-w-[100px]">
               Parent Category
             </TableColumn>
-            <TableColumn className="min-w-[100px] lg:min-w-[150px]">
+            <TableColumn className="min-w-[100px] lg:min-w-[120px]">
               Subcategory
             </TableColumn>
             <TableColumn className="min-w-[70px] lg:min-w-[80px]">
@@ -237,14 +237,14 @@ export default function ProductsTable() {
                     </TableCell>
                   ))}
                   {/* Render Parent Category and Subcategory columns */}
-                  <TableCell className="min-w-[120px] lg:min-w-[180px]">
+                  <TableCell className="min-w-[120px] lg:min-w-[150px]">
                     {product.parentCategoryName}
                   </TableCell>
-                  <TableCell className="min-w-[120px] lg:min-w-[180px]">
+                  <TableCell className="min-w-[150px] lg:min-w-[150px]">
                     {product.subcategoryName}
                   </TableCell>
                   {/* Render Action Button */}
-                  <TableCell className="min-w-[100px] lg:min-w-[150px]">
+                  <TableCell className="min-w-[80px] lg:min-w-[80px]">
                     <Dropdown size="small">
                       <DropdownTrigger>
                         <Button

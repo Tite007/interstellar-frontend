@@ -114,7 +114,7 @@ const ChartWidget = ({ id }) => {
   }
 
   return (
-    <div className="p-4 border rounded-lg bg-white">
+    <div className="p-4 border rounded-xl bg-white">
       <Tabs
         selectedKey={selectedDays.toString()}
         onSelectionChange={handleTabChange}

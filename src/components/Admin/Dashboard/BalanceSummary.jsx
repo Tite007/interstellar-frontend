@@ -1,4 +1,3 @@
-// components/BalanceSummary.js
 import React from 'react'
 
 const BalanceSummary = ({ summary }) => {
@@ -15,28 +14,36 @@ const BalanceSummary = ({ summary }) => {
   }
 
   return (
-    <div className="bg-white shadow mt-5  rounded-lg p-4">
+    <div className="bg-white shadow mt-5 rounded-xl p-4">
       <h2 className="text-xl font-semibold mb-4">Balance Summary</h2>
       <div className="overflow-x-auto pb-4 ">
-        <table className="min-w-full divide-y divide-gray-200">
+        <table className="min-w-30 divide-y divide-gray-200">
           <thead>
             <tr>
-              <th>Starting Balance</th>
-              <th>Account Activity</th>
-              <th>Fees</th>
-              <th>Net Balance Change</th>
-              <th>Total Payouts</th>
-              <th>Ending Balance</th>
+              <th className="px-6 py-3 min-w-[30px]">Starting Balance</th>
+              <th className="px-6 py-3 min-w-[30px]">Account Activity</th>
+              <th className="px-6 py-3 min-w-[30px]">Fees</th>
+              <th className="px-6 py-3 min-w-[30px]">Net Balance Change</th>
+              <th className="px-6 py-3 min-w-[30px]">Total Payouts</th>
+              <th className="px-6 py-3 min-w-[30px]">Ending Balance</th>
             </tr>
           </thead>
           <tbody>
             <tr className="text-center pt-4">
-              <td>{formatCurrency(summary.startingBalance)}</td>
-              <td>{formatCurrency(summary.accountActivity)}</td>
-              <td>{`-${formatCurrency(summary.fees)}`}</td>
-              <td>{formatCurrency(summary.netChange)}</td>
-              <td>{formatCurrency(summary.totalPayouts)}</td>
-              <td>{formatCurrency(summary.endingBalance)}</td>
+              <td className="px-6 py-3">
+                {formatCurrency(summary.startingBalance)}
+              </td>
+              <td className="px-6 py-3">
+                {formatCurrency(summary.accountActivity)}
+              </td>
+              <td className="px-6 py-3">{`-${formatCurrency(summary.fees)}`}</td>
+              <td className="px-6 py-3">{formatCurrency(summary.netChange)}</td>
+              <td className="px-6 py-3">
+                {formatCurrency(summary.totalPayouts)}
+              </td>
+              <td className="px-6 py-3">
+                {formatCurrency(summary.endingBalance)}
+              </td>
             </tr>
           </tbody>
         </table>
