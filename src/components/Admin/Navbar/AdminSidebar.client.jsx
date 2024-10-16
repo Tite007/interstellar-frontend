@@ -10,10 +10,11 @@ import {
   FileText,
   ArrowRightLeft,
   ChevronDown,
+  CircleAlert,
+  FolderOpen,
 } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import { usePathname } from 'next/navigation' // Assuming this is available in your project
-import { FolderOpen } from 'lucide-react'
 
 // Example structure updated to include potential dropdown items
 const navigation = [
@@ -31,6 +32,11 @@ const navigation = [
     name: 'Products',
     href: '/admin/products',
     icon: <Box strokeWidth={1.5} className="mr-4 h-5 w-5" />,
+  },
+  {
+    name: 'Products Expiration',
+    href: '/admin/products-expiration',
+    icon: <CircleAlert strokeWidth={1.5} className="mr-4 h-5 w-5" />,
   },
   {
     name: 'Categories',

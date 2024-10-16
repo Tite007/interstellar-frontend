@@ -20,9 +20,10 @@ import {
   ShoppingBag,
   FileText,
   Menu,
+  CircleAlert,
+  FolderOpen,
 } from 'lucide-react'
 import { Button } from '@nextui-org/button'
-import { FolderOpen } from 'lucide-react'
 
 const navigation = [
   {
@@ -39,6 +40,11 @@ const navigation = [
     name: 'Products',
     href: '/admin/products',
     icon: <Box strokeWidth={1.5} className="mr-4 h-5 w-5" />,
+  },
+  {
+    name: 'Products Expiration',
+    href: '/admin/products-expiration',
+    icon: <CircleAlert strokeWidth={1.5} className="mr-4 h-5 w-5" />,
   },
   {
     name: 'Categories',
