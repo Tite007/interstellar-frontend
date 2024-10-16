@@ -282,6 +282,7 @@ const ProductEditForm = () => {
               value={product.name}
               onClear={() => handleClear('name')}
               onChange={handleChange}
+              style={{ fontSize: '16px' }}
             />
 
             <Input
@@ -293,6 +294,7 @@ const ProductEditForm = () => {
               label="SKU"
               name="sku"
               onChange={handleChange}
+              style={{ fontSize: '16px' }}
             />
             <Input
               labelPlacement="outside"
@@ -301,6 +303,7 @@ const ProductEditForm = () => {
               label="Subtitle"
               name="subtitle"
               onChange={handleChange}
+              style={{ fontSize: '16px' }}
             />
             <Input
               labelPlacement="outside"
@@ -310,6 +313,7 @@ const ProductEditForm = () => {
               label="Size"
               name="size"
               onChange={handleChange}
+              style={{ fontSize: '16px' }}
             />
             <Input
               labelPlacement="outside"
@@ -319,6 +323,7 @@ const ProductEditForm = () => {
               label="Roast Level"
               name="roastLevel"
               onChange={handleChange}
+              style={{ fontSize: '16px' }}
             />
             <Input
               labelPlacement="outside"
@@ -328,6 +333,7 @@ const ProductEditForm = () => {
               name="brand"
               value={product.brand}
               onChange={handleChange}
+              style={{ fontSize: '16px' }}
             />
 
             <Select
@@ -380,6 +386,7 @@ const ProductEditForm = () => {
               name="description"
               onChange={handleChange}
               className="md:col-span-2"
+              style={{ fontSize: '16px' }}
             />
           </div>
 
@@ -434,6 +441,7 @@ const ProductEditForm = () => {
               name="price"
               type="number"
               onChange={handleChange}
+              style={{ fontSize: '16px' }}
             />
             <Input
               labelPlacement="outside"
@@ -444,6 +452,7 @@ const ProductEditForm = () => {
               name="costPrice"
               type="number"
               onChange={handleChange}
+              style={{ fontSize: '16px' }}
             />
             <Input
               labelPlacement="outside"
@@ -454,6 +463,7 @@ const ProductEditForm = () => {
               name="compareAtPrice"
               type="number"
               onChange={handleChange}
+              style={{ fontSize: '16px' }}
             />
             <Input
               labelPlacement="outside"
@@ -464,6 +474,7 @@ const ProductEditForm = () => {
               name="margin"
               type="text"
               onChange={handleChange}
+              style={{ fontSize: '16px' }}
             />
             <Input
               labelPlacement="outside"
@@ -474,6 +485,7 @@ const ProductEditForm = () => {
               name="profit"
               type="number"
               onChange={handleChange}
+              style={{ fontSize: '16px' }}
             />
             <RadioGroup>
               <Radio className="mt-4" value="track">
@@ -507,6 +519,7 @@ const ProductEditForm = () => {
                 name="currentStock"
                 type="number"
                 onChange={handleChange}
+                style={{ fontSize: '16px' }}
               />
             </div>
           </div>
@@ -528,6 +541,7 @@ const ProductEditForm = () => {
               label="SEO Title"
               name="seoTitle"
               onChange={handleChange}
+              style={{ fontSize: '16px' }}
             />
             <Textarea
               clearable
@@ -536,6 +550,7 @@ const ProductEditForm = () => {
               label="SEO Description"
               name="seoDescription"
               onChange={handleChange}
+              style={{ fontSize: '16px' }}
             />
             <Input
               clearable
@@ -544,6 +559,7 @@ const ProductEditForm = () => {
               value={product.seoKeywords}
               label="SEO Keywords"
               name="seoKeywords"
+              style={{ fontSize: '16px' }}
               onChange={handleChange}
             />
           </div>

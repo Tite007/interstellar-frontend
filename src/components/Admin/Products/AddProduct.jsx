@@ -11,6 +11,8 @@ import { useRouter } from 'next/navigation'
 import { Tabs, Tab } from '@nextui-org/tabs'
 import TechnicalDataFormAdd from './TechnicalDataFormAdd'
 import Image from 'next/image'
+import { DatePicker } from '@nextui-org/date-picker'
+import { CalendarDate } from '@internationalized/date'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
@@ -46,17 +48,18 @@ const ProductAddForm = () => {
       processingMethod: '',
       tasteNotes: '',
     },
+    brand: '', // New state field for brand
+    expirationDate: null, // New state field for expiration date (CalendarDate)
   })
 
-  const [categories, setCategories] = useState([]) // State for parent categories
-  const [subcategories, setSubcategories] = useState([]) // State for subcategories
+  const [categories, setCategories] = useState([])
+  const [subcategories, setSubcategories] = useState([])
   const [inventoryType, setInventoryType] = useState('track')
   const [images, setImages] = useState([])
   const [variants, setVariants] = useState([])
 
   const router = useRouter()
 
-  // Fetch categories on mount
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -67,16 +70,13 @@ const ProductAddForm = () => {
         console.error('Error fetching categories:', error)
       }
     }
-
     fetchCategories()
   }, [])
 
-  // Handle inventory type change
   const handleInventoryTypeChange = (value) => {
     setInventoryType(value)
   }
 
-  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target
     let newFields = { [name]: value }
@@ -97,7 +97,6 @@ const ProductAddForm = () => {
     }))
   }
 
-  // Handle technical data change function to update the technical data state
   const handleTechnicalDataChange = (name, value) => {
     setProduct((prev) => ({
       ...prev,
@@ -108,15 +107,13 @@ const ProductAddForm = () => {
     }))
   }
 
-  // Handle parent category change
   const handleParentCategoryChange = async (selectedKey) => {
     setProduct((prevState) => ({
       ...prevState,
       parentCategory: selectedKey.currentKey,
-      subcategory: '', // Reset subcategory when parent category changes
+      subcategory: '',
     }))
 
-    // Fetch subcategories based on parent category
     try {
       const response = await fetch(
         `${API_BASE_URL}/categories/categories?parent=${selectedKey.currentKey}`,
@@ -128,7 +125,6 @@ const ProductAddForm = () => {
     }
   }
 
-  // Handle subcategory change
   const handleSubcategoryChange = (selectedKey) => {
     setProduct((prevState) => ({
       ...prevState,
@@ -136,17 +132,10 @@ const ProductAddForm = () => {
     }))
   }
 
-  // Handle category change
-  const handleCategoryChange = (value) => {
-    setProduct({ ...product, category: value })
-  }
-
-  // Handle variants change
   const handleVariantsChange = (newVariants) => {
     setVariants(newVariants)
   }
 
-  // Handle image deletion
   const handleDeleteImage = async (image) => {
     const imageUrl = typeof image === 'string' ? image : image.url
     if (!imageUrl) {
@@ -172,7 +161,6 @@ const ProductAddForm = () => {
     }
   }
 
-  // Calculate profit and margin
   const calculateProfit = (price, costPrice) => {
     return Number(price) - Number(costPrice)
   }
@@ -185,7 +173,13 @@ const ProductAddForm = () => {
     return 0
   }
 
-  // Handle save function - save product to the database
+  const handleDateChange = (date) => {
+    setProduct((prev) => ({
+      ...prev,
+      expirationDate: date,
+    }))
+  }
+
   const handleSave = async (e) => {
     e.preventDefault()
 
@@ -216,6 +210,9 @@ const ProductAddForm = () => {
         ...product,
         images: allImages.map((image) => image.url),
         variants,
+        expirationDate: product.expirationDate
+          ? product.expirationDate.toString() // Convert to string for backend
+          : null,
       }
 
       const res = await fetch(`${API_BASE_URL}/products/addProduct`, {
@@ -233,13 +230,11 @@ const ProductAddForm = () => {
 
   return (
     <form onSubmit={handleSave} className=" xl:container space-y-5">
-      <h1 className=" col-span-3 text-lg font-semibold text-gray-700">
-        Add New Product
-      </h1>
+      <h1 className="  text-lg font-semibold text-gray-700">Add New Product</h1>
 
       <Tabs className="overflow-x-auto w-full" aria-label="Product Add Tabs">
         <Tab key="product" title="Product">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border bg-white pr-4 pl-4 rounded-2xl pt-10 pb-10">
+          <div className="grid grid-cols-1  md:grid-cols-2 gap-6 border bg-white pr-4 pl-4 rounded-2xl pt-10 pb-10">
             <Input
               isRequired
               labelPlacement="outside"
@@ -248,8 +243,8 @@ const ProductAddForm = () => {
               label="Name"
               name="name"
               onChange={handleChange}
-              className="col-span-1"
               value={product.name}
+              style={{ fontSize: '16px' }}
             />
             <Input
               labelPlacement="outside"
@@ -259,8 +254,8 @@ const ProductAddForm = () => {
               label="SKU"
               name="sku"
               onChange={handleChange}
-              className="col-span-1"
               value={product.sku}
+              style={{ fontSize: '16px' }}
             />
             <Input
               labelPlacement="outside"
@@ -269,8 +264,8 @@ const ProductAddForm = () => {
               label="Subtitle"
               name="subtitle"
               onChange={handleChange}
-              className="col-span-1"
               value={product.subtitle}
+              style={{ fontSize: '16px' }}
             />
             <Input
               labelPlacement="outside"
@@ -279,8 +274,8 @@ const ProductAddForm = () => {
               label="Size"
               name="size"
               onChange={handleChange}
-              className="col-span-1"
               value={product.size}
+              style={{ fontSize: '16px' }}
             />
             <Input
               labelPlacement="outside"
@@ -289,14 +284,24 @@ const ProductAddForm = () => {
               label="Roast Level"
               name="roastLevel"
               onChange={handleChange}
-              className="col-span-1"
               value={product.roastLevel}
+              style={{ fontSize: '16px' }}
             />
-
+            <Input
+              labelPlacement="outside"
+              clearable
+              bordered
+              label="Brand"
+              name="brand"
+              onChange={handleChange}
+              value={product.brand}
+              style={{ fontSize: '16px' }}
+            />
             <Select
               labelPlacement="outside"
               onSelectionChange={handleParentCategoryChange}
               placeholder="Select a category"
+              className="w-full mt-5"
               selectedKeys={
                 product.parentCategory
                   ? new Set([product.parentCategory])
@@ -314,6 +319,7 @@ const ProductAddForm = () => {
               labelPlacement="outside"
               onSelectionChange={handleSubcategoryChange}
               placeholder="Select a subcategory"
+              className="w-full mt-5"
               selectedKeys={
                 product.subcategory ? new Set([product.subcategory]) : new Set()
               }
@@ -326,6 +332,14 @@ const ProductAddForm = () => {
               ))}
             </Select>
 
+            <DatePicker
+              label="Expiration Date"
+              className="max-w-[284px] w-full mt-5"
+              value={product.expirationDate}
+              onChange={handleDateChange}
+              placeholder="Select expiration date"
+            />
+
             <Textarea
               isRequired
               clearable
@@ -333,42 +347,9 @@ const ProductAddForm = () => {
               label="Description"
               name="description"
               onChange={handleChange}
-              className="col-span-2"
               value={product.description}
+              style={{ fontSize: '16px' }}
             />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white pr-4 pl-4 mt-4 border rounded-2xl pt-5 pb-10">
-            <div className="col-span-1">
-              <label className="block mb-2 text-sm font-medium text-gray-700">
-                Upload new product images
-              </label>
-              <Dropzone images={images} setImages={setImages} />
-            </div>
-            <div className="files-preview">
-              <h4>Uploaded Images</h4>
-              <ul>
-                {images.map((image, index) => (
-                  <li key={index} className="flex items-center mb-2">
-                    <Image
-                      src={typeof image === 'string' ? image : image.url}
-                      alt={`Preview ${index}`}
-                      className="w-24 h-24 object-cover mr-2"
-                      width={100}
-                      height={100}
-                    />
-                    <Button
-                      auto
-                      color="danger"
-                      size="sm"
-                      onClick={() => handleDeleteImage(image)}
-                      className="ml-2"
-                    >
-                      Delete
-                    </Button>
-                  </li>
-                ))}
-              </ul>
-            </div>
           </div>
         </Tab>
         <Tab key="technical" title="Technical Data">
@@ -378,10 +359,9 @@ const ProductAddForm = () => {
           />
         </Tab>
         <Tab key="price" title="Price">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6 border bg-white pr-4 pl-4 rounded-2xl pt-5 pb-10">
-            <h1 className="col-span-3 text-lg font-semibold text-gray-700">
-              Price
-            </h1>
+          <h1 className="text-lg font-semibold text-gray-700">Price</h1>
+
+          <div className="grid md:grid-cols-2 gap-6 mt-6 border bg-white pr-4 pl-4 rounded-2xl pt-5 pb-10">
             <Input
               labelPlacement="outside"
               isRequired
@@ -394,6 +374,7 @@ const ProductAddForm = () => {
               onChange={handleChange}
               className="col-span-1"
               value={product.price}
+              style={{ fontSize: '16px' }}
             />
             <Input
               clearable
@@ -406,6 +387,7 @@ const ProductAddForm = () => {
               onChange={handleChange}
               className="col-span-1"
               value={product.costPrice}
+              style={{ fontSize: '16px' }}
             />
             <Input
               labelPlacement="outside"
@@ -417,6 +399,7 @@ const ProductAddForm = () => {
               onChange={handleChange}
               className="col-span-1"
               value={product.compareAtPrice}
+              style={{ fontSize: '16px' }}
             />
             <Input
               labelPlacement="outside"
@@ -427,6 +410,7 @@ const ProductAddForm = () => {
               type="text"
               value={product.margin}
               className="col-span-1"
+              style={{ fontSize: '16px' }}
             />
             <Input
               labelPlacement="outside"
@@ -437,6 +421,7 @@ const ProductAddForm = () => {
               type="number"
               value={product.profit}
               className="col-span-1"
+              style={{ fontSize: '16px' }}
             />
             <RadioGroup>
               <Radio className="mt-4" value="track">
@@ -446,8 +431,8 @@ const ProductAddForm = () => {
           </div>
         </Tab>
         <Tab key="inventory" title="Inventory">
-          <div className="grid grid-cols-2 gap-6 border bg-white pr-4 pl-4 rounded-2xl pt-5 pb-10">
-            <h1 className="col-span-3 text-lg font-semibold text-gray-700">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border bg-white pr-4 pl-4 rounded-2xl pt-5 pb-10">
+            <h1 className="col-span-2 text-lg font-semibold text-gray-700">
               Inventory Tracking
             </h1>
             <RadioGroup
@@ -471,7 +456,6 @@ const ProductAddForm = () => {
                 name="currentStock"
                 type="number"
                 onChange={handleChange}
-                className="col-span-1"
                 value={product.currentStock}
               />
             </div>
@@ -489,6 +473,7 @@ const ProductAddForm = () => {
               name="seoTitle"
               onChange={handleChange}
               value={product.seoTitle}
+              style={{ fontSize: '16px' }}
             />
             <Textarea
               clearable
@@ -497,6 +482,7 @@ const ProductAddForm = () => {
               name="seoDescription"
               onChange={handleChange}
               value={product.seoDescription}
+              style={{ fontSize: '16px' }}
             />
             <Input
               clearable
@@ -506,6 +492,7 @@ const ProductAddForm = () => {
               name="seoKeywords"
               onChange={handleChange}
               value={product.seoKeywords}
+              style={{ fontSize: '16px' }}
             />
           </div>
         </Tab>

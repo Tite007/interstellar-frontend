@@ -161,7 +161,8 @@ export default function ProductsTable() {
           placeholder="Search by name, parent category, or subcategory..."
           value={filterValue}
           onChange={onSearchChange}
-          contentLeft={<Search size="18" />}
+          contentLeft={<Search />}
+          style={{ fontSize: '16px' }}
         />
         <Link href="/admin/products/add" passHref>
           <Button
