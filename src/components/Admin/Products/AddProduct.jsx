@@ -394,7 +394,7 @@ const ProductAddForm = () => {
         </Tab>
         <Tab key="price" title="Price">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 border bg-white pr-4 pl-4 rounded-2xl pt-5 pb-10">
-            <h1 className="col-span-3 text-lg font-semibold text-gray-700">
+            <h1 className="col-span-2 text-lg font-semibold text-gray-700">
               Price
             </h1>
             <Input
@@ -407,7 +407,6 @@ const ProductAddForm = () => {
               placeholder="0.00"
               type="number"
               onChange={handleChange}
-              className="col-span-1"
               value={product.price}
               style={{ fontSize: '16px' }}
             />
@@ -420,7 +419,6 @@ const ProductAddForm = () => {
               name="costPrice"
               type="number"
               onChange={handleChange}
-              className="col-span-1"
               value={product.costPrice}
               style={{ fontSize: '16px' }}
             />
