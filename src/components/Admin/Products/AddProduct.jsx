@@ -230,11 +230,13 @@ const ProductAddForm = () => {
 
   return (
     <form onSubmit={handleSave} className=" xl:container space-y-5">
-      <h1 className="  text-lg font-semibold text-gray-700">Add New Product</h1>
+      <h1 className=" col-span-3 text-lg font-semibold text-gray-700">
+        Add New Product
+      </h1>
 
       <Tabs className="overflow-x-auto w-full" aria-label="Product Add Tabs">
         <Tab key="product" title="Product">
-          <div className="grid grid-cols-1  md:grid-cols-2 gap-6 border bg-white pr-4 pl-4 rounded-2xl pt-10 pb-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border bg-white pr-4 pl-4 rounded-2xl pt-10 pb-10">
             <Input
               isRequired
               labelPlacement="outside"
@@ -274,6 +276,7 @@ const ProductAddForm = () => {
               label="Size"
               name="size"
               onChange={handleChange}
+              className="col-span-1"
               value={product.size}
               style={{ fontSize: '16px' }}
             />
@@ -284,6 +287,7 @@ const ProductAddForm = () => {
               label="Roast Level"
               name="roastLevel"
               onChange={handleChange}
+              className="col-span-1"
               value={product.roastLevel}
               style={{ fontSize: '16px' }}
             />
@@ -294,6 +298,7 @@ const ProductAddForm = () => {
               label="Brand"
               name="brand"
               onChange={handleChange}
+              className="col-span-1"
               value={product.brand}
               style={{ fontSize: '16px' }}
             />
@@ -301,7 +306,6 @@ const ProductAddForm = () => {
               labelPlacement="outside"
               onSelectionChange={handleParentCategoryChange}
               placeholder="Select a category"
-              className="w-full mt-5"
               selectedKeys={
                 product.parentCategory
                   ? new Set([product.parentCategory])
@@ -314,12 +318,10 @@ const ProductAddForm = () => {
                 </SelectItem>
               ))}
             </Select>
-
             <Select
               labelPlacement="outside"
               onSelectionChange={handleSubcategoryChange}
               placeholder="Select a subcategory"
-              className="w-full mt-5"
               selectedKeys={
                 product.subcategory ? new Set([product.subcategory]) : new Set()
               }
@@ -331,15 +333,13 @@ const ProductAddForm = () => {
                 </SelectItem>
               ))}
             </Select>
-
             <DatePicker
               label="Expiration Date"
-              className="max-w-[284px] w-full mt-5"
+              className="max-w-[284px]"
               value={product.expirationDate}
               onChange={handleDateChange}
               placeholder="Select expiration date"
             />
-
             <Textarea
               isRequired
               clearable
@@ -347,9 +347,43 @@ const ProductAddForm = () => {
               label="Description"
               name="description"
               onChange={handleChange}
+              className="col-span-1"
               value={product.description}
               style={{ fontSize: '16px' }}
             />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white pr-4 pl-4 mt-4 border rounded-2xl pt-5 pb-10">
+            <div className="col-span-1">
+              <label className="block mb-2 text-sm font-medium text-gray-700">
+                Upload new product images
+              </label>
+              <Dropzone images={images} setImages={setImages} />
+            </div>
+            <div className="files-preview">
+              <h4>Uploaded Images</h4>
+              <ul>
+                {images.map((image, index) => (
+                  <li key={index} className="flex items-center mb-2">
+                    <Image
+                      src={typeof image === 'string' ? image : image.url}
+                      alt={`Preview ${index}`}
+                      className="w-24 h-24 object-cover mr-2"
+                      width={100}
+                      height={100}
+                    />
+                    <Button
+                      auto
+                      color="danger"
+                      size="sm"
+                      onClick={() => handleDeleteImage(image)}
+                      className="ml-2"
+                    >
+                      Delete
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </Tab>
         <Tab key="technical" title="Technical Data">
@@ -359,9 +393,10 @@ const ProductAddForm = () => {
           />
         </Tab>
         <Tab key="price" title="Price">
-          <h1 className="text-lg font-semibold text-gray-700">Price</h1>
-
-          <div className="grid md:grid-cols-2 gap-6 mt-6 border bg-white pr-4 pl-4 rounded-2xl pt-5 pb-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 border bg-white pr-4 pl-4 rounded-2xl pt-5 pb-10">
+            <h1 className="col-span-3 text-lg font-semibold text-gray-700">
+              Price
+            </h1>
             <Input
               labelPlacement="outside"
               isRequired
@@ -431,8 +466,8 @@ const ProductAddForm = () => {
           </div>
         </Tab>
         <Tab key="inventory" title="Inventory">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border bg-white pr-4 pl-4 rounded-2xl pt-5 pb-10">
-            <h1 className="col-span-2 text-lg font-semibold text-gray-700">
+          <div className="grid grid-cols-2 gap-6 border bg-white pr-4 pl-4 rounded-2xl pt-5 pb-10">
+            <h1 className="col-span-3 text-lg font-semibold text-gray-700">
               Inventory Tracking
             </h1>
             <RadioGroup
@@ -456,6 +491,7 @@ const ProductAddForm = () => {
                 name="currentStock"
                 type="number"
                 onChange={handleChange}
+                className="col-span-1"
                 value={product.currentStock}
               />
             </div>
