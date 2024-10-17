@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 export default function BreadcrumbsUserProfile() {
   return (
-    <div className="breadcrumbs container mx-auto ">
+    <div className="breadcrumbs xl:container mx-auto ">
       <div className="mb-6 text-sm  font-light text-1B51CA">
         <Link href="/" className=" pr-2 hover:underline hover:text-blue-600">
           {/* Apply className directly to Link */}

@@ -6,9 +6,9 @@ import BreadcrumbsUserProfile from '@/src/components/customer/BreadcrumbsProfile
 
 export default function EditCustomerPage(users) {
   return (
-    <div className=" container ">
+    <div className="xl:container ">
       <BreadcrumbsUserProfile />
-      <h1 className=" container text-xl mt-5 font-semibold">My Profile</h1>
+      <h1 className=" xl:container text-xl mt-5 font-semibold">My Profile</h1>
       <CustomerProfilePage users={users} />
       {/* You can add your table here */}
     </div>

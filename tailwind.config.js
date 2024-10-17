@@ -11,6 +11,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors: {
+        lightGray: '#f0f4f8',
+      },
       screens: {
         sm: '640px',
         md: '768px',

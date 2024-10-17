@@ -168,7 +168,7 @@ export default function CustomerProfilePage() {
   }
 
   return (
-    <div className=" container mb-10">
+    <div className=" xl:container mb-10">
       <div>
         <h1 className="mt-2 font-semibold mb-2 text-2xl">
           {user.name} {user.lastName}
@@ -181,7 +181,7 @@ export default function CustomerProfilePage() {
       <div className="flex gap-4 flex-col md:flex-row">
         <div className="flex-1">
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 border bg-white pr-4 pl-4 rounded-2xl pt-10 pb-10 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 border bg-white pr-4 pl-4 rounded-xl pt-10 pb-10 md:grid-cols-2 gap-6">
               <Input
                 isClearable={true}
                 value={user.name}
@@ -252,10 +252,8 @@ export default function CustomerProfilePage() {
               </Checkbox>
             </div>
 
-            <h1 className="col-span-3 text-lg font-semibold text-gray-700">
-              Address
-            </h1>
-            <div className="grid grid-cols-1 border bg-white pr-4 pl-4 rounded-2xl pt-10 pb-10 md:grid-cols-2 gap-6">
+            <h1 className="col-span-3 text-lg  text-black">Address</h1>
+            <div className="grid grid-cols-1 border bg-white pr-4 pl-4 rounded-xl pt-10 pb-10 md:grid-cols-2 gap-6">
               <Input
                 isClearable={true}
                 value={user.street}
@@ -306,11 +304,11 @@ export default function CustomerProfilePage() {
               />
             </div>
             <div>
-              <h1 className="col-span-3 text-lg font-semibold text-gray-700">
+              <h1 className="col-span-3 text-lg  text-blakc">
                 Change Password
               </h1>
             </div>
-            <div className="grid grid-cols-1 border bg-white pr-4 pl-4 rounded-2xl pt-10 pb-10 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 border bg-white pr-4 pl-4 rounded-xl pt-10 pb-10 md:grid-cols-2 gap-6">
               <Input
                 clearable
                 bordered
