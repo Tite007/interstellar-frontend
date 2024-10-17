@@ -168,7 +168,7 @@ export default function CustomerProfilePage() {
   }
 
   return (
-    <div className="mb-10">
+    <div className=" container mb-10">
       <div>
         <h1 className="mt-2 font-semibold mb-2 text-2xl">
           {user.name} {user.lastName}

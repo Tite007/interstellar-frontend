@@ -12,6 +12,7 @@ import { Input } from '@nextui-org/input'
 import { Pagination } from '@nextui-org/pagination'
 import { toast } from 'sonner'
 import { Chip } from '@nextui-org/chip'
+import { useRouter } from 'next/navigation'
 import ColorLegendPopover from '@/src/components/Admin/Products/ColorLegendPopover'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
@@ -21,6 +22,7 @@ export default function ExpirationTable() {
   const [filterValue, setFilterValue] = useState('')
   const [page, setPage] = useState(1)
   const [rowsPerPage, setRowsPerPage] = useState(10)
+  const router = useRouter()
 
   useEffect(() => {
     const fetchExpiringProducts = async () => {
@@ -38,19 +40,17 @@ export default function ExpirationTable() {
     fetchExpiringProducts()
   }, [])
 
-  // Function to calculate days remaining until expiration
   const calculateDaysUntilExpiration = (expirationDate) => {
     const currentDate = new Date()
     const expiration = new Date(expirationDate)
     const timeDiff = expiration - currentDate
-    return Math.ceil(timeDiff / (1000 * 60 * 60 * 24)) // Convert from milliseconds to days
+    return Math.ceil(timeDiff / (1000 * 60 * 60 * 24))
   }
 
-  // Map status to color for the Chip component
   const getStatusColor = (status) => {
-    if (status === 'red') return 'error' // Red for urgent expiration
-    if (status === 'yellow') return 'warning' // Yellow for warning
-    return 'success' // Green for long-term expiration
+    if (status === 'red') return 'error'
+    if (status === 'yellow') return 'warning'
+    return 'success'
   }
 
   const formatPrice = (price) => {
@@ -59,12 +59,16 @@ export default function ExpirationTable() {
       : 'N/A'
   }
 
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(filterValue.toLowerCase()),
+  )
+
   return (
-    <div className=" bg-white rounded-xl">
-      <div className="flex  justify-between items-center mb-4 p-4">
+    <div className="xl:container bg-white rounded-xl">
+      <div className="flex justify-between items-center p-4">
         <Input
           size="small"
-          className="w-96"
+          className="sm:w-80 md:w-80 lg:w-80 w-56"
           clearable
           bordered
           placeholder="Search by product name..."
@@ -76,31 +80,45 @@ export default function ExpirationTable() {
 
       <div className="overflow-x-auto p-4">
         <Table
-          className="border rounded-xl "
+          className="rounded-xl"
           isHeaderSticky
           isStriped
           isCompact
           shadow="none"
         >
           <TableHeader>
-            <TableColumn>Product Name</TableColumn>
-            <TableColumn>Status</TableColumn>
-            <TableColumn>Days left</TableColumn>
-            <TableColumn>Expiration Date</TableColumn>
-            <TableColumn>Category</TableColumn>
-            <TableColumn>Subcategory</TableColumn>
-            <TableColumn>Stock</TableColumn>
-            <TableColumn>Price</TableColumn>
-            <TableColumn>Compare Price</TableColumn>
+            <TableColumn className="text-sm sm:w-1/4">Product Name</TableColumn>
+            <TableColumn className="text-sm sm:w-1/6">Status</TableColumn>
+            <TableColumn className="text-sm sm:w-1/8">Days left</TableColumn>
+            <TableColumn className="text-sm sm:w-1/8">
+              Expiration Date
+            </TableColumn>
+            <TableColumn className="text-sm sm:w-1/6">Category</TableColumn>
+            <TableColumn className="text-sm sm:w-1/6">Subcategory</TableColumn>
+            <TableColumn className="text-sm sm:w-1/8">Stock</TableColumn>
+            <TableColumn className="text-sm sm:w-1/8">Price</TableColumn>
+            <TableColumn className="text-sm sm:w-1/8">
+              Compare Price
+            </TableColumn>
           </TableHeader>
           <TableBody>
-            {products.map((product) => {
+            {filteredProducts.map((product) => {
               const daysUntilExpiration = calculateDaysUntilExpiration(
                 product.expirationDate,
               )
+
               return (
                 <TableRow key={product._id}>
-                  <TableCell>{product.name}</TableCell>
+                  <TableCell>
+                    <span
+                      className="text-blue-500 cursor-pointer"
+                      onClick={() =>
+                        router.push(`/admin/products/edit/${product._id}`)
+                      }
+                    >
+                      {product.name}
+                    </span>
+                  </TableCell>
                   <TableCell>
                     <Chip
                       variant="flat"
@@ -110,8 +128,10 @@ export default function ExpirationTable() {
                       {`${product.status.toUpperCase()} `}
                     </Chip>
                   </TableCell>
-                  <TableCell> {daysUntilExpiration} days left</TableCell>
-                  <TableCell>
+                  <TableCell className="whitespace-nowrap">
+                    {daysUntilExpiration} days left
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap">
                     {new Date(product.expirationDate).toLocaleDateString()}
                   </TableCell>
                   <TableCell>{product.category}</TableCell>
@@ -126,13 +146,14 @@ export default function ExpirationTable() {
         </Table>
       </div>
 
-      <div className="flex justify-between items-center mt-4 p-4">
+      <div className="flex justify-between items-center p-4">
         <Pagination
-          total={Math.ceil(products.length / rowsPerPage)}
+          total={Math.ceil(filteredProducts.length / rowsPerPage)}
           page={page}
           onChange={setPage}
         />
         <select
+          className="border rounded-lg p-2"
           onChange={(e) => setRowsPerPage(Number(e.target.value))}
           defaultValue={rowsPerPage}
         >

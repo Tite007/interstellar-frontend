@@ -6,7 +6,7 @@ import UserReviews from '@/src/components/customer/UserReviews' // Adjust the im
 const MyReviewsPage = () => {
   return (
     <div>
-      <h1 className="text-2xl font-semibold mb-4">My Reviews</h1>
+      <h1 className=" container text-2xl font-semibold mb-4">My Reviews</h1>
       <UserReviews />
     </div>
   )

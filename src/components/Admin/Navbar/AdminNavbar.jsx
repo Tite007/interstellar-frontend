@@ -32,10 +32,11 @@ const navigation = [
     icon: <Home strokeWidth={1.5} className="mr-4 h-5 w-5" />,
   },
   {
-    name: 'Customers',
-    href: '/admin/customers',
-    icon: <Users strokeWidth={1.5} className="mr-4 h-5 w-5" />,
+    name: 'Orders',
+    href: '/admin/orders',
+    icon: <ShoppingBag strokeWidth={1.5} className="mr-4 h-5 w-5" />,
   },
+
   {
     name: 'Products',
     href: '/admin/products',
@@ -47,6 +48,11 @@ const navigation = [
     icon: <CircleAlert strokeWidth={1.5} className="mr-4 h-5 w-5" />,
   },
   {
+    name: 'Customers',
+    href: '/admin/customers',
+    icon: <Users strokeWidth={1.5} className="mr-4 h-5 w-5" />,
+  },
+  {
     name: 'Categories',
     href: '/admin/categories',
     icon: <FolderOpen strokeWidth={1.5} className="mr-4 h-5 w-5" />,
@@ -56,11 +62,7 @@ const navigation = [
     href: '/admin/transactions',
     icon: <ArrowRightLeft strokeWidth={1.5} className="mr-4 h-5 w-5" />,
   },
-  {
-    name: 'Orders',
-    href: '/admin/orders',
-    icon: <ShoppingBag strokeWidth={1.5} className="mr-4 h-5 w-5" />,
-  },
+
   {
     name: 'Content',
     href: '/admin/content',

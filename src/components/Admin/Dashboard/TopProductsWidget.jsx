@@ -8,8 +8,15 @@ import {
   TableRow,
   TableCell,
 } from '@nextui-org/table'
+import { Pagination } from '@nextui-org/pagination'
 
-const TopProductsWidget = ({ topProducts, totalRevenue }) => {
+const TopProductsWidget = ({
+  topProducts,
+  totalRevenue,
+  currentPage,
+  totalPages,
+  onPageChange,
+}) => {
   const formatCurrency = (amount) => {
     return amount.toLocaleString('en-US', {
       style: 'currency',
@@ -50,6 +57,15 @@ const TopProductsWidget = ({ topProducts, totalRevenue }) => {
           })}
         </TableBody>
       </Table>
+
+      {/* Pagination Component */}
+      <div className="flex justify-center mt-4">
+        <Pagination
+          total={totalPages}
+          initialPage={currentPage}
+          onChange={onPageChange}
+        />
+      </div>
     </div>
   )
 }

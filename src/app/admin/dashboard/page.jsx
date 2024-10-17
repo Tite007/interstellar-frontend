@@ -1,3 +1,4 @@
+// File: components/Dashboard/Dashboard.js
 'use client'
 import React, { useEffect, useState } from 'react'
 import ChartWidget from '@/src/components/Admin/Dashboard/ChartWidget'
@@ -23,6 +24,8 @@ const Dashboard = () => {
   const [topProducts, setTopProducts] = useState([])
   const [totalOrders, setTotalOrders] = useState(0)
   const [totalRevenue, setTotalRevenue] = useState(0)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
 
   useEffect(() => {
     fetch(`${API_BASE_URL}/payment/stripe/balance`)
@@ -56,22 +59,7 @@ const Dashboard = () => {
         console.error('Error fetching balance transactions:', error)
       })
 
-    fetch(`${API_BASE_URL}/orders/topProducts`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok')
-        }
-        return response.json()
-      })
-      .then((data) => {
-        setTopProducts(data)
-        const totalRevenue = data.reduce(
-          (acc, product) => acc + product.totalRevenue,
-          0,
-        )
-        setTotalRevenue(totalRevenue)
-      })
-      .catch((error) => console.error('Error fetching top products:', error))
+    fetchTopProducts(currentPage)
 
     fetch(`${API_BASE_URL}/orders/totalOrders`)
       .then((response) => {
@@ -84,7 +72,31 @@ const Dashboard = () => {
         setTotalOrders(data.totalOrders)
       })
       .catch((error) => console.error('Error fetching total orders:', error))
-  }, [])
+  }, [currentPage])
+
+  const fetchTopProducts = (page) => {
+    fetch(`${API_BASE_URL}/orders/topProducts?page=${page}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok')
+        }
+        return response.json()
+      })
+      .then((data) => {
+        setTopProducts(data.topProducts)
+        setTotalPages(data.totalPages)
+        const totalRevenue = data.topProducts.reduce(
+          (acc, product) => acc + product.totalRevenue,
+          0,
+        )
+        setTotalRevenue(totalRevenue)
+      })
+      .catch((error) => console.error('Error fetching top products:', error))
+  }
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page)
+  }
 
   const salesData =
     balanceSummary.transactions && balanceSummary.transactions.length
@@ -113,7 +125,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="xl:container mt-4  grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <div className="xl:container mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
       <BalanceWidget balance={balance} />
       <TotalOrdersWidget totalOrders={totalOrders} />
       <div className="col-span-1 md:col-span-2 lg:col-span-3">
@@ -122,6 +134,9 @@ const Dashboard = () => {
         <TopProductsWidget
           topProducts={topProducts}
           totalRevenue={totalRevenue}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
         />
       </div>
     </div>

@@ -182,7 +182,6 @@ export default function ProductsTable() {
           isHeaderSticky
           isStriped
           isCompact
-          selectionMode="multiple"
           aria-label="Product Table"
           shadow="none"
           className="xl:container bg-white shrink-0 p-2"
