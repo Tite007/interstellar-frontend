@@ -45,7 +45,7 @@ const UserReviews = () => {
 
   if (loading) {
     return (
-      <div className=" container  flex justify-center items-center h-full">
+      <div className=" xl:container  flex justify-center items-center h-full">
         <Spinner color="primary" />
       </div>
     )

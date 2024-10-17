@@ -115,11 +115,14 @@ const ShoppingCart = () => {
                         {item.productName}
                       </p>
                       <p className="text-gray-500 text-sm">
-                        Size: {item.productVariant}
+                        Size: {item.productVariant || item.size || 'N/A'}
                       </p>
-                      <p className="text-gray-500 text-sm mb-2">
-                        Grind Type: {item.grindType}
-                      </p>
+                      {/* Conditionally render Grind Type if it exists */}
+                      {item.grindType && (
+                        <p className="text-gray-500 text-sm mb-2">
+                          Grind Type: {item.grindType}
+                        </p>
+                      )}
                       <p className="text-sm font-bold">
                         ${item.productPrice.toFixed(2)}
                       </p>

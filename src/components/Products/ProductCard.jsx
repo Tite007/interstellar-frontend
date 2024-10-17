@@ -18,9 +18,11 @@ const ProductCard = ({ product }) => {
       productId: product._id,
       productImage: product.images[0],
       productName: product.name,
+      productsize: product.size,
       productPrice: product.price,
       compareAtPrice: product.compareAtPrice,
       quantity: parseInt(selectedQuantity, 10),
+      size: product.size, // Add the size of the product here
     }
 
     addToCart(cartItem)
@@ -65,7 +67,7 @@ const ProductCard = ({ product }) => {
       <p className="text-black text-xs md:text-md lg:text-md xl:text-md">
         {product.category}
       </p>
-
+      <p className="text-black text-xs"> Size: {product.size}</p>
       {/* Show prices: regular price and compareAtPrice (if on sale) */}
       <div className="flex flex-col ">
         {product.compareAtPrice && product.compareAtPrice > product.price ? (

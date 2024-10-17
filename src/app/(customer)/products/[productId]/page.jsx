@@ -133,6 +133,7 @@ export default function ProductDetails({ params, products }) {
       (option) => option.value === selectedPackage,
     )
 
+    // Create the base cart item
     const cartItem = {
       productId: product._id,
       variantId: variantOption ? variantOption._id : null,
@@ -142,7 +143,11 @@ export default function ProductDetails({ params, products }) {
       productPrice: price,
       compareAtPrice: compareAtPrice,
       quantity: parseInt(selectedQuantity, 10) || 1,
-      grindType: getGrindLabel(selectedGrind),
+    }
+
+    // Include grindType only if the product is a coffee-related product
+    if (isCoffeeProduct) {
+      cartItem.grindType = getGrindLabel(selectedGrind)
     }
 
     addToCart(cartItem)
@@ -150,6 +155,10 @@ export default function ProductDetails({ params, products }) {
   }
 
   const images = product.images || []
+  // Determine if the product is coffee-related
+  const isCoffeeProduct =
+    product?.parentCategory === '670351ab96bf844ee6763504' || // ID for "Coffee"
+    product?.subcategory === '67035c09407c1bf49bcf2720' // ID for "Specialty Coffee"
 
   return (
     <main className="container flex-col items-center justify-between mt-5 p-4">
@@ -256,14 +265,18 @@ export default function ProductDetails({ params, products }) {
             </p>
           </div>
 
-          <h3 className="mt-4 font-semibold text-md">Grind Type:</h3>
-          <GrindTypeSelect
-            selectedGrind={selectedGrind}
-            onGrindChange={handleGrindChange}
-          />
-          <p className="mt-2 text-sm">
-            Grind Type: {getGrindLabel(selectedGrind)}
-          </p>
+          {isCoffeeProduct && (
+            <div className="mt-4">
+              <h3 className="font-semibold text-md">Grind Type:</h3>
+              <GrindTypeSelect
+                selectedGrind={selectedGrind}
+                onGrindChange={(keys) => setSelectedGrind(keys.anchorKey)}
+              />
+              <p className="mt-2 text-sm">
+                Grind Type: {getGrindLabel(selectedGrind)}
+              </p>
+            </div>
+          )}
 
           <div className="mt-4">
             <h3 className="text-md font-semibold mb-4">

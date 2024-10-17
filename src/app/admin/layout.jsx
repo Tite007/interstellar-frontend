@@ -17,7 +17,7 @@ export default async function AdminLayout({ children }) {
       <div className="flex w-full flex-col xl:ms-[270px] xl:w-[calc(100%-270px)] 2xl:ms-72 2xl:w-[calc(100%-288px)]">
         <MainNavbar />
 
-        <div className="flex flex-grow flex-col border bg-gray-100 px-4 pb-6 pt-2 md:px-5 lg:px-6 lg:pb-8 3xl:px-8 3xl:pt-4 4xl:px-10 4xl:pb-9">
+        <div className="flex flex-grow flex-col border bg-lightGray px-4 pb-6 pt-2 md:px-5 lg:px-6 lg:pb-8 3xl:px-8 3xl:pt-4 4xl:px-10 4xl:pb-9">
           {children}
         </div>
       </div>

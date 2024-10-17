@@ -105,7 +105,7 @@ const SignUpPage = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen ">
-      <div className="max-w-lg w-full space-y-8 p-10 bg-white rounded-lg shadow-md">
+      <div className="max-w-lg w-full space-y-8 p-10 bg-white rounded-xl shadow-md">
         <h1 className="text-lg font-semibold text-gray-700">Sign Up</h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

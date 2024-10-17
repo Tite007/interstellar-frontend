@@ -37,9 +37,10 @@ const ProductCardCategory = ({ product }) => {
       productPrice: product.price,
       compareAtPrice: product.compareAtPrice,
       quantity: parseInt(selectedQuantity, 10),
+      size: product.size, // Ensure the size is included here
     }
     addToCart(cartItem)
-    alert(`${product.name} added to cart`)
+    alert(`${product.name} (${product.size}) added to cart`)
   }
 
   // Updated mapping logic to handle subcategory separately
@@ -136,6 +137,7 @@ const ProductCardCategory = ({ product }) => {
       <p className="text-black text-xs md:text-md lg:text-md xl:text-md">
         {product.category?.name || 'Unknown Category'}
       </p>
+      <p className="text-black text-xs"> Size: {product.size}</p>
 
       <div className="flex flex-col">
         {product.compareAtPrice && product.compareAtPrice > product.price ? (

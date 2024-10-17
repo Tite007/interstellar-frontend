@@ -66,7 +66,7 @@ export default function UserLoginPage() {
     <div className="min-h-screen flex items-center justify-center">
       <form
         onSubmit={handleSubmit}
-        className="text-base max-w-lg p-4 bg-white w-full shadow-md rounded-md"
+        className="text-base max-w-lg p-4 bg-white w-full shadow-md rounded-xl"
       >
         <h2 className="text-2xl text-center font-semibold mb-4">Log in</h2>
         <div className="mb-4">
@@ -113,7 +113,7 @@ export default function UserLoginPage() {
         </Button>
         <div className="text-center mt-4">
           <p>Don&apos;t have an account?</p>
-          <Link href="/user/sign-up">
+          <Link href="/customer/sign-up">
             <Button
               color="default"
               className="mt-2 w-full text-black py-2 px-4 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"

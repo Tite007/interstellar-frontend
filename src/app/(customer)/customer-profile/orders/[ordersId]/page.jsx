@@ -98,8 +98,8 @@ const OrderDetailsPage = () => {
   return (
     <>
       <BreadcrumbsUserProfileOrdersDetails />
-      <div className="container border rounded-lg p-4 md:p-10 font-sans text-gray-800">
-        <h1 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">
+      <div className="xl:container bg-white border rounded-xl p-4 md:p-10 font-sans text-gray-800">
+        <h1 className="text-xl md:text-2xl font-semibold mb-4 md:mb-6">
           Order Details
         </h1>
         {isLoading ? (
@@ -110,7 +110,7 @@ const OrderDetailsPage = () => {
           <div>
             <div className="flex flex-col md:flex-row justify-between mb-6 md:mb-10">
               <div className="md:w-1/2">
-                <h2 className="text-lg md:text-lg font-bold mb-4">
+                <h2 className="text-lg md:text-lg font-semi mb-4">
                   Order Number: {orderDetails?.orderNumber}
                 </h2>
                 <p className="mb-2 md:mb-4">
@@ -120,9 +120,7 @@ const OrderDetailsPage = () => {
               </div>
 
               <div className="md:w-1/2 md:pl-8">
-                <h4 className="text-lg font-semibold mb-2">
-                  Shipping Address:
-                </h4>
+                <h4 className="text-lg  mb-2">Shipping Address:</h4>
                 <p className="mb-1">
                   {orderDetails?.shippingInfo?.address?.line1}
                 </p>
