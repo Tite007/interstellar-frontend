@@ -181,7 +181,7 @@ export default function CustomerProfilePage() {
       <div className="flex gap-4 flex-col md:flex-row">
         <div className="flex-1">
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 border bg-white pr-4 pl-4 rounded-xl pt-10 pb-10 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 border bg-white pr-4 pl-4 shadow-md rounded-2xl pt-10 pb-10 md:grid-cols-2 gap-6">
               <Input
                 isClearable={true}
                 value={user.name}
@@ -253,7 +253,7 @@ export default function CustomerProfilePage() {
             </div>
 
             <h1 className="col-span-3 text-lg  text-black">Address</h1>
-            <div className="grid grid-cols-1 border bg-white pr-4 pl-4 rounded-xl pt-10 pb-10 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 border bg-white pr-4 pl-4 rounded-2xl shadow-md pt-10 pb-10 md:grid-cols-2 gap-6">
               <Input
                 isClearable={true}
                 value={user.street}
@@ -308,7 +308,7 @@ export default function CustomerProfilePage() {
                 Change Password
               </h1>
             </div>
-            <div className="grid grid-cols-1 border bg-white pr-4 pl-4 rounded-xl pt-10 pb-10 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 border shadow-md bg-white pr-4 pl-4 rounded-2xl pt-10 pb-10 md:grid-cols-2 gap-6">
               <Input
                 clearable
                 bordered

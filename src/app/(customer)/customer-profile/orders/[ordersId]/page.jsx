@@ -98,7 +98,7 @@ const OrderDetailsPage = () => {
   return (
     <>
       <BreadcrumbsUserProfileOrdersDetails />
-      <div className="xl:container bg-white border rounded-xl p-4 md:p-10 font-sans text-gray-800">
+      <div className="xl:container bg-white border rounded-2xl shadow-md p-4 md:p-10 font-sans text-gray-800">
         <h1 className="text-xl md:text-2xl font-semibold mb-4 md:mb-6">
           Order Details
         </h1>

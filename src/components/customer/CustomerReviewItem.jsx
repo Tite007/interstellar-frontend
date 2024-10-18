@@ -18,7 +18,7 @@ const CustomerReviewItem = ({ review, onDelete }) => {
   const isReviewOwner = sessionUser?.id === user._id
 
   return (
-    <div className="customer-review-item container bg-white border shadow-md rounded-xl mb-2 text-left p-4">
+    <div className="customer-review-item container bg-white border shadow-md rounded-2xl mb-2 text-left p-4">
       <div className="flex justify-between">
         <div>
           {/** User Info */}
