@@ -115,13 +115,13 @@ export default function MainNavbar() {
       {/* Mobile Menu */}
       <div
         ref={menuRef}
-        className={`absolute top-10 -ml-6 mt-6 border shadow-lg min-h-screen w-64 bg-gray-100 pt-16 ${menuOpen ? 'block' : 'hidden'}`}
+        className={`absolute top-10 -ml-6 mt-6 border shadow-xl min-h-screen w-64 bg-gray-100 pt-16 ${menuOpen ? 'block' : 'hidden'}`}
       >
         {navigation.map((item) => (
           <Link
             key={item.name}
             href={item.href}
-            className="flex hover:bg-gray-300 w-full px-5 rounded-lg font-light text-sm items-center py-2"
+            className="flex hover:bg-D9D9D9 w-full px-6 rounded-lg font-light text-sm items-center py-2"
             onClick={() => setMenuOpen(false)}
           >
             {item.icon}

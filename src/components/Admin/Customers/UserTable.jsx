@@ -133,8 +133,8 @@ export default function CustomerTable() {
   }
 
   return (
-    <div className=" shadow-md rounded-2xl">
-      <div className="flex xl:container bg-white mt-6 pt-8 p-5 rounded-t-2xl  justify-between items-center">
+    <div>
+      <div className="flex xl:container bg-white mt-6 pt-8 p-5 shadow-md rounded-t-2xl  justify-between items-center">
         <Input
           size="small"
           className="w-96 "
@@ -230,7 +230,7 @@ export default function CustomerTable() {
           ))}
         </TableBody>
       </Table>
-      <div className="flex xl:container justify-between rounded-b-2xl bg-white  items-center p-4">
+      <div className="flex xl:container shadow-md justify-between rounded-b-2xl bg-white  items-center p-4">
         <Pagination
           total={pages}
           page={page}

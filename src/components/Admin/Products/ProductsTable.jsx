@@ -151,13 +151,13 @@ export default function ProductsTable() {
   }
 
   return (
-    <div className=" shadow-md rounded-xl">
-      <div className="flex xl:container bg-white mt-6 pt-8 p-5 rounded-t-2xl justify-between items-center">
+    <div>
+      <div className="flex xl:container bg-white mt-6 pt-8 p-5 shadow-md rounded-t-2xl justify-between items-center">
         <Input
           size="small"
-          className="w-96"
           clearable
           bordered
+          className="w-96"
           placeholder="Search by name, parent category, or subcategory..."
           value={filterValue}
           onChange={onSearchChange}
@@ -280,7 +280,7 @@ export default function ProductsTable() {
         </Table>
       </div>
 
-      <div className="flex xl:container bg-white rounded-b-2xl justify-between items-center p-4">
+      <div className="flex xl:container shadow-md bg-white rounded-b-2xl justify-between items-center p-4">
         <Pagination
           showControls
           showShadow

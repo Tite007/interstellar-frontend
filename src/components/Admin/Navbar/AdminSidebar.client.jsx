@@ -87,7 +87,7 @@ export default function Sidebar() {
   }
 
   return (
-    <div className="hidden xl:block fixed top-[64px] bottom-0 bg-slate-50 start-0 z-50 h-full w-[270px] border-e-2 border-gray-100 2xl:w-72 dark:bg-gray-100/50">
+    <div className="hidden xl:block fixed top-[64px] bottom-0 bg-white start-0 z-50 h-full w-[270px]  2xl:w-72 ">
       <div className="pt-10 pb-4">
         <nav className="mt-10">
           <ul>
@@ -98,7 +98,7 @@ export default function Sidebar() {
                 <Fragment key={item.name}>
                   <li>
                     <div
-                      className="flex items-center font-light justify-between p-2 pl-7 text-sm text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-700 rounded-lg cursor-pointer"
+                      className="flex items-center font-light justify-between p-2 pl-10 text-sm text-gray-900 dark:text-white hover:bg-D9D9D9 dark:hover:D9D9D9 rounded-lg cursor-pointer"
                       onClick={() =>
                         item.dropdownItems ? toggleDropdown(index) : null
                       }
@@ -108,7 +108,7 @@ export default function Sidebar() {
                         className="flex items-center w-full"
                       >
                         {item.icon}
-                        <span className="ml-4">{item.name}</span>
+                        <span className="ml-3">{item.name}</span>
                       </Link>
                       {item.dropdownItems && (
                         <ChevronDown
