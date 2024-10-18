@@ -26,7 +26,7 @@ const TopProductsWidget = ({
   }
 
   return (
-    <div className="bg-white mt-5 shadow rounded-xl p-4">
+    <div className="bg-white mt-4 shadow-md rounded-2xl p-4">
       <h3 className="text-xl font-semibold mb-4">Top 10 Most Sold Products</h3>
       <Table shadow="none" isCompact aria-label="Top Products Table">
         <TableHeader>

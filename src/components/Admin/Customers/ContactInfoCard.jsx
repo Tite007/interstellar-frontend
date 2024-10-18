@@ -3,7 +3,7 @@ import { RadioGroup, Radio } from '@nextui-org/radio'
 
 export default function ContactInfoCard({ user }) {
   return (
-    <div className=" border  w-full  bg-white shadow-sm rounded-xl mt-10 p-5">
+    <div className=" border  w-full  bg-white shadow-md rounded-2xl mt-10 p-5">
       <h2 className="font-simibold mb-4">Contact information</h2>
 
       {/* Update this line to include a mailto link */}

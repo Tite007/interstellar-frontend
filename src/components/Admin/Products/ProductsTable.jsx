@@ -151,8 +151,8 @@ export default function ProductsTable() {
   }
 
   return (
-    <div>
-      <div className="flex xl:container bg-white mt-6 pt-8 p-5 rounded-t-xl justify-between items-center">
+    <div className=" shadow-md rounded-xl">
+      <div className="flex xl:container bg-white mt-6 pt-8 p-5 rounded-t-2xl justify-between items-center">
         <Input
           size="small"
           className="w-96"
@@ -161,7 +161,7 @@ export default function ProductsTable() {
           placeholder="Search by name, parent category, or subcategory..."
           value={filterValue}
           onChange={onSearchChange}
-          contentLeft={<Search />}
+          endContent={<Search />}
           style={{ fontSize: '16px' }}
         />
         <Link href="/admin/products/add" passHref>
@@ -280,7 +280,7 @@ export default function ProductsTable() {
         </Table>
       </div>
 
-      <div className="flex xl:container bg-white rounded-b-xl justify-between items-center p-4">
+      <div className="flex xl:container bg-white rounded-b-2xl justify-between items-center p-4">
         <Pagination
           showControls
           showShadow

@@ -266,12 +266,9 @@ const ProductEditForm = () => {
       }}
       className="space-y-6 xl:container"
     >
-      <h1 className=" col-span-3 text-lg font-semibold text-gray-700">
-        Edit Product
-      </h1>
       <Tabs aria-label="Product Edit Tabs">
         <Tab key="product" title="Product">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border bg-white pr-4 pl-4 rounded-2xl pt-10 pb-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border shadow-md bg-white pr-4 pl-4 rounded-2xl pt-10 pb-10">
             <Input
               labelPlacement="outside"
               isRequired
@@ -391,7 +388,7 @@ const ProductEditForm = () => {
           </div>
 
           {/* Image and Dropzone section */}
-          <div className="grid grid-cols-1 mt-5 md:grid-cols-2 gap-6 bg-white pr-4 pl-4 border rounded-2xl pt-5 pb-10">
+          <div className="grid grid-cols-1 mt-4 md:grid-cols-2 gap-6 bg-white pr-4 pl-4 border shadow-md rounded-2xl pt-5 pb-10">
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-700">
                 Upload new product images
@@ -426,7 +423,7 @@ const ProductEditForm = () => {
           </div>
 
           {/* Price and Inventory section */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mt-5 border bg-white pr-4 pl-4 rounded-2xl pt-5 pb-10">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mt-4 border bg-white pr-4 pl-4 shadow-md rounded-2xl pt-5 pb-10">
             <h1 className="col-span-1 md:col-span-3 text-lg font-semibold text-gray-700">
               Price and Inventory
             </h1>
@@ -495,7 +492,7 @@ const ProductEditForm = () => {
           </div>
 
           {/* Inventory tracking section */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border mt-5 bg-white pr-4 pl-4 rounded-2xl pt-5 pb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border mt-4 bg-white pr-4 pl-4 shadow-md rounded-2xl pt-5 pb-8">
             <h1 className="col-span-3 text-lg font-semibold text-gray-700">
               Inventory Tracking
             </h1>
@@ -530,7 +527,7 @@ const ProductEditForm = () => {
           <TechnicalDataForm productId={product._id} />
         </Tab>
         <Tab key="seo" title="SEO">
-          <div className="grid grid-cols-1 gap-6 border bg-white pr-4 pl-4 rounded-2xl pt-5 pb-10">
+          <div className="grid grid-cols-1 gap-6 border bg-white pr-4 pl-4 shadow-md rounded-2xl pt-5 pb-10">
             <h1 className="text-lg font-semibold text-gray-700">SEO Tags</h1>
             <Input
               clearable
@@ -565,7 +562,7 @@ const ProductEditForm = () => {
           </div>
         </Tab>
         <Tab key="variants" title="Variants">
-          <div className="bg-white pr-4 pl-4 rounded-2xl pt-10 pb-10">
+          <div className="bg-white pr-4 pl-4 shadow-md rounded-2xl pt-10 pb-10">
             <h1 className="col-span-3 text-lg font-semibold text-gray-700">
               Variants
             </h1>

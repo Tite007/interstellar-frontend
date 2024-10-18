@@ -113,8 +113,8 @@ export default function OrdersTable() {
   )
 
   return (
-    <div className=" xl:container bg-white p-4 rounded-xl mt-2">
-      <div className="mt-4 mb-4 items-end justify-end flex ">
+    <div className=" xl:container bg-white p-4 rounded-2xl shadow-md mt-2">
+      <div className="mt-2 mb-2 items-end justify-end flex ">
         <Button
           className="bg-blue-500 text-white"
           onClick={() => router.push(`/admin/orders/create-checkout`)}

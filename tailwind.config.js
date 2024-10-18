@@ -14,6 +14,8 @@ module.exports = {
       colors: {
         lightGray: '#f0f4f8',
         dedede: '#dedede',
+        D9D9D9: '#D9D9D9',
+        F2F2F2: '#F2F2F2',
       },
       screens: {
         sm: '640px',

@@ -64,7 +64,7 @@ export default function ExpirationTable() {
   )
 
   return (
-    <div className="xl:container bg-white rounded-xl">
+    <div className="xl:container bg-white shadow-md rounded-2xl">
       <div className="flex justify-between items-center p-4">
         <Input
           size="small"

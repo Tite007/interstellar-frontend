@@ -97,15 +97,15 @@ export default function ContentManagementPage() {
   }
 
   return (
-    <div className="xl:container bg-white p-4 mt-5 rounded-lg w-full ">
+    <div className="xl:container bg-white p-4 mt-5 shadow-md rounded-2xl w-full ">
       <h1 className="text-2xl mt-5 font-semibold text-gray-700">Content</h1>
       <div className="flex justify-between items-center mb-4">
         <Input
-          className=" mt-5  w-1/2"
+          className=" pl-2 mt-5  w-1/2"
           isClearable
-          size="sm"
+          size="md"
           radius="md"
-          variant="faded"
+          variant="flat"
           placeholder="Search by headline..."
           value={filterValue}
           onChange={(e) => setFilterValue(e.target.value)}

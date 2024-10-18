@@ -230,13 +230,9 @@ const ProductAddForm = () => {
 
   return (
     <form onSubmit={handleSave} className=" xl:container space-y-5">
-      <h1 className=" col-span-3 text-lg font-semibold text-gray-700">
-        Add New Product
-      </h1>
-
       <Tabs className="overflow-x-auto w-full" aria-label="Product Add Tabs">
         <Tab key="product" title="Product">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border bg-white pr-4 pl-4 rounded-2xl pt-10 pb-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 shadow-md gap-6 border bg-white pr-4 pl-4 rounded-2xl pt-10 pb-10">
             <Input
               isRequired
               labelPlacement="outside"
@@ -352,7 +348,7 @@ const ProductAddForm = () => {
               style={{ fontSize: '16px' }}
             />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white pr-4 pl-4 mt-4 border rounded-2xl pt-5 pb-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white pr-4 pl-4 mt-4 border shadow-md rounded-2xl pt-5 pb-10">
             <div className="col-span-1">
               <label className="block mb-2 text-sm font-medium text-gray-700">
                 Upload new product images
@@ -393,7 +389,7 @@ const ProductAddForm = () => {
           />
         </Tab>
         <Tab key="price" title="Price">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 border bg-white pr-4 pl-4 rounded-2xl pt-5 pb-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 border bg-white pr-4 pl-4 shadow-md rounded-2xl pt-5 pb-10">
             <h1 className="col-span-2 text-lg font-semibold text-gray-700">
               Price
             </h1>
@@ -497,7 +493,7 @@ const ProductAddForm = () => {
         </Tab>
 
         <Tab key="seo" title="SEO">
-          <div className="grid grid-cols-1 gap-6 border bg-white pr-4 pl-4 rounded-2xl pt-5 pb-10">
+          <div className="grid grid-cols-1 gap-6 border shadow-md bg-white pr-4 pl-4 rounded-2xl pt-5 pb-10">
             <h1 className="text-lg font-semibold text-gray-700">SEO Tags</h1>
             <Input
               clearable
@@ -531,7 +527,7 @@ const ProductAddForm = () => {
           </div>
         </Tab>
         <Tab key="variants" title="Variants">
-          <div className="bg-white pr-4 pl-4 rounded-2xl pt-10 pb-10">
+          <div className="bg-white pr-4 pl-4 rounded-2xl shadow-md pt-10 pb-10">
             <h1 className="col-span-3 text-lg font-semibold text-gray-700">
               Variants
             </h1>
@@ -548,7 +544,7 @@ const ProductAddForm = () => {
         <Button
           size="sm"
           color="secondary"
-          className="bg-gray-200 hover:bg-gray-300 text-black"
+          className="bg-gray-200 hover:bg-gray-300 shadow-md text-black"
         >
           Save as Draft
         </Button>
@@ -556,7 +552,7 @@ const ProductAddForm = () => {
           size="sm"
           type="submit"
           color="primary"
-          className="bg-green-500 hover:bg-green-600 text-white"
+          className="bg-green-500 shadow-md hover:bg-green-600 text-black"
         >
           Create Product
         </Button>

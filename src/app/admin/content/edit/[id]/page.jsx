@@ -164,7 +164,7 @@ export default function EditContentPage() {
   return (
     <div className="xl:container mt-4">
       <BreadcrumbsContent />
-      <div className="xl:container mt-5 bg-white p-4 rounded-lg w-full">
+      <div className="xl:container mt-5 bg-white p-4 rounded-2xl w-full">
         <h1 className="text-2xl mt-2 font-semibold text-gray-700 mb-5">
           Edit Content
         </h1>
@@ -178,14 +178,14 @@ export default function EditContentPage() {
                 placeholder="Enter headline"
                 value={headline}
                 onChange={(e) => setHeadline(e.target.value)}
-                variant="faded"
+                variant="flat"
               />
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Input
                   className="mt-4"
                   radius="md"
                   size="sm"
-                  variant="faded"
+                  variant="flat"
                   type="date"
                   label="Date Published"
                   value={datePublished}
@@ -194,7 +194,7 @@ export default function EditContentPage() {
                 />
                 <Input
                   className="mt-4"
-                  variant="faded"
+                  variant="flat"
                   radius="md"
                   size="sm"
                   label="Author Name"
@@ -204,7 +204,7 @@ export default function EditContentPage() {
                   style={{ fontSize: '16px' }}
                 />
                 <Input
-                  variant="faded"
+                  variant="flat"
                   label="Author URL"
                   radius="md"
                   size="sm"
@@ -259,7 +259,7 @@ export default function EditContentPage() {
                 placeholder="Enter SEO title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                variant="faded"
+                variant="flat"
                 style={{ fontSize: '16px' }}
               />
               <Textarea
@@ -269,7 +269,7 @@ export default function EditContentPage() {
                 placeholder="Enter SEO excerpt"
                 value={excerpt}
                 onChange={(e) => setExcerpt(e.target.value)}
-                variant="faded"
+                variant="flat"
                 className="mt-4"
               />
               <Input
@@ -279,7 +279,7 @@ export default function EditContentPage() {
                 placeholder="Enter SEO keywords"
                 value={keywords}
                 onChange={(e) => setKeywords(e.target.value)}
-                variant="faded"
+                variant="flat"
                 className="mt-4"
               />
             </div>

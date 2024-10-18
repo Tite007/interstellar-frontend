@@ -57,7 +57,7 @@ const TechnicalDataForm = ({ productId }) => {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border bg-white pr-4 pl-4 rounded-2xl pt-10 pb-10">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border bg-white pr-4 pl-4 shadow-md rounded-2xl pt-10 pb-10">
       <h1 className="col-span-full text-lg font-semibold text-gray-700">
         Technical Data
       </h1>

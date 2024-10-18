@@ -99,7 +99,7 @@ export default function NewContentPage() {
   return (
     <div className="xl:container mt-4">
       <BreadcrumbsNewContent />
-      <div className="xl:container mt-5 bg-white p-4 rounded-lg w-full">
+      <div className="xl:container mt-5 bg-white p-4 rounded-2xl shadow-md w-full">
         <h1 className="text-2xl mt-4 font-semibold text-gray-700 mb-5">
           Create New Content
         </h1>
@@ -113,7 +113,7 @@ export default function NewContentPage() {
                 placeholder="Enter headline"
                 value={headline}
                 onChange={(e) => setHeadline(e.target.value)}
-                variant="faded"
+                variant="flat"
                 style={{ fontSize: '16px' }}
               />
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -121,7 +121,7 @@ export default function NewContentPage() {
                   className="mt-4"
                   radius="md"
                   size="sm"
-                  variant="faded"
+                  variant="flat"
                   type="date"
                   label="Date Published"
                   value={datePublished}
@@ -130,7 +130,7 @@ export default function NewContentPage() {
                 />
                 <Input
                   className="mt-4"
-                  variant="faded"
+                  variant="flat"
                   radius="md"
                   size="sm"
                   label="Author Name"
@@ -140,7 +140,7 @@ export default function NewContentPage() {
                   style={{ fontSize: '16px' }}
                 />
                 <Input
-                  variant="faded"
+                  variant="flat"
                   label="Author URL"
                   radius="md"
                   size="sm"
@@ -184,7 +184,7 @@ export default function NewContentPage() {
                 placeholder="Enter SEO title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                variant="faded"
+                variant="flat"
               />
               <Textarea
                 label="Excerpt"
@@ -193,7 +193,7 @@ export default function NewContentPage() {
                 placeholder="Enter SEO excerpt"
                 value={excerpt}
                 onChange={(e) => setExcerpt(e.target.value)}
-                variant="faded"
+                variant="flat"
                 className="mt-4"
               />
               <Input
@@ -203,7 +203,7 @@ export default function NewContentPage() {
                 placeholder="Enter SEO keywords"
                 value={keywords}
                 onChange={(e) => setKeywords(e.target.value)}
-                variant="faded"
+                variant="flat"
                 className="mt-4"
                 style={{ fontSize: '16px' }}
               />

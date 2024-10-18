@@ -159,7 +159,7 @@ const EditUserForm = () => {
       <h1 className="col-span-3 text-lg font-semibold text-gray-700">
         {id ? 'Edit User' : 'Add User'}
       </h1>
-      <div className="grid grid-cols-1 border bg-white pr-4 pl-4 rounded-2xl pt-10 pb-10 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 border bg-white pr-4 pl-4 shadow-md rounded-2xl pt-10 pb-10 md:grid-cols-2 gap-6">
         <Input
           size="sm"
           isClearable={true}
@@ -234,7 +234,7 @@ const EditUserForm = () => {
       <h1 className="col-span-3 text-lg font-semibold text-gray-700">
         Address
       </h1>
-      <div className="grid grid-cols-1 border bg-white pr-4 pl-4 rounded-2xl pt-10 pb-10 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 border bg-white pr-4 pl-4 shadow-md rounded-2xl pt-10 pb-10 md:grid-cols-2 gap-6">
         <Input
           isClearable={true}
           value={user.street}
@@ -290,7 +290,7 @@ const EditUserForm = () => {
           style={{ fontSize: '16px' }}
         />
       </div>
-      <div className="grid grid-cols-1 border bg-white pr-4 pl-4 rounded-2xl pt-10 pb-10 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 border bg-white shadow-md pr-4 pl-4 rounded-2xl pt-10 pb-10 md:grid-cols-2 gap-6">
         <Input
           clearable
           bordered
@@ -302,7 +302,7 @@ const EditUserForm = () => {
           style={{ fontSize: '16px' }}
         />
       </div>
-      <div className="grid grid-cols-1 border bg-white pr-4 pl-4 rounded-2xl pt-10 pb-10 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 border bg-white pr-4 pl-4 shadow-md rounded-2xl pt-10 pb-10 md:grid-cols-2 gap-6">
         <Select
           size="sm"
           clearable

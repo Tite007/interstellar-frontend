@@ -122,7 +122,7 @@ export default function CustomerOrderHistory({ user }) {
   )
 
   return (
-    <div className="border bg-white shadow-sm w-full rounded-xl mt-10 p-5">
+    <div className="border bg-white shadow-md w-full rounded-2xl mt-10 p-5">
       <div className="flex justify-between">
         <h2 className=" text-lg font-semibold mb-4">Order History</h2>
         <div className="text-right">
@@ -149,6 +149,7 @@ export default function CustomerOrderHistory({ user }) {
             isHeaderSticky
             isStriped
             isCompact
+            shadow="none"
             aria-label="Order History Table"
           >
             <TableHeader>

@@ -76,7 +76,7 @@ export default function TransactionsTable() {
   )
 
   return (
-    <div className="xl:container  bg-white p-4 rounded-xl mt-2">
+    <div className="xl:container  bg-white p-4 shadow-md rounded-2xl mt-2">
       <Table
         isHeaderSticky
         isStriped

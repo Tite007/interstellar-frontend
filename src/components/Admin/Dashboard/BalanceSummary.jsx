@@ -14,9 +14,10 @@ const BalanceSummary = ({ summary }) => {
   }
 
   return (
-    <div className="bg-white shadow mt-5 rounded-xl p-4">
+    <div className="bg-white shadow-md mt-4 rounded-2xl p-4">
       <h2 className="text-xl font-semibold mb-4">Balance Summary</h2>
-      <div className="overflow-x-auto pb-4 ">
+      <div className="flex justify-center overflow-x-auto pb-4">
+        {' '}
         <table className="min-w-30 divide-y divide-gray-200">
           <thead>
             <tr>
@@ -36,7 +37,7 @@ const BalanceSummary = ({ summary }) => {
               <td className="px-6 py-3">
                 {formatCurrency(summary.accountActivity)}
               </td>
-              <td className="px-6 py-3">{`-${formatCurrency(summary.fees)}`}</td>
+              <td className="px-6 py-3 text-red-700">{`${formatCurrency(summary.fees)}`}</td>
               <td className="px-6 py-3">{formatCurrency(summary.netChange)}</td>
               <td className="px-6 py-3">
                 {formatCurrency(summary.totalPayouts)}
