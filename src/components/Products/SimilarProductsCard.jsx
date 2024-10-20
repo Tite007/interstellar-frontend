@@ -82,6 +82,7 @@ const SimilarProductsCard = ({ product }) => {
         ) : (
           <p className="font-bold text-gray-900">${product.price.toFixed(2)}</p>
         )}
+        <p> {product.size}</p>
       </div>
 
       <AddToCartButton
