@@ -1,48 +1,93 @@
 // components/SimilarProductsCard.js
+import React, { useState, useEffect, useContext } from 'react'
+import Link from 'next/link'
 import Image from 'next/image'
-import React, { useState, useContext } from 'react'
 import ProductRatingCards from '../Product-details/RatingProductCards'
 import AddToCartButton from '@/src/components/Products/AddToCartButton'
 import { CartContext } from '@/src/context/CartContext'
-import Link from 'next/link'
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
 const SimilarProductsCard = ({ product }) => {
   const { addToCart } = useContext(CartContext)
   const [selectedQuantity, setSelectedQuantity] = useState('1')
   const [isOutOfStock, setIsOutOfStock] = useState(product.currentStock === 0)
+  const [categories, setCategories] = useState([])
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/categories/categories`)
+        const data = await response.json()
+        setCategories(data)
+      } catch (err) {
+        console.error('Error fetching categories:', err)
+      }
+    }
+
+    fetchCategories()
+  }, [])
 
   const handleAddToCart = (event) => {
     event.stopPropagation()
-
     const cartItem = {
       productId: product._id,
       productImage: product.images[0],
       productName: product.name,
       productPrice: product.price,
       compareAtPrice: product.compareAtPrice,
-      quantity: selectedQuantity,
+      quantity: parseInt(selectedQuantity, 10),
+      size: product.size,
     }
-
     addToCart(cartItem)
-    alert(`${product.name} added to cart`)
+    alert(`${product.name} (${product.size}) added to cart`)
   }
 
-  const discountPercentage =
-    product.compareAtPrice && product.compareAtPrice > product.price
-      ? Math.round(
-          ((product.compareAtPrice - product.price) / product.compareAtPrice) *
-            100,
-        )
-      : null
+  const mapCategoryAndSubcategory = (product) => {
+    let categoryName = 'default-category'
+    let subcategoryName = 'default-subcategory'
 
-  const savingsAmount =
-    product.compareAtPrice && product.compareAtPrice > product.price
-      ? (product.compareAtPrice - product.price).toFixed(2)
-      : null
+    if (product.parentCategory) {
+      const category = categories.find(
+        (cat) => String(cat._id) === String(product.parentCategory),
+      )
+
+      if (category) {
+        categoryName = category.name
+
+        if (product.subcategory) {
+          const subcategory = categories.find(
+            (cat) => String(cat._id) === String(product.subcategory),
+          )
+          if (subcategory) {
+            subcategoryName = subcategory.name
+          }
+        }
+      }
+    }
+
+    return { categoryName, subcategoryName }
+  }
+
+  const { categoryName, subcategoryName } = mapCategoryAndSubcategory(product)
+
+  const productName = product.name
+    ? product.name.toLowerCase().replace(/\s+/g, '-')
+    : 'default-product'
+
+  const formattedCategoryName = categoryName.toLowerCase().replace(/\s+/g, '-')
+  const formattedSubcategoryName = subcategoryName
+    .toLowerCase()
+    .replace(/\s+/g, '-')
+
+  const productLink = {
+    pathname: `/categories/${formattedCategoryName}/${formattedSubcategoryName}/${productName}`,
+    query: { productId: product._id },
+  }
 
   return (
-    <div className="border border-gray-200 rounded-xl p-4 m-4 shadow-md text-left w-[300px] h-[550px] sm:h-[520px] md:h-[500px] lg:h-[500px] flex flex-col justify-between">
-      <Link href={`/products/${product._id}`}>
+    <div className="border border-gray-200 rounded-2xl p-4 shadow-md text-left w-[300px] h-[550px] sm:h-[520px] md:h-[500px] lg:h-[500px] flex flex-col justify-between">
+      <Link href={productLink}>
         <div className="cursor-pointer">
           <div className="relative w-[260px] h-[260px] mx-auto mb-4">
             <Image
@@ -62,12 +107,14 @@ const SimilarProductsCard = ({ product }) => {
       <ProductRatingCards productId={product._id} />
 
       <p className="text-sm text-gray-500 text-left">
-        {product.technicalData?.tasteNotes}
+        {product.technicalData?.tasteNotes || 'No taste notes available'}
       </p>
-      <p className="text-black text-left">{product.category}</p>
+      <p className=" text-sm text-black text-left">
+        {product.category?.name || 'Unknown Category'}
+      </p>
 
       <div className="text-left">
-        {discountPercentage ? (
+        {product.compareAtPrice && product.compareAtPrice > product.price ? (
           <>
             <p className="text-red-500 font-bold">
               ${product.price.toFixed(2)}{' '}
@@ -75,14 +122,20 @@ const SimilarProductsCard = ({ product }) => {
                 ${product.compareAtPrice.toFixed(2)}
               </span>{' '}
               <span className="text-green-600">
-                ( {discountPercentage}% off)
+                ({' '}
+                {Math.round(
+                  ((product.compareAtPrice - product.price) /
+                    product.compareAtPrice) *
+                    100,
+                )}
+                % off)
               </span>
             </p>
           </>
         ) : (
           <p className="font-bold text-gray-900">${product.price.toFixed(2)}</p>
         )}
-        <p> {product.size}</p>
+        <p className="text-black text-sm"> Size: {product.size}</p>
       </div>
 
       <AddToCartButton
