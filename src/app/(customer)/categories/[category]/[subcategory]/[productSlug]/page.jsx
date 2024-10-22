@@ -171,7 +171,7 @@ export default function MainProductDetails() {
       <div className="block md:hidden text-left mb-4">
         <p className="tex-lg font-semibold mt-1"> {product.brand}</p>
 
-        <h1 className="text-2xl mt-1 mb-1 font-semibold ">
+        <h1 className="text-xl mt-1 mb-1 font-semibold ">
           {product.name || 'N/A'}
         </h1>
         <ProductRating productId={product._id} />
@@ -182,7 +182,7 @@ export default function MainProductDetails() {
         {isOutOfStock && (
           <p className="text-red-600 font-semibold mb-1">Out of Stock</p>
         )}
-        <p className="text-2xl font-bold mb-4">
+        <p className="text-xl font-bold mb-4">
           ${price.toFixed(2)}
           {compareAtPrice && compareAtPrice > price && (
             <>

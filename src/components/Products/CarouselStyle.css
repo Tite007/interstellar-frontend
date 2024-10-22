@@ -26,7 +26,6 @@
 @media (min-width: 380px) {
   .embla-product {
     --slide-size: 73%; /* Adjust slide size for small screens */
-    --slide-spacing: 1.8rem; /* Adjust spacing for small screens */
   }
 }
 

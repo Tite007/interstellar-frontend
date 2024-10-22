@@ -14,7 +14,7 @@ const StickyAddToCartButton = ({
   }
 
   return (
-    <div className="fixed bottom-0 left-0 w-full md:hidden bg-white shadow-2xl border-t-1 text-white flex items-center justify-center p-4 z-50">
+    <div className="fixed bottom-0 left-0 w-full md:hidden bg-white shadow-t-2xl border-t-1 text-white flex items-center justify-center p-4 z-50">
       <div className="flex items-center w-full space-x-4">
         <Select
           label="Quantity"
