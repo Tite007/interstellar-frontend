@@ -86,13 +86,14 @@ const SimilarProductsCard = ({ product }) => {
   }
 
   return (
-    <div className="border border-gray-200 rounded-2xl p-4 shadow-md text-left w-[300px] h-[550px] sm:h-[520px] md:h-[500px] lg:h-[500px] flex flex-col justify-between">
+    <div className="border  rounded-2xl p-4  text-left w-[270px] sm:w-[300px] md:w-320 h-[530px] sm:h-[520px] md:h-[500px] lg:h-[500px] flex flex-col justify-between">
       <Link href={productLink}>
         <div className="cursor-pointer">
-          <div className="relative w-[260px] h-[260px] mx-auto mb-4">
+          <div className="relative w-[240px] sm:w-[250px] md:w-[260px] h-[260px] mx-auto ">
             <Image
               src={product.images[0]}
               alt={product.name}
+              sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
               className="object-cover rounded-t-md"
               width={260}
               height={260}
@@ -100,13 +101,15 @@ const SimilarProductsCard = ({ product }) => {
               style={{ objectFit: 'cover' }}
             />
           </div>
-          <h3 className="text-lg font-semibold text-left">{product.name}</h3>
         </div>
       </Link>
+      <h3 className="text-lg line-clamp-1 font-semibold text-left">
+        {product.name}
+      </h3>
 
       <ProductRatingCards productId={product._id} />
 
-      <p className="text-sm text-gray-500 text-left">
+      <p className="text-sm line-clamp-1 text-gray-500 text-left">
         {product.technicalData?.tasteNotes || 'No taste notes available'}
       </p>
       <p className=" text-sm text-black text-left">
@@ -135,7 +138,10 @@ const SimilarProductsCard = ({ product }) => {
         ) : (
           <p className="font-bold text-gray-900">${product.price.toFixed(2)}</p>
         )}
-        <p className="text-black text-sm"> Size: {product.size}</p>
+        <p className="text-black text-sm">
+          {' '}
+          <strong>Size: </strong> {product.size}
+        </p>
       </div>
 
       <AddToCartButton
