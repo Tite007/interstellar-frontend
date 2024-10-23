@@ -89,7 +89,7 @@ const SimilarProductsCard = ({ product }) => {
     <div className=" bg-F5F5F7 rounded-2xl p-4 text-left xs:w-[300px] mx-auto sm:w-[300px] md:w-[300px] lg:w-[300px] xl:w-[300px] h-[500px] sm:h-[520px] md:h-[500px] lg:h-[500px] flex flex-col justify-between">
       <Link href={productLink}>
         <div className="cursor-pointer">
-          <div className="relative w-[220px] sm:w-[250px] md:w-[260px] h-[230px] sm:h-[260px] md:[h-260px] lg:h-[260px] mx-auto ">
+          <div className="relative mb-2 w-[234px] sm:w-[250px] md:w-[260px] h-[230px] sm:h-[260px] md:[h-260px] lg:h-[260px] mx-auto ">
             <Image
               src={product.images[0]}
               alt={product.name}
