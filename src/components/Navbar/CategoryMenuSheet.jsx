@@ -11,95 +11,63 @@ import {
 import { Button } from '@nextui-org/button'
 import { ChevronLeft, Menu, Home } from 'lucide-react' // Import back arrow and home icons
 
-export function CategoryMenuSheet({ shopCategories }) {
-  const [activeCategory, setActiveCategory] = useState(null) // Track active category
+export default function CategoryMenuSheet({ shopCategories }) {
+  const [activeCategory, setActiveCategory] = useState(null)
 
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button isIconOnly variant="flat" color="primary">
-          <Menu />
+        <Button variant="flat" color="primary" isIconOnly>
+          <Menu className="h-6 w-6" />
+          <span className="sr-only">Open menu</span>
         </Button>
       </SheetTrigger>
-
-      {/* Main Categories Sheet */}
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Main Categories</SheetTitle>
-        </SheetHeader>
-        <div className="mt-4 p-4">
-          <Button
-            className="w-full mb-2"
-            variant="flat"
-            color="primary"
-            onClick={() => {
-              // Redirect to home when clicked
-              window.location.href = '/'
-            }}
-            startContent={<Home />} // Home icon
-          >
-            Home
-          </Button>
-          {shopCategories.map((category) => (
-            <Button
-              key={category.label}
-              className="w-full mb-2"
-              onClick={() => setActiveCategory(category)}
-            >
-              {category.label}
-            </Button>
-          ))}
-        </div>
-      </SheetContent>
-
-      {/* Subcategories Sheet */}
-      {activeCategory && (
-        <SheetContent>
-          <SheetHeader>
-            <SheetTitle>{activeCategory.label}</SheetTitle>
-            <Button
-              className="mt-4 text-left mb-4"
-              variant="light"
+          {activeCategory && (
+            <button
               onClick={() => setActiveCategory(null)}
-              startContent={<ChevronLeft />}
+              className="flex items-center text-sm font-medium text-muted-foreground mb-2"
             >
-              Go Back
-            </Button>
-            {/*   <Button
-              className="mt-4 text-left mb-4"
-              variant="flat"
-              color="primary"
-              onClick={() => {
-                // Redirect to home when clicked
-                window.location.href = '/'
-              }}
-              startContent={<Home />} // Home icon
-            >
-              Home
-            </Button>*/}
-          </SheetHeader>
-          <div className="p-4">
-            {activeCategory.subcategories.length > 0 ? (
-              activeCategory.subcategories.map((subcategory) => (
-                <Button
+              <ChevronLeft className="mr-2 h-4 w-4" />
+              Back
+            </button>
+          )}
+          <SheetTitle className="text-left text-lg mt-2 font-medium">
+            {activeCategory ? activeCategory.label : 'Menu'}
+          </SheetTitle>
+        </SheetHeader>
+        <div className="mt-6 flex flex-col space-y-4">
+          {activeCategory ? (
+            <>
+              {activeCategory.subcategories.map((subcategory) => (
+                <a
                   key={subcategory.label}
-                  className="w-full mb-2 "
-                  onClick={() => {
-                    // Handle subcategory click, can redirect here
-                    window.location.href = subcategory.href
-                  }}
+                  href={subcategory.href}
+                  className="text-2xl font-medium"
                 >
                   {subcategory.label}
-                </Button>
-              ))
-            ) : (
-              <p>No subcategories available</p>
-            )}
-          </div>
-        </SheetContent>
-      )}
+                </a>
+              ))}
+            </>
+          ) : (
+            <>
+              <a href="/" className="text-2xl font-medium font-sans">
+                Home
+              </a>
+              {shopCategories.map((category) => (
+                <button
+                  key={category.label}
+                  onClick={() => setActiveCategory(category)}
+                  className="text-left text-2xl font-medium font-sans"
+                >
+                  {category.label}
+                </button>
+              ))}
+            </>
+          )}
+        </div>
+      </SheetContent>
     </Sheet>
   )
 }
-
-export default CategoryMenuSheet

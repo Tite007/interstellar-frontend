@@ -16,6 +16,7 @@ module.exports = {
         dedede: '#dedede',
         D9D9D9: '#D9D9D9',
         F2F2F2: '#F2F2F2',
+        F5F5F7: '#F5F5F7',
       },
       screens: {
         sm: '640px',

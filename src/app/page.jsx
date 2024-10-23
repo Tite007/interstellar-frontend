@@ -14,7 +14,9 @@ export default function Home({ products }) {
           <HeroBanner />
           {/* Similar Products Carousel */}
           <div className="mt-16">
-            <h2 className="text-2xl font-semibold mb-6">Similar Products</h2>
+            <h2 className="text-2xl font-semibold font-sans mb-6">
+              Similar Products
+            </h2>
 
             <ProductCarouselContainer
               products={products}

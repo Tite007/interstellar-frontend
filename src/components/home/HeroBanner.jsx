@@ -9,7 +9,7 @@ const HeroBanner = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 ">
           {/* Left Column: Letters/Text */}
           <div className="hero-banner text">
-            <h1 className="text-6xl font-bold mb-4">
+            <h1 className="text-6xl font-bold font-sans mb-4">
               Good Ideas Start with Great Coffee
             </h1>
             <p className="text-lg text-gray-700 mb-4">
