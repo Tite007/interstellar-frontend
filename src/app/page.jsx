@@ -4,7 +4,7 @@ import MainNavbarCustomer from '../components/Navbar/CustomerNavbar'
 import { CartProvider } from '../context/CartContext'
 import HeroBanner from '@/src/components/home/HeroBanner'
 import ProductCarouselContainer from '../components/Products/ProductCarouselContainer'
-import SubcategoryProductSection from '@/src/components/Home/SubcategoryProductSection'
+import SubcategoryProductSection from '@/src/components/home/SubcategoryProductSection'
 
 export default function Home() {
   return (
