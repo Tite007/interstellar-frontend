@@ -188,9 +188,11 @@ export default function MainProductDetails() {
             <Button
               size="sm"
               color="primary"
+              variant="flat"
               onPress={() => setShowNotifyModal(true)}
+              startContent={<Bell size={16} strokeWidth={1.75} />}
             >
-              <Bell size={14} strokeWidth={1.75} /> Notify Me
+              Notify Me
             </Button>
           </div>
         )}
@@ -239,9 +241,11 @@ export default function MainProductDetails() {
                 <Button
                   size="sm"
                   color="primary"
+                  variant="flat"
                   onPress={() => setShowNotifyModal(true)}
+                  startContent={<Bell size={16} strokeWidth={2.0} />}
                 >
-                  <Bell size={16} strokeWidth={1.75} /> Notify Me
+                  Notify Me
                 </Button>
               </div>
             )}

@@ -24,6 +24,8 @@ import ProductCarouselContainer from '@/src/components/Products/ProductCarouselC
 import { ReviewProvider } from '@/src/context/ReviewContext' // Import ReviewProvider
 import ReviewSection from '@/src/components/Product-details/ReviewSection' // Import ReviewSection
 import ProductRating from '@/src/components/Product-details/ProductRating'
+import NotifyMeModal from '@/src/components/Product-details/NotifyMeModal'
+import { Bell } from 'lucide-react'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
@@ -39,6 +41,7 @@ export default function ProductDetails({ params, products }) {
   const { addToCart } = useContext(CartContext)
   const [selectedImages, setSelectedImages] = useState([])
   const [isOutOfStock, setIsOutOfStock] = useState(false)
+  const [showNotifyModal, setShowNotifyModal] = useState(false)
 
   // Fetch product details
   useEffect(() => {
@@ -176,8 +179,24 @@ export default function ProductDetails({ params, products }) {
           {product.technicalData.tasteNotes || 'No taste notes available'}
         </h2>
         {isOutOfStock && (
-          <p className="text-red-600 font-semibold mb-1">Out of Stock</p>
+          <div className="flex items-center space-x-3 mb-1">
+            <p className="text-red-600 font-semibold">Out of Stock</p>
+            <Button
+              size="sm"
+              color="primary"
+              variant="flat"
+              onPress={() => setShowNotifyModal(true)}
+              startContent={<Bell size={16} strokeWidth={2.0} />}
+            >
+              Notify Me
+            </Button>
+          </div>
         )}
+        <NotifyMeModal
+          isVisible={showNotifyModal}
+          onClose={() => setShowNotifyModal(false)}
+          productId={product?._id}
+        />
         <p className="text-2xl font-bold mb-4">
           ${price.toFixed(2)}
           {compareAtPrice && compareAtPrice > price && (
@@ -215,8 +234,24 @@ export default function ProductDetails({ params, products }) {
               {product.technicalData.tasteNotes || 'No taste notes available'}
             </p>
             {isOutOfStock && (
-              <p className="text-red-600 font-semibold mb-1">Out of Stock</p>
+              <div className="flex items-center space-x-3 mb-1">
+                <p className="text-red-600 font-semibold">Out of Stock</p>
+                <Button
+                  size="sm"
+                  color="primary"
+                  variant="flat"
+                  onPress={() => setShowNotifyModal(true)}
+                  startContent={<Bell size={16} strokeWidth={2.0} />}
+                >
+                  Notify Me
+                </Button>
+              </div>
             )}
+            <NotifyMeModal
+              isVisible={showNotifyModal}
+              onClose={() => setShowNotifyModal(false)}
+              productId={product?._id}
+            />
             <p className="text-2xl font-bold mb-4">
               ${price.toFixed(2)}
               {compareAtPrice && compareAtPrice > price && (

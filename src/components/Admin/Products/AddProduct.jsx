@@ -12,7 +12,6 @@ import { Tabs, Tab } from '@nextui-org/tabs'
 import TechnicalDataFormAdd from './TechnicalDataFormAdd'
 import Image from 'next/image'
 import { DatePicker } from '@nextui-org/date-picker'
-import { CalendarDate } from '@internationalized/date'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 

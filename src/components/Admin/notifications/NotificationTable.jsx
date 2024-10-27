@@ -11,6 +11,7 @@ import {
 } from '@nextui-org/table'
 import { Pagination } from '@nextui-org/pagination'
 import { format } from 'date-fns'
+import { toast } from 'sonner'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
@@ -19,7 +20,6 @@ export default function NotificationTable() {
   const [page, setPage] = useState(1)
   const [rowsPerPage, setRowsPerPage] = useState(10)
 
-  // Fetch notifications
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
@@ -41,7 +41,6 @@ export default function NotificationTable() {
     productId,
   ) => {
     try {
-      // Step 1: Fetch email content from the backend
       const emailContentResponse = await fetch(
         `${API_BASE_URL}/notifications/generate-email-content`,
         {
@@ -50,11 +49,9 @@ export default function NotificationTable() {
           body: JSON.stringify({ customerName, productId }),
         },
       )
-
       const { emailSubject, emailText, emailHtml } =
         await emailContentResponse.json()
 
-      // Step 2: Send the email with the generated content
       const response = await fetch(`${API_BASE_URL}/notifications/send-email`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -75,19 +72,26 @@ export default function NotificationTable() {
               : notification,
           ),
         )
-        alert('Notification email sent successfully.')
+        toast.success('Notification email sent successfully.')
       } else {
         console.error(
           'Error sending email notification:',
           await response.json(),
         )
+        toast.error('Failed to send notification email.')
       }
     } catch (error) {
       console.error('Failed to send email notification:', error)
+      toast.error('Failed to send notification email.')
     }
   }
 
-  // Function to delete a notification
+  const confirmDeleteNotification = (notificationId) => {
+    if (window.confirm('Are you sure you want to delete this notification?')) {
+      deleteNotification(notificationId)
+    }
+  }
+
   const deleteNotification = async (notificationId) => {
     try {
       const response = await fetch(
@@ -103,12 +107,14 @@ export default function NotificationTable() {
             (notification) => notification._id !== notificationId,
           ),
         )
-        alert('Notification deleted successfully.')
+        toast.success('Notification deleted successfully.')
       } else {
         console.error('Error deleting notification:', await response.json())
+        toast.error('Failed to delete notification.')
       }
     } catch (error) {
       console.error('Failed to delete notification:', error)
+      toast.error('Failed to delete notification.')
     }
   }
 
@@ -137,15 +143,22 @@ export default function NotificationTable() {
             <TableColumn>Product</TableColumn>
             <TableColumn>Date Requested</TableColumn>
             <TableColumn>Notified</TableColumn>
-            <TableColumn>Action</TableColumn>
+            <TableColumn>Send Email</TableColumn>
+            <TableColumn>Delete</TableColumn>
           </TableHeader>
           <TableBody>
             {paginatedNotifications.map((notification) => (
               <TableRow key={notification._id}>
-                <TableCell>{notification.name}</TableCell>
-                <TableCell>{notification.email}</TableCell>
-                <TableCell>{notification.product?.name || 'N/A'}</TableCell>
-                <TableCell>
+                <TableCell style={{ minWidth: '150px' }}>
+                  {notification.name}
+                </TableCell>
+                <TableCell style={{ minWidth: '200px' }}>
+                  {notification.email}
+                </TableCell>
+                <TableCell style={{ minWidth: '150px' }}>
+                  {notification.product?.name || 'N/A'}
+                </TableCell>
+                <TableCell style={{ minWidth: '120px' }}>
                   {format(new Date(notification.createdAt), 'yyyy-MM-dd')}
                 </TableCell>
                 <TableCell>{notification.notified ? 'Yes' : 'No'}</TableCell>
@@ -157,14 +170,16 @@ export default function NotificationTable() {
                         notification._id,
                         notification.email,
                         notification.name,
-                        notification.product?._id, // Use product ID directly here
+                        notification.product?._id,
                       )
                     }
                   >
                     {notification.notified ? 'Notified' : 'Send Email'}
                   </button>
+                </TableCell>
+                <TableCell>
                   <button
-                    onClick={() => deleteNotification(notification._id)}
+                    onClick={() => confirmDeleteNotification(notification._id)}
                     className="ml-2 text-red-500"
                   >
                     Delete
