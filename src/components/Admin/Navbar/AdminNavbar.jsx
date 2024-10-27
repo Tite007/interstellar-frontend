@@ -22,6 +22,7 @@ import {
   Menu,
   CircleAlert,
   FolderOpen,
+  Bell,
 } from 'lucide-react'
 import { Button } from '@nextui-org/button'
 
@@ -48,10 +49,16 @@ const navigation = [
     icon: <CircleAlert strokeWidth={1.5} className="mr-4 h-5 w-5" />,
   },
   {
+    name: 'Product Notifications',
+    href: '/admin/notifications',
+    icon: <Bell size={20} strokeWidth={1.25} className="mr-4 h-5 w-5" />,
+  },
+  {
     name: 'Customers',
     href: '/admin/customers',
     icon: <Users strokeWidth={1.5} className="mr-4 h-5 w-5" />,
   },
+
   {
     name: 'Categories',
     href: '/admin/categories',

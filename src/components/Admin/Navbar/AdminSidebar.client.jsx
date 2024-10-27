@@ -12,6 +12,7 @@ import {
   ChevronDown,
   CircleAlert,
   FolderOpen,
+  Bell,
 } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import { usePathname } from 'next/navigation' // Assuming this is available in your project
@@ -40,10 +41,16 @@ const navigation = [
     icon: <CircleAlert strokeWidth={1.5} className="mr-4 h-5 w-5" />,
   },
   {
+    name: 'Product Notifications',
+    href: '/admin/notifications',
+    icon: <Bell size={20} strokeWidth={1.25} className="mr-4 h-5 w-5" />,
+  },
+  {
     name: 'Customers',
     href: '/admin/customers',
     icon: <Users strokeWidth={1.5} className="mr-4 h-5 w-5" />,
   },
+
   {
     name: 'Categories',
     href: '/admin/categories',

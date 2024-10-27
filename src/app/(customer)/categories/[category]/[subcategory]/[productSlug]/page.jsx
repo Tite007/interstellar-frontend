@@ -24,6 +24,8 @@ import ReviewSection from '@/src/components/Product-details/ReviewSection'
 import ProductRating from '@/src/components/Product-details/ProductRating'
 import { CartContext } from '@/src/context/CartContext'
 import { Button } from '@nextui-org/button'
+import NotifyMeModal from '@/src/components/Product-details/NotifyMeModal'
+import { Bell } from 'lucide-react'
 
 export default function MainProductDetails() {
   const searchParams = useSearchParams() // To extract query parameters
@@ -39,6 +41,7 @@ export default function MainProductDetails() {
   const [compareAtPrice, setCompareAtPrice] = useState(null)
   const [selectedImages, setSelectedImages] = useState([])
   const [isOutOfStock, setIsOutOfStock] = useState(false)
+  const [showNotifyModal, setShowNotifyModal] = useState(false)
 
   // Fetch product details by productId from query params
   useEffect(() => {
@@ -180,7 +183,16 @@ export default function MainProductDetails() {
           {product.technicalData?.tasteNotes || 'No taste notes available'}
         </h2>
         {isOutOfStock && (
-          <p className="text-red-600 font-semibold mb-1">Out of Stock</p>
+          <div className="flex items-center space-x-3 mb-1">
+            <p className="text-red-600 font-semibold">Out of Stock</p>
+            <Button
+              size="sm"
+              color="primary"
+              onPress={() => setShowNotifyModal(true)}
+            >
+              <Bell size={14} strokeWidth={1.75} /> Notify Me
+            </Button>
+          </div>
         )}
         <p className="text-xl font-bold mb-4">
           ${price.toFixed(2)}
@@ -222,8 +234,22 @@ export default function MainProductDetails() {
               {product.technicalData?.tasteNotes || 'No taste notes available'}
             </p>
             {isOutOfStock && (
-              <p className="text-red-600 font-semibold mb-1">Out of Stock</p>
+              <div className="flex items-center space-x-3 mb-1">
+                <p className="text-red-600 font-semibold">Out of Stock</p>
+                <Button
+                  size="sm"
+                  color="primary"
+                  onPress={() => setShowNotifyModal(true)}
+                >
+                  <Bell size={16} strokeWidth={1.75} /> Notify Me
+                </Button>
+              </div>
             )}
+            <NotifyMeModal
+              isVisible={showNotifyModal}
+              onClose={() => setShowNotifyModal(false)}
+              productId={product?._id}
+            />
             <p className="text-2xl font-bold mb-4">
               ${price.toFixed(2)}
               {compareAtPrice && compareAtPrice > price && (
@@ -282,6 +308,7 @@ export default function MainProductDetails() {
               </p>
             </div>
           )}
+
           <div className="mt-4">
             <h3 className="text-md font-semibold mb-4">
               Choose Your Delivery Option:
