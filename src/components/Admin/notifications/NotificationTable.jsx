@@ -41,14 +41,41 @@ export default function NotificationTable() {
     productId,
   ) => {
     try {
+      // Use the correct route for fetching the product
+      const productResponse = await fetch(
+        `${API_BASE_URL}/products/findProduct/${productId}`,
+      )
+
+      // Check if the response is OK
+      if (!productResponse.ok) {
+        throw new Error(
+          `Failed to fetch product: ${productResponse.statusText} (${productResponse.status})`,
+        )
+      }
+
+      const productData = await productResponse.json()
+      const productImageUrl = productData.images?.[0] || '' // Use the first image as the main image
+
       const emailContentResponse = await fetch(
         `${API_BASE_URL}/notifications/generate-email-content`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ customerName, productId }),
+          body: JSON.stringify({
+            customerName,
+            productId,
+            productImageUrl, // Pass image URL
+          }),
         },
       )
+
+      // Check if email content generation was successful
+      if (!emailContentResponse.ok) {
+        throw new Error(
+          `Failed to generate email content: ${emailContentResponse.statusText}`,
+        )
+      }
+
       const { emailSubject, emailText, emailHtml } =
         await emailContentResponse.json()
 
