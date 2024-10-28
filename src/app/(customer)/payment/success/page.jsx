@@ -154,7 +154,8 @@ const PaymentSuccessPage = () => {
             </p>
 
             <h4 className="text-lg font-semibold mb-2">Items Ordered:</h4>
-            <div className="mb-10">
+            {/* Desktop Table */}
+            <div className="hidden sm:block mb-10">
               <table className="w-full table-auto text-left">
                 <thead>
                   <tr className="border-b-2 border-gray-200">
@@ -170,13 +171,13 @@ const PaymentSuccessPage = () => {
                 <tbody>
                   {items.map((item, index) => (
                     <tr key={index} className="border-b border-gray-200">
-                      <td className="px-4 py-">
+                      <td className="px-4 py-2">
                         <Image
                           src={item.productDetails?.images?.[0]}
                           alt={item.description}
                           width={50}
                           height={50}
-                          className=" rounded-md object-cover"
+                          className="rounded-md object-cover"
                         />
                       </td>
                       <td className="px-4 py-2">{item.description}</td>
@@ -194,45 +195,59 @@ const PaymentSuccessPage = () => {
                     </tr>
                   ))}
                 </tbody>
-                <tfoot>
-                  <tr>
-                    <td
-                      className="px-4 py-2 font-medium text-right"
-                      colSpan="4"
-                    >
-                      Subtotal:
-                    </td>
-                    <td className="px-4 py-2 text-right">
-                      ${calculateSubtotal.toFixed(2)}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td
-                      className="px-4 py-2 font-medium text-right"
-                      colSpan="4"
-                    >
-                      Shipping (Standard Shipping):
-                    </td>
-                    <td className="px-4 py-2 text-right">
-                      $
-                      {(
-                        (sessionDetails?.shipping_cost?.amount_total || 0) / 100
-                      ).toFixed(2)}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td
-                      className="px-4 py-2 font-medium text-right"
-                      colSpan="4"
-                    >
-                      Total:
-                    </td>
-                    <td className="px-4 py-2 text-right">
-                      ${calculateTotal.toFixed(2)}
-                    </td>
-                  </tr>
-                </tfoot>
               </table>
+            </div>
+
+            {/* Mobile-Friendly Card View */}
+            <div className="block sm:hidden space-y-4 mb-10">
+              {items.map((item, index) => (
+                <div key={index} className="border rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center space-x-4 mb-2">
+                    <Image
+                      src={item.productDetails?.images?.[0]}
+                      alt={item.description}
+                      width={50}
+                      height={50}
+                      className="rounded-md object-cover"
+                    />
+                    <div className="flex-1">
+                      <h3 className="font-semibold">{item.description}</h3>
+                      <p className="text-sm text-gray-600">
+                        Qty: {item.quantity}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <p>Unit Price:</p>
+                    <p>${(item.price.unit_amount / 100).toFixed(2)}</p>
+                  </div>
+                  <div className="flex justify-between text-sm font-semibold">
+                    <p>Total:</p>
+                    <p>
+                      $
+                      {((item.price.unit_amount / 100) * item.quantity).toFixed(
+                        2,
+                      )}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Totals Section for Both Views */}
+            <div className="mt-4 space-y-2 text-right sm:text-right">
+              <div className="font-medium">
+                Subtotal: ${calculateSubtotal.toFixed(2)}
+              </div>
+              <div className="font-medium">
+                Shipping (Standard Shipping): $
+                {(
+                  (sessionDetails?.shipping_cost?.amount_total || 0) / 100
+                ).toFixed(2)}
+              </div>
+              <div className="font-bold">
+                Total: ${calculateTotal.toFixed(2)}
+              </div>
             </div>
           </div>
         </div>
