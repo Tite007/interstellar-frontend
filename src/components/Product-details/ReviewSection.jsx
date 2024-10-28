@@ -1,5 +1,6 @@
+// ReviewSection.js
 'use client'
-import React, { useState, useContext } from 'react' // Add useState here
+import React, { useState, useContext } from 'react'
 import { Button } from '@nextui-org/button'
 import { Textarea } from '@nextui-org/input'
 import { useSession } from 'next-auth/react'
@@ -24,15 +25,27 @@ const ReviewSection = ({ productId }) => {
   return (
     <div className="review-section">
       <Toaster position="top-right" richColors />
-      <h2 className=" text-2xl font-semibold mb-3">Customer Reviews</h2>
-      {reviews.map((review) => (
-        <ReviewItem
-          key={review._id}
-          review={review}
-          addReply={addReply}
-          deleteReview={deleteReview}
-        />
-      ))}
+      <h2 className="text-2xl font-semibold mb-3">Customer Reviews</h2>
+
+      {/* Scrollable and Centered Container */}
+      <div
+        className={`flex overflow-x-auto space-x-4 pb-2 snap-x snap-mandatory ${
+          reviews.length <= 2 ? 'md:justify-center' : ''
+        }`}
+      >
+        {reviews.map((review) => (
+          <div
+            key={review._id}
+            className="flex-shrink-0 w-80 h-52 pb-1 snap-start"
+          >
+            <ReviewItem
+              review={review}
+              addReply={addReply}
+              deleteReview={deleteReview}
+            />
+          </div>
+        ))}
+      </div>
 
       {status === 'authenticated' && hasPurchased && (
         <div className="new-review">
@@ -40,7 +53,7 @@ const ReviewSection = ({ productId }) => {
             Rate this Product
           </p>
           <StarRating maxStars={5} onRatingChange={setNewRating} />
-          <h3 className=" text-left mt-4 mb-2 text-lg font-semibold">
+          <h3 className="text-left mt-4 mb-2 text-lg font-semibold">
             Add a Review
           </h3>
           <Textarea
@@ -48,12 +61,12 @@ const ReviewSection = ({ productId }) => {
             onChange={(e) => setNewComment(e.target.value)}
             placeholder="Write your review here"
             rows={4}
-            className=" text-[17px]"
+            className="text-[17px]"
           />
           <Button
             color="primary"
             size="sm"
-            className=" mt-4"
+            className="mt-4"
             onClick={handleSubmit}
           >
             Submit

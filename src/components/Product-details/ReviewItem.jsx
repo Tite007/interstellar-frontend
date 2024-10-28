@@ -12,6 +12,7 @@ const ReviewItem = ({ review, addReply, deleteReview, isReply = false }) => {
   const { data: session, status } = useSession()
   const [replyText, setReplyText] = useState('')
   const [replyTo, setReplyTo] = useState(null)
+  const [isExpanded, setIsExpanded] = useState(false) // State for 'Read more' toggle
 
   const handleReplySubmit = () => {
     addReply(replyText, review._id)
@@ -19,13 +20,19 @@ const ReviewItem = ({ review, addReply, deleteReview, isReply = false }) => {
     setReplyTo(null)
   }
 
+  // Truncate comment text to 160 characters
+  const truncatedComment =
+    review.comment.length > 160
+      ? `${review.comment.slice(0, 160)}...`
+      : review.comment
+
   return (
     <div style={{ marginLeft: isReply ? '20px' : '0' }}>
-      <div className="review-item border shadow-md rounded-lg mb-2 text-left p-4">
-        <div className="flex justify-between">
+      <div className="review-item border shadow-md rounded-2xl mb-2 text-left p-4  w-80 max-h-60 overflow-hidden">
+        <div className="flex justify-betwee">
           <div>
             {/** User Info */}
-            <div className="flex items-center mt-1 ">
+            <div className="flex items-center mt-1">
               <User
                 name={review.user.name}
                 description={review.user.role || 'Customer'}
@@ -44,7 +51,20 @@ const ReviewItem = ({ review, addReply, deleteReview, isReply = false }) => {
             <p className="text-xs mt-1 text-gray-500">
               {format(new Date(review.time), 'PPpp')}
             </p>
-            <p className="mt-2">{review.comment}</p>
+            <p className="mt-2 h-12 ">
+              {isExpanded ? review.comment : truncatedComment}
+              {review.comment.length > 160 && (
+                <Button
+                  auto
+                  light
+                  size="xs"
+                  className="ml-2"
+                  onClick={() => setIsExpanded(!isExpanded)}
+                >
+                  {isExpanded ? 'Read less' : 'Read more'}
+                </Button>
+              )}
+            </p>
           </div>
           {/** Delete Button */}
           {status === 'authenticated' &&
@@ -62,7 +82,7 @@ const ReviewItem = ({ review, addReply, deleteReview, isReply = false }) => {
               </Button>
             )}
         </div>
-        {/** Reply Section  Button */}
+        {/** Reply Section Button */}
         {status === 'authenticated' && !isReply && (
           <Button
             className="mt-4"
@@ -95,7 +115,7 @@ const ReviewItem = ({ review, addReply, deleteReview, isReply = false }) => {
         {review.replies &&
           review.replies.length > 0 &&
           review.replies.map((reply) => (
-            <div key={reply._id} className="mt-3 ">
+            <div key={reply._id} className="mt-3">
               <ReviewItem
                 review={reply}
                 addReply={addReply}
