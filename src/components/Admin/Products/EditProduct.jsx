@@ -13,6 +13,7 @@ import TechnicalDataForm from '@/src/components/Admin/Products/TechnicalDataForm
 import Image from 'next/image'
 import { DatePicker } from '@nextui-org/date-picker'
 import { parseDate, CalendarDate, toCalendar } from '@internationalized/date'
+import TaxCodeSearchModal from './TaxCodeSearchModal'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
@@ -59,6 +60,7 @@ const ProductEditForm = () => {
     seoDescription: '',
     seoKeywords: '',
     brand: '',
+    taxCode: '', // This will hold the stripeTaxCode only
     expirationDate: null, // Use CalendarDate for DatePicker
   })
 
@@ -67,6 +69,7 @@ const ProductEditForm = () => {
   const [inventoryType, setInventoryType] = useState('track')
   const [images, setImages] = useState([])
   const router = useRouter()
+  const [selectedTaxCode, setSelectedTaxCode] = useState('') // Display the type and name
 
   // Fetch categories on mount
   useEffect(() => {
@@ -206,9 +209,38 @@ const ProductEditForm = () => {
     }
   }
 
+  // Load existing tax code details on component mount
+  useEffect(() => {
+    if (product.taxCode) {
+      // Fetch tax code details if taxCode is already set in the product
+      const fetchTaxCodeDetails = async () => {
+        try {
+          const response = await fetch(
+            `${API_BASE_URL}/taxCodes/findByStripeCode/${product.taxCode}`,
+          )
+          const taxCodeData = await response.json()
+          if (taxCodeData) {
+            // Set selectedTaxCode with the type and name
+            setSelectedTaxCode(`${taxCodeData.type} - ${taxCodeData.name}`)
+          }
+        } catch (error) {
+          console.error('Error fetching tax code details:', error)
+        }
+      }
+      fetchTaxCodeDetails()
+    }
+  }, [product.taxCode])
+
+  // Handle Tax Code Selection
+  const handleTaxCodeSelect = (taxCode) => {
+    setProduct((prev) => ({ ...prev, taxCode: taxCode.stripeTaxCode })) // Save only stripeTaxCode
+    setSelectedTaxCode(`${taxCode.type} - ${taxCode.name}`) // Display type and name
+  }
+  // Handle save function
   // Handle save function
   const handleSave = async (status) => {
     try {
+      // Filter out new images that haven't been uploaded yet
       const newImages = images.filter((image) => image.file)
       const formImageData = new FormData()
       newImages.forEach((image) => {
@@ -226,19 +258,23 @@ const ProductEditForm = () => {
         uploadedImages = await uploadRes.json()
       }
 
+      // Combine existing and newly uploaded images
       const allImages = [
         ...images.filter((image) => !image.file),
         ...uploadedImages.map((image) => ({ url: image.url })),
       ]
 
+      // Prepare the payload with updated images, expiration date, and taxCode
       const payload = {
         ...product,
         images: allImages.map((image) => image.url),
         expirationDate: product.expirationDate
           ? formatDateForBackend(product.expirationDate)
           : null, // Save formatted as YYYY-MM-DD
+        taxCode: product.taxCode || null, // Include only stripeTaxCode in the payload
       }
 
+      // Send update request to backend
       const res = await fetch(
         `${API_BASE_URL}/products/updateProduct/${product._id}`,
         {
@@ -372,6 +408,21 @@ const ProductEditForm = () => {
               onChange={handleDateChange}
               placeholder="Select expiration date"
             />
+            {/* Tax Code Section */}
+            <div className="mt-4">
+              <label className="block text-sm font-medium text-gray-700">
+                Tax Code
+              </label>
+              <div className="flex items-center gap-2">
+                <Input
+                  readOnly
+                  fullWidth
+                  value={selectedTaxCode} // Display selected tax code type and name
+                  placeholder="Select a tax code"
+                />
+                <TaxCodeSearchModal onSelectTaxCode={handleTaxCodeSelect} />
+              </div>
+            </div>
 
             <Textarea
               isRequired
