@@ -47,10 +47,7 @@ const ShoppingCart = () => {
           console.log(result.error.message)
         }
       } else {
-        console.error(
-          'Failed to create checkout session, response status:',
-          response.status,
-        )
+        console.error('Failed to create checkout session', response.status)
         const errorDetail = await response.text()
         console.error('Error details:', errorDetail)
       }

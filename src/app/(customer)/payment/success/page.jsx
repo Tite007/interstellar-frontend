@@ -114,8 +114,9 @@ const PaymentSuccessPage = () => {
   }, [items])
 
   const calculateTotal = useMemo(() => {
-    const shipping = (sessionDetails?.shipping_cost?.amount_total || 0) / 100
-    return calculateSubtotal + shipping
+    const shipping = (sessionDetails?.shipping_cost?.amount_subtotal || 0) / 100
+    const tax = (sessionDetails?.total_details?.amount_tax || 0) / 100
+    return calculateSubtotal + tax + shipping
   }, [calculateSubtotal, sessionDetails])
 
   const handleGoToOrders = () => {
@@ -198,52 +199,20 @@ const PaymentSuccessPage = () => {
               </table>
             </div>
 
-            {/* Mobile-Friendly Card View */}
-            <div className="block sm:hidden space-y-4 mb-10">
-              {items.map((item, index) => (
-                <div key={index} className="border rounded-lg p-4 shadow-sm">
-                  <div className="flex items-center space-x-4 mb-2">
-                    <Image
-                      src={item.productDetails?.images?.[0]}
-                      alt={item.description}
-                      width={50}
-                      height={50}
-                      className="rounded-md object-cover"
-                    />
-                    <div className="flex-1">
-                      <h3 className="font-semibold">{item.description}</h3>
-                      <p className="text-sm text-gray-600">
-                        Qty: {item.quantity}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <p>Unit Price:</p>
-                    <p>${(item.price.unit_amount / 100).toFixed(2)}</p>
-                  </div>
-                  <div className="flex justify-between text-sm font-semibold">
-                    <p>Total:</p>
-                    <p>
-                      $
-                      {((item.price.unit_amount / 100) * item.quantity).toFixed(
-                        2,
-                      )}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
             {/* Totals Section for Both Views */}
             <div className="mt-4 space-y-2 text-right sm:text-right">
               <div className="font-medium">
                 Subtotal: ${calculateSubtotal.toFixed(2)}
               </div>
               <div className="font-medium">
+                Tax: $
+                {(sessionDetails?.total_details?.amount_tax / 100).toFixed(2)}
+              </div>
+              <div className="font-medium">
                 Shipping (Standard Shipping): $
-                {(
-                  (sessionDetails?.shipping_cost?.amount_total || 0) / 100
-                ).toFixed(2)}
+                {(sessionDetails?.shipping_cost?.amount_subtotal / 100).toFixed(
+                  2,
+                )}
               </div>
               <div className="font-bold">
                 Total: ${calculateTotal.toFixed(2)}
