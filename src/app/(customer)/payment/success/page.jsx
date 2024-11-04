@@ -124,7 +124,7 @@ const PaymentSuccessPage = () => {
   }
 
   return (
-    <div className="container p-10 font-sans text-gray-800">
+    <div className="container rounded-2xl bg-F5F5F7 p-10 font-sans text-gray-800">
       <h1 className="text-2xl font-bold mb-6">Payment Success</h1>
       {isLoading ? (
         <p>Loading your order details...</p>
@@ -197,6 +197,38 @@ const PaymentSuccessPage = () => {
                   ))}
                 </tbody>
               </table>
+            </div>
+
+            {/* Mobile List */}
+            <div className="block sm:hidden mb-10">
+              {items.map((item, index) => (
+                <div
+                  key={index}
+                  className="border p-4 bg-white rounded-2xl  border-gray-200 pb-4 mb-4"
+                >
+                  <div className="flex items-center">
+                    <Image
+                      src={item.productDetails?.images?.[0]}
+                      alt={item.description}
+                      width={50}
+                      height={50}
+                      className="rounded-md object-cover"
+                    />
+                    <div className="ml-4">
+                      <p className="font-medium">{item.description}</p>
+                      <p>Qty: {item.quantity}</p>
+                      <p>Price: ${(item.price.unit_amount / 100).toFixed(2)}</p>
+                      <p>
+                        Total: $
+                        {(
+                          (item.price.unit_amount / 100) *
+                          item.quantity
+                        ).toFixed(2)}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
 
             {/* Totals Section for Both Views */}
