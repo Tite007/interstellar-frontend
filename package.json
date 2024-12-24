@@ -48,7 +48,7 @@
     "chartjs-adapter-date-fns": "^3.0.0",
     "class-variance-authority": "^0.7.0",
     "classnames": "^2.5.1",
-    "cookie": "^0.6.0",
+    "cookie": "^1.0.2",
     "date-fns": "^3.6.0",
     "embla-carousel": "^8.1.8",
     "embla-carousel-react": "^8.1.8",
