@@ -18,7 +18,7 @@ module.exports = {
         D9D9D9: '#D9D9D9',
         F2F2F2: '#F2F2F2',
         F5F5F7: '#F5F5F7',
-        tealGreen: '#269167', // Assign a valid name like 'tealGreen'
+        tealGreen: '#269167',
         softGreen: '#15BFA0',
       },
       screens: {
