@@ -99,7 +99,7 @@ export default function MainNavbarCustomer() {
   return (
     <Navbar
       maxWidth="2xl"
-      className="bg-gray-200 shadow-lg"
+      className=" bg-tealGreen shadow-lg"
       isMenuOpen={isMenuOpen} // Control menu visibility
       onMenuOpenChange={(isOpen) => setIsMenuOpen(isOpen)} // Update state when toggling menu
     >
@@ -186,8 +186,8 @@ export default function MainNavbarCustomer() {
         {status === 'unauthenticated' && (
           <Dropdown>
             <DropdownTrigger>
-              <Button isIconOnly variant="flat">
-                <User size={24} strokeWidth={1.5} />
+              <Button isIconOnly variant="light">
+                <User color="white" size={24} strokeWidth={1.5} />
               </Button>
             </DropdownTrigger>
             <DropdownMenu aria-label="Login Actions" variant="flat">
@@ -242,7 +242,7 @@ export default function MainNavbarCustomer() {
               <Avatar
                 isBordered
                 as="button"
-                className="cursor-pointer"
+                className="cursor-pointer "
                 src={session.user.image}
               />
             </DropdownTrigger>

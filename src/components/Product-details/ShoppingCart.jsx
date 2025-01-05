@@ -127,7 +127,7 @@ const ShoppingCart = () => {
                         Subtotal: ${itemSubtotal.toFixed(2)}
                       </p>
                       {itemDiscount > 0 && (
-                        <p className="text-sm text-green-600">
+                        <p className="text-sm text-tealGreen font-bold">
                           You save: ${itemDiscount.toFixed(2)}
                         </p>
                       )}
@@ -144,7 +144,7 @@ const ShoppingCart = () => {
                     <div>
                       <Button
                         variant="flat"
-                        color="danger"
+                        className=" bg-tealGreen text-white"
                         size="sm"
                         onClick={() =>
                           removeFromCart(item.productName, item.productVariant)
@@ -165,7 +165,7 @@ const ShoppingCart = () => {
         <>
           <div className="mt-6 text-right">
             {cartSummary.discount > 0 && (
-              <p className="text-lg mb-2 font-bold text-green-600">
+              <p className="text-lg mb-2 font-bold text-tealGreen ">
                 Total Savings: ${cartSummary.discount.toFixed(2)}
               </p>
             )}
@@ -176,8 +176,7 @@ const ShoppingCart = () => {
           <Button
             onClick={handleSubmitStripePayment}
             variant="solid"
-            color="success"
-            className="mt-6 w-full"
+            className="mt-6 w-full bg-tealGreen text-white font-medium"
           >
             Proceed to Checkout
           </Button>

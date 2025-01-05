@@ -17,8 +17,8 @@ export default function CategoryMenuSheet({ shopCategories }) {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="flat" color="primary" isIconOnly>
-          <Menu className="h-6 w-6" />
+        <Button variant="light" isIconOnly>
+          <Menu color="white" className="h-6 w-6" />
           <span className="sr-only">Open menu</span>
         </Button>
       </SheetTrigger>

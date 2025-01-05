@@ -96,7 +96,7 @@ export default function SearchModal() {
         onClick={onOpen}
         variant="flat"
         endContent={<Search />}
-        color="primary"
+        className=" bg-white text-gray-400"
       >
         Search Products...
       </Button>

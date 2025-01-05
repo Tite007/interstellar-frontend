@@ -1,4 +1,5 @@
 const { nextui } = require('@nextui-org/theme')
+const { green } = require('colors')
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -17,6 +18,8 @@ module.exports = {
         D9D9D9: '#D9D9D9',
         F2F2F2: '#F2F2F2',
         F5F5F7: '#F5F5F7',
+        tealGreen: '#269167', // Assign a valid name like 'tealGreen'
+        softGreen: '#15BFA0',
       },
       screens: {
         sm: '640px',

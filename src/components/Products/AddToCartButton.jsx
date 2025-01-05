@@ -18,14 +18,13 @@ const AddToCartButton = ({
     <div className="flex flex-col mt-2 space-y-2 md:flex-row md:space-y-0 md:space-x-4">
       {/* Stack vertically on mobile, side-by-side on medium and larger screens */}
       <Select
-        color="danger"
         size="sm"
         placeholder="Select quantity"
         selectedKeys={
           selectedQuantity ? new Set([selectedQuantity]) : undefined
         }
         onSelectionChange={handleQuantityChange}
-        className="w-full md:max-w-[60px]" // Full width on mobile, fixed width on larger screens
+        className="w-full border rounded-lg md:max-w-[60px]" // Full width on mobile, fixed width on larger screens
         disabled={isOutOfStock}
       >
         {[1, 2, 3, 4, 5].map((quantity) => (
@@ -40,9 +39,9 @@ const AddToCartButton = ({
       </Select>
 
       <Button
-        color="danger"
+        color="" // Use the color you defined in tailwind.config.js
         size="sm"
-        className="w-full text-sm" // Full width on mobile, adjust as needed
+        className="w-full text-white font-medium bg-tealGreen text-sm" // Full width on mobile, adjust as needed
         onClick={handleAddToCart}
         disabled={isOutOfStock || !selectedQuantity}
       >

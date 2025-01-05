@@ -16,8 +16,8 @@ export function ShoppingCartSheet() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button isIconOnly variant="flat" color="primary">
-          <ShoppingBag size={24} strokeWidth={1.5} />{' '}
+        <Button isIconOnly variant="light">
+          <ShoppingBag color="white" size={24} strokeWidth={1.5} />{' '}
           {/* Replace the cart icon with the bag icon */}
         </Button>
       </SheetTrigger>
