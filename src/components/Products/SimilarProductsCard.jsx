@@ -29,7 +29,6 @@ const SimilarProductsCard = ({ product }) => {
   }, [])
 
   const handleAddToCart = (event) => {
-    event.stopPropagation()
     const cartItem = {
       productId: product._id,
       productImage: product.images[0],
@@ -86,15 +85,15 @@ const SimilarProductsCard = ({ product }) => {
   }
 
   return (
-    <div className=" rounded-2xl p-4 text-left xs:w-[300px] mx-auto sm:w-[300px] md:w-[300px] lg:w-[300px] xl:w-[300px] h-[500px] sm:h-[520px] md:h-[500px] lg:h-[500px] flex flex-col justify-between">
+    <div className="  rounded-2xl p-4 text-left xs:w-[300px] mx-auto sm:w-[300px] md:w-[300px] lg:w-[300px] xl:w-[300px] h-[500px] sm:h-[520px] md:h-[500px] lg:h-[500px] flex flex-col justify-between">
       <Link href={productLink}>
-        <div className="cursor-pointer ">
+        <div className="cursor-pointer">
           <div className="relative mb-2 w-[234px] sm:w-[250px] md:w-[260px] h-[230px] sm:h-[260px] md:[h-260px] lg:h-[260px] mx-auto ">
             <Image
               src={product.images[0]}
               alt={product.name}
               sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-              className="object-cover  rounded-t-md"
+              className="object-cover rounded-t-md"
               width={260}
               height={260}
               priority
