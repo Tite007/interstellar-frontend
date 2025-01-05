@@ -24,7 +24,7 @@ const AddToCartButton = ({
           selectedQuantity ? new Set([selectedQuantity]) : undefined
         }
         onSelectionChange={handleQuantityChange}
-        className="w-full border rounded-lg md:max-w-[60px]" // Full width on mobile, fixed width on larger screens
+        className="w-full borderrounded-lg md:max-w-[60px]" // Full width on mobile, fixed width on larger screens
         disabled={isOutOfStock}
       >
         {[1, 2, 3, 4, 5].map((quantity) => (
