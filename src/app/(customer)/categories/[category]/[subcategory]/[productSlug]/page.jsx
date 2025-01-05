@@ -329,8 +329,7 @@ export default function MainProductDetails() {
           <div className="grid grid-cols-2 gap-2 ">
             <Button
               size="md"
-              color="danger"
-              className="mt-9 hidden md:block text-white"
+              className="mt-9 hidden md:block bg-tealGreen text-white"
               onClick={handleAddToCart}
               disabled={isOutOfStock}
             >
@@ -342,15 +341,15 @@ export default function MainProductDetails() {
             <Select
               label="Quantity"
               labelPlacement="outside-left"
-              color="danger"
               placeholder="Select quantity"
+              variant="faded"
               selectedKeys={
                 selectedQuantity ? new Set([selectedQuantity]) : undefined
               }
               onSelectionChange={(value) =>
                 setSelectedQuantity(value.anchorKey)
               }
-              className="max-w-xs mt-4 hidden md:block"
+              className="max-w-xs   mt-4 hidden md:block"
             >
               {[1, 2, 3, 4, 5].map((quantity) => (
                 <SelectItem

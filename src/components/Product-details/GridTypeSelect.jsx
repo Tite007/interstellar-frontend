@@ -1,12 +1,12 @@
 // src/components/Product-details/ProductSelect.jsx
-import React from "react";
-import { Select, SelectItem } from "@nextui-org/select";
-import { grindOptions } from "./data";
+import React from 'react'
+import { Select, SelectItem } from '@nextui-org/select'
+import { grindOptions } from './data'
 
 const GrindTypeSelect = ({ selectedGrind, onGrindChange }) => {
   return (
     <Select
-      color="primary"
+      color="success"
       size="md"
       placeholder="Select grind type"
       selectedKeys={selectedGrind ? new Set([selectedGrind]) : undefined}
@@ -19,7 +19,7 @@ const GrindTypeSelect = ({ selectedGrind, onGrindChange }) => {
         </SelectItem>
       ))}
     </Select>
-  );
-};
+  )
+}
 
-export default GrindTypeSelect;
+export default GrindTypeSelect

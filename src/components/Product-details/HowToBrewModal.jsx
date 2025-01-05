@@ -22,7 +22,7 @@ export default function HowToBrewModal() {
       <Button
         startContent={<Coffee strokeWidth={1.5} />}
         onPress={openModal}
-        className=" bg-yellow-100"
+        className=" bg-F2D230 "
         variant="flat"
       >
         How to Brew

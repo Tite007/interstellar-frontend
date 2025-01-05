@@ -19,6 +19,8 @@ module.exports = {
         F5F5F7: '#F5F5F7',
         tealGreen: '#269167',
         softGreen: '#15BFA0',
+        DCF230: '#DCF230',
+        F2D230: '#F2D230',
       },
       screens: {
         sm: '640px',

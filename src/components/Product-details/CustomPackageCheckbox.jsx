@@ -14,11 +14,11 @@ export default function CustomPackageCheckbox({
 
   return (
     <label
-      className={`flex items-center text-sm justify-between mt-2 p-3 border rounded-lg cursor-pointer 
+      className={`flex items-center  text-sm justify-between mt-2 p-3 border rounded-lg cursor-pointer 
         ${
           isSelected
-            ? 'border-blue-500 bg-blue-100'
-            : 'border-gray-200 hover:bg-gray-100'
+            ? 'border-tealGreen font-medium text-white bg-tealGreen'
+            : 'border-gray-200 hover:softGreen hover:bg-softGreen'
         }`}
       onClick={() => onChange(value)}
     >

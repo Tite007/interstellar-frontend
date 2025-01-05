@@ -18,14 +18,13 @@ const StickyAddToCartButton = ({
       <div className="flex items-center w-full space-x-4">
         <Select
           label="Quantity"
-          color="danger"
           size="sm"
           placeholder="Select quantity"
           selectedKeys={
             selectedQuantity ? new Set([selectedQuantity]) : undefined
           }
           onSelectionChange={handleQuantityChange}
-          className="max-w-xs w-1/2"
+          className="max-w-xs  w-1/2"
           disabled={isOutOfStock} // Disable select if out of stock
         >
           {[1, 2, 3, 4, 5].map((quantity) => (
@@ -41,7 +40,7 @@ const StickyAddToCartButton = ({
         <Button
           color="danger"
           size="lg"
-          className="w-1/2 text-md"
+          className="w-1/2 bg-tealGreen text-md"
           onClick={handleAddToCart}
           disabled={isOutOfStock || !selectedQuantity} // Disable button if out of stock
         >

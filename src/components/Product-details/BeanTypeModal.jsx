@@ -21,7 +21,7 @@ export default function BeanTypeModal() {
       <Button
         startContent={<ClipboardPenLine strokeWidth={1.5} />}
         onPress={openModal}
-        className=" bg-yellow-100"
+        className=" bg-F2D230 "
         variant="flat"
       >
         Bean Type

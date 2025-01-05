@@ -21,7 +21,7 @@ export default function AboutModal({ product }) {
       <Button
         startContent={<CircleUser strokeWidth={1.5} />}
         onPress={openModal}
-        className=" bg-yellow-100"
+        className=" bg-F2D230"
         variant="flat"
       >
         About
@@ -38,7 +38,11 @@ export default function AboutModal({ product }) {
                 </p>
               </ModalBody>
               <ModalFooter>
-                <Button color="danger" variant="flat" onPress={closeModal}>
+                <Button
+                  className="bg-DCF230"
+                  variant="flat"
+                  onPress={closeModal}
+                >
                   Close
                 </Button>
               </ModalFooter>
