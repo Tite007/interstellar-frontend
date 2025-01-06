@@ -72,7 +72,10 @@ const SubcategoryPage = () => {
               }}
               key={item._id}
             >
-              <Card className="py-4 hover:shadow-lg transition-shadow duration-300">
+              <Card
+                shadow="none"
+                className="py-4 border hover:shadow-lg transition-shadow duration-300"
+              >
                 <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
                   <h4 className="font-bold text-large">{item.name}</h4>
                 </CardHeader>

@@ -19,9 +19,9 @@ const HeroBanner = () => {
 
             <Button
               as={Link}
-              href="/products"
+              href="/categories"
               radius="lg"
-              className="inline-block bg-tealGreen text-white px-6 py-3 rounded-md mt-4 hover:bg-blue-700 transition duration-300"
+              className="inline-block bg-tealGreen text-white px-6 py-3 rounded-md mt-4 hover:bg-softGreen transition duration-300"
             >
               Shop Now
             </Button>
