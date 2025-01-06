@@ -331,7 +331,7 @@ export default function MainProductDetails() {
               size="md"
               className="mt-9 hidden md:block bg-tealGreen text-white"
               onClick={handleAddToCart}
-              disabled={isOutOfStock}
+              isDisabled={isOutOfStock}
             >
               {isOutOfStock
                 ? 'Out of Stock'

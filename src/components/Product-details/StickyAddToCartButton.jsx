@@ -42,7 +42,7 @@ const StickyAddToCartButton = ({
           size="lg"
           className="w-1/2 bg-tealGreen text-md"
           onClick={handleAddToCart}
-          disabled={isOutOfStock || !selectedQuantity} // Disable button if out of stock
+          isDisabled={isOutOfStock || !selectedQuantity} // Disable button if out of stock
         >
           {isOutOfStock
             ? 'Out of Stock'

@@ -43,7 +43,7 @@ const AddToCartButton = ({
         size="sm"
         className="w-full text-white font-medium bg-tealGreen text-sm" // Full width on mobile, adjust as needed
         onClick={handleAddToCart}
-        disabled={isOutOfStock || !selectedQuantity}
+        isDisabled={isOutOfStock || !selectedQuantity}
       >
         {isOutOfStock
           ? 'Out of Stock'
