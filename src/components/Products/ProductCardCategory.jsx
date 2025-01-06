@@ -29,7 +29,6 @@ const ProductCardCategory = ({ product }) => {
   }, [])
 
   const handleAddToCart = (event) => {
-    event.stopPropagation()
     const cartItem = {
       productId: product._id,
       productImage: product.images[0],
@@ -111,7 +110,7 @@ const ProductCardCategory = ({ product }) => {
   console.log('Product Name:', productName)
 
   return (
-    <div className="border border-gray-200 rounded-xl p-4 m-1 shadow-md text-left sm:min-w-[220px] h-[440px] md:h-[460px] sm:max-w-[260px] lg:max-w-[285px] md:max-w-[350px] flex flex-col justify-between">
+    <div className="border border-gray-200 rounded-xl p-4 m-1  text-left sm:min-w-[220px] h-[440px] md:h-[460px] sm:max-w-[260px] lg:max-w-[285px] md:max-w-[350px] flex flex-col justify-between">
       <Link href={productLink}>
         <div className="cursor-pointer">
           <div className="relative w-full h-[200px] md:h-[250px] lg:h-[250px] mb-1">
@@ -150,7 +149,7 @@ const ProductCardCategory = ({ product }) => {
             <span className="line-through text-gray-500">
               ${product.compareAtPrice.toFixed(2)}
             </span>{' '}
-            <span className="text-green-600">
+            <span className="text-tealGreen">
               (
               {Math.round(
                 ((product.compareAtPrice - product.price) /
