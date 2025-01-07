@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import BreadcrumbsUserProfileOrdersDetails from '@/src/components/customer/BreadcrumbsProfileOrdersDetails'
 import Image from 'next/image'
-
+import { Button } from '@nextui-org/button'
 const OrderDetailsPage = () => {
   const pathname = usePathname()
   const orderId = pathname.split('/').pop() // Gets the last segment of the path
@@ -93,6 +93,24 @@ const OrderDetailsPage = () => {
     const shipping = orderDetails?.shippingInfo?.shippingCost || 0
     const tax = (orderDetails?.taxInfo?.taxPercentage / 100) * subtotal || 0
     return subtotal + shipping + tax
+  }
+
+  // Helper function to generate tracking URL
+  const generateTrackingUrl = (carrier, trackingNumber) => {
+    switch (carrier.toLowerCase()) {
+      case 'ups':
+        return `https://www.ups.com/track?loc=en_CA&tracknum=${trackingNumber}`
+      case 'fedex':
+        return `https://www.fedex.com/fedextrack/?tracknumbers=${trackingNumber}`
+      case 'dhl':
+        return `https://www.dhl.com/en/express/tracking.html?AWB=${trackingNumber}`
+      default:
+        return '#'
+    }
+  }
+
+  if (!orderDetails) {
+    return <div>Loading order details...</div>
   }
 
   return (
@@ -218,6 +236,57 @@ const OrderDetailsPage = () => {
                   </tr>
                 </tfoot>
               </table>
+            </div>
+            {/* Tracking Information */}
+            <div className="mb-4 border p-4 rounded-xl">
+              <h2 className="font-semibold text-lg">Tracking Information</h2>
+              {orderDetails.trackingNumber && orderDetails.carrier ? (
+                <div>
+                  <p>
+                    <strong>Carrier:</strong> {orderDetails.carrier}
+                  </p>
+                  <p>
+                    <strong>Tracking Number:</strong>{' '}
+                    {orderDetails.trackingNumber}
+                  </p>
+                  {/* <p>
+                    <a
+                      href={generateTrackingUrl(
+                        orderDetails.carrier,
+                        orderDetails.trackingNumber,
+                      )}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 underline"
+                    >
+                      Track Package
+                    </a>
+                  </p>
+                  {/* Tracking Button */}
+                  <Button
+                    onPress={() =>
+                      window.open(
+                        generateTrackingUrl(
+                          orderDetails.carrier,
+                          orderDetails.trackingNumber,
+                        ),
+                        '_blank',
+                      )
+                    }
+                    className="mt-2 px-4 py-2 bg-tealGreen text-white  hover:bg-softGreen"
+                  >
+                    Track Your Package
+                  </Button>
+                </div>
+              ) : (
+                <p>No tracking information available yet.</p>
+              )}
+            </div>
+
+            {/* Fulfillment Status */}
+            <div className="mb-4">
+              <h2 className="font-semibold text-lg">Fulfillment Status</h2>
+              <p>{orderDetails.fulfillmentStatus || 'Pending'}</p>
             </div>
           </div>
         )}

@@ -11,7 +11,7 @@ import {
 } from '@nextui-org/navbar'
 import { Button } from '@nextui-org/button'
 import { AcmeLogo } from '@/src/components/Navbar/logo'
-import Link from 'next/link'
+import { Link } from '@nextui-org/link'
 import {
   Dropdown,
   DropdownTrigger,
@@ -26,6 +26,7 @@ import { CartContext } from '@/src/context/CartContext'
 import { User, ChevronDown, Search } from 'lucide-react'
 import CategoryMenuSheet from '@/src/components/Navbar/CategoryMenuSheet' // Import the new CategoryMenuSheet component
 import SearchModal from '@/src/components/Navbar/SearchModal' // Import the new SearchModal component
+import { useRouter } from 'next/navigation'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
@@ -45,6 +46,7 @@ export default function MainNavbarCustomer() {
   const [isMenuOpen, setIsMenuOpen] = useState(false) // Control mobile menu state
   const [activeCategory, setActiveCategory] = useState(null)
   const [shopCategories, setShopCategories] = useState([])
+  const router = useRouter()
 
   const isUser = session?.user?.role === 'user'
 
@@ -192,28 +194,28 @@ export default function MainNavbarCustomer() {
             </DropdownTrigger>
             <DropdownMenu aria-label="Login Actions" variant="flat">
               <DropdownItem key="login">
-                <Link href="/customer/login" className="w-full">
-                  <Button
-                    color="primary"
-                    size="sm"
-                    className="w-full text-left"
-                    onPress={handleLinkClick}
-                  >
-                    Login
-                  </Button>
-                </Link>
+                <Button
+                  as={Link}
+                  href="/customer/login"
+                  color="primary"
+                  size="sm"
+                  className="w-full text-left"
+                  onPress={handleLinkClick}
+                >
+                  Login
+                </Button>
               </DropdownItem>
               <DropdownItem key="signup">
-                <Link href="/customer/sign-up" className="w-full">
-                  <Button
-                    color="primary"
-                    size="sm"
-                    className="w-full text-left"
-                    onPress={handleLinkClick}
-                  >
-                    Sign Up
-                  </Button>
-                </Link>
+                <Button
+                  as={Link}
+                  href="/customer/sign-up"
+                  color="primary"
+                  size="sm"
+                  className="w-full text-left"
+                  onPress={handleLinkClick}
+                >
+                  Sign Up
+                </Button>
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>
@@ -242,6 +244,7 @@ export default function MainNavbarCustomer() {
             <DropdownMenu aria-label="Profile Actions" variant="flat">
               <DropdownItem key="profile" className="h-14 gap-2">
                 <Link
+                  color="foreground"
                   href="/customer-profile"
                   className="flex flex-col items-start"
                   onClick={handleLinkClick}
@@ -252,18 +255,18 @@ export default function MainNavbarCustomer() {
               </DropdownItem>
               <DropdownItem key="orders" className="gap-2">
                 <Link
+                  color="foreground"
                   href="/customer-profile/orders"
                   className="flex flex-col items-start"
-                  onClick={handleLinkClick}
                 >
-                  <p className="font-semibold">Order History</p>
+                  <p className="font-semibold">Your Orders</p>
                 </Link>
               </DropdownItem>
               <DropdownItem key="reviews" className="gap-2">
                 <Link
+                  color="foreground"
                   href="/customer-profile/my-reviews"
                   className="flex flex-col items-start"
-                  onClick={handleLinkClick}
                 >
                   <p className="font-semibold">My reviews</p>
                 </Link>

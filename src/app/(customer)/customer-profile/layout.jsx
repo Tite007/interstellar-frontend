@@ -22,7 +22,7 @@ const CustomerProfileLayout = ({ children }) => {
           <li className="mb-2">
             <Link href="/customer-profile/orders">
               <p className="block py-2 px-4 rounded hover:bg-gray-700">
-                Orders History
+                Your Orders
               </p>
             </Link>
           </li>

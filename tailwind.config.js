@@ -7,7 +7,7 @@ module.exports = {
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
     './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
-    './node_modules/@nextui-org/theme/dist/components/{accordion,date-picker,divider,button,date-picker,checkbox,card,dropdown,avatar,table,pagination,chip,user,modal,select,radio,tabs,tooltip,popover,badge,skeleton,progress,breadcrumbs,user}.js',
+    './node_modules/@nextui-org/theme/dist/components/{accordion,date-picker,divider,button,date-picker,checkbox,card,dropdown,avatar,table,pagination,chip,user,modal,select,radio,tabs,tooltip,popover,badge,skeleton,progress,breadcrumbs,user,link}.js',
   ],
   theme: {
     extend: {
