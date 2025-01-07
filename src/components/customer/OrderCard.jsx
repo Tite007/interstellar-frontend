@@ -9,7 +9,7 @@ const OrderCard = ({ order }) => {
   const totalItems = order.items.reduce((acc, item) => acc + item.quantity, 0)
 
   return (
-    <div className="grid grid-cols-4 gap-4 p-4 bg-white  border rounded-2xl shadow-md mb-3 hover:shadow-md transition-shadow cursor-pointer">
+    <div className="grid grid-cols-4 gap-4 p-4 bg-white  border rounded-2xl mb-3 hover:shadow-md transition-shadow cursor-pointer">
       {/* Image Column */}
       <div className="flex justify-center items-center">
         <Image

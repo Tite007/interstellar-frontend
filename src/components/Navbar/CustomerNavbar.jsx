@@ -192,30 +192,24 @@ export default function MainNavbarCustomer() {
             </DropdownTrigger>
             <DropdownMenu aria-label="Login Actions" variant="flat">
               <DropdownItem key="login">
-                <Link
-                  href="/customer/login"
-                  className="w-full"
-                  onClick={handleLinkClick}
-                >
+                <Link href="/customer/login" className="w-full">
                   <Button
                     color="primary"
                     size="sm"
                     className="w-full text-left"
+                    onPress={handleLinkClick}
                   >
                     Login
                   </Button>
                 </Link>
               </DropdownItem>
               <DropdownItem key="signup">
-                <Link
-                  href="/customer/sign-up"
-                  className="w-full"
-                  onClick={handleLinkClick}
-                >
+                <Link href="/customer/sign-up" className="w-full">
                   <Button
                     color="primary"
                     size="sm"
                     className="w-full text-left"
+                    onPress={handleLinkClick}
                   >
                     Sign Up
                   </Button>
@@ -240,9 +234,8 @@ export default function MainNavbarCustomer() {
           <Dropdown placement="bottom-end">
             <DropdownTrigger>
               <Avatar
-                isBordered
                 as="button"
-                className="cursor-pointer "
+                className="cursor-pointer bg-white"
                 src={session.user.image}
               />
             </DropdownTrigger>
@@ -266,7 +259,7 @@ export default function MainNavbarCustomer() {
                   <p className="font-semibold">Order History</p>
                 </Link>
               </DropdownItem>
-              <DropdownItem key="orders" className="gap-2">
+              <DropdownItem key="reviews" className="gap-2">
                 <Link
                   href="/customer-profile/my-reviews"
                   className="flex flex-col items-start"

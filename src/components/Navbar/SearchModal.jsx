@@ -93,7 +93,7 @@ export default function SearchModal() {
   return (
     <>
       <Button
-        onClick={onOpen}
+        onPress={onOpen}
         variant="flat"
         endContent={<Search />}
         className=" bg-white text-gray-400"

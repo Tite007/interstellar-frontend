@@ -124,7 +124,7 @@ const PaymentSuccessPage = () => {
   }
 
   return (
-    <div className="container rounded-2xl bg-F5F5F7 p-10 font-sans text-gray-800">
+    <div className="container mt-6 rounded-2xl bg-white border p-10 font-sans text-gray-800">
       <h1 className="text-2xl font-bold mb-6">Payment Success</h1>
       {isLoading ? (
         <p>Loading your order details...</p>
@@ -255,9 +255,8 @@ const PaymentSuccessPage = () => {
       )}
       <Button
         size="sm"
-        color="primary"
-        onClick={handleGoToOrders}
-        className="mt-4"
+        onPress={handleGoToOrders}
+        className="mt-4 bg-tealGreen text-white"
       >
         Go to Orders Page
       </Button>

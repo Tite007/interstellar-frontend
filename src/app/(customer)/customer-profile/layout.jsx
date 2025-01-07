@@ -5,7 +5,7 @@ import MobileNavbar from '@/src/components/customer/MobileNavbar' // Import the 
 
 const CustomerProfileLayout = ({ children }) => {
   return (
-    <div className="flex min-h-screen bg-D9D9D9 flex-col lg:flex-row">
+    <div className="flex min-h-screen bg-white flex-col lg:flex-row">
       {/* Mobile Navbar for Small and Medium Screens */}
       {/*<MobileNavbar /> {/* Uncomment if you have this component */}
       {/* Vertical Sidebar for Large Screens */}

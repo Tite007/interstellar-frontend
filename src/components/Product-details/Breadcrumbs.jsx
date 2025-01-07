@@ -52,7 +52,7 @@ export default function BreadcrumbsProduct({ product }) {
           <Link href="/">Home</Link>
         </BreadcrumbItem>
         <BreadcrumbItem>
-          <Link href="/products">Products</Link>
+          <Link href="/categories">Categories</Link>
         </BreadcrumbItem>
         <BreadcrumbItem>
           <Link href={`/categories/${formattedCategoryName}`}>
