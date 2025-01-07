@@ -116,7 +116,7 @@ const OrderDetailsPage = () => {
   return (
     <>
       <BreadcrumbsUserProfileOrdersDetails />
-      <div className="xl:container bg-white border rounded-2xl shadow-md p-4 md:p-10 font-sans text-gray-800">
+      <div className="xl:container bg-white border rounded-2xl p-6 font-sans text-gray-800">
         <h1 className="text-xl md:text-2xl font-semibold mb-4 md:mb-6">
           Order Details
         </h1>
@@ -128,8 +128,8 @@ const OrderDetailsPage = () => {
           <div>
             <div className="flex flex-col md:flex-row justify-between mb-6 md:mb-10">
               <div className="md:w-1/2">
-                <h2 className="text-lg md:text-lg font-semi mb-4">
-                  Order Number: {orderDetails?.orderNumber}
+                <h2 className="text-md  mb-4">
+                  <strong>Order Number:</strong> {orderDetails?.orderNumber}
                 </h2>
                 <p className="mb-2 md:mb-4">
                   <strong>Order Date:</strong>{' '}
@@ -138,21 +138,19 @@ const OrderDetailsPage = () => {
               </div>
 
               <div className="md:w-1/2 md:pl-8">
-                <h4 className="text-lg  mb-2">Shipping Address:</h4>
-                <p className="mb-1">
-                  {orderDetails?.shippingInfo?.address?.line1}
-                </p>
+                <h4 className="text-md font-semibold mb-2">
+                  Shipping Address:
+                </h4>
+                <p>{orderDetails?.shippingInfo?.address?.line1}</p>
                 {orderDetails?.shippingInfo?.address?.line2 && (
-                  <p className="mb-1">
-                    {orderDetails?.shippingInfo?.address?.line2}
-                  </p>
+                  <p>{orderDetails?.shippingInfo?.address?.line2}</p>
                 )}
-                <p className="mb-1">
+                <p>
                   {orderDetails?.shippingInfo?.address?.city},{' '}
                   {orderDetails?.shippingInfo?.address?.postal_code}
                 </p>
-                <p className="mb-6">
-                  {orderDetails?.shippingInfo?.address?.province},{' '}
+                <p>
+                  {orderDetails?.shippingInfo?.address?.state},{' '}
                   {orderDetails?.shippingInfo?.address?.country}
                 </p>
               </div>
@@ -239,13 +237,15 @@ const OrderDetailsPage = () => {
             </div>
             {/* Tracking Information */}
             <div className="mb-4 border p-4 rounded-xl">
-              <h2 className="font-semibold text-lg">Tracking Information</h2>
+              <h2 className="font-semibold mb-2 text-lg">
+                Tracking Information
+              </h2>
               {orderDetails.trackingNumber && orderDetails.carrier ? (
                 <div>
-                  <p>
+                  <p className="text-md">
                     <strong>Carrier:</strong> {orderDetails.carrier}
                   </p>
-                  <p>
+                  <p className="text-md">
                     <strong>Tracking Number:</strong>{' '}
                     {orderDetails.trackingNumber}
                   </p>
