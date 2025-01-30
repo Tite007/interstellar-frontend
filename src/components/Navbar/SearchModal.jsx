@@ -92,13 +92,8 @@ export default function SearchModal() {
 
   return (
     <>
-      <Button
-        onPress={onOpen}
-        variant="flat"
-        endContent={<Search />}
-        className=" bg-white text-gray-400"
-      >
-        Search Products...
+      <Button onPress={onOpen} variant="light" color="danger" isIconOnly>
+        <Search color="white" />{' '}
       </Button>
 
       <Modal

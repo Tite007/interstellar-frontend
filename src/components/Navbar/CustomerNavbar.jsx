@@ -10,7 +10,6 @@ import {
   NavbarMenuItem,
 } from '@nextui-org/navbar'
 import { Button } from '@nextui-org/button'
-import { AcmeLogo } from '@/src/components/Navbar/logo'
 import { Link } from '@nextui-org/link'
 import {
   Dropdown,
@@ -27,6 +26,7 @@ import { User, ChevronDown, Search } from 'lucide-react'
 import CategoryMenuSheet from '@/src/components/Navbar/CategoryMenuSheet' // Import the new CategoryMenuSheet component
 import SearchModal from '@/src/components/Navbar/SearchModal' // Import the new SearchModal component
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
@@ -111,14 +111,16 @@ export default function MainNavbarCustomer() {
           className="sm:hidden"
           onClick={() => setIsMenuOpen((prev) => !prev)} // Toggle menu on click
         />*/}
+        <NavbarItem>
+          <CategoryMenuSheet shopCategories={shopCategories} />
+        </NavbarItem>
         <NavbarBrand>
-          {/* Render the CategoryMenuSheet component */}
-          <NavbarContent>
-            <NavbarItem>
-              <CategoryMenuSheet shopCategories={shopCategories} />
-            </NavbarItem>
-          </NavbarContent>{' '}
-          <p className="font-bold text-inherit"></p>
+          <Image
+            src="/muchio_logo.webp"
+            alt="Muchio Logo"
+            width={150}
+            height={50}
+          />
         </NavbarBrand>
       </NavbarContent>
 
@@ -181,10 +183,9 @@ export default function MainNavbarCustomer() {
         </Dropdown>
       </NavbarContent>*/}
 
-      <SearchModal />
-
       {/* Modify NavbarContent to conditionally render based on isMenuOpen */}
       <NavbarContent justify="end" className="items-center gap-4">
+        <SearchModal />
         {status === 'unauthenticated' && (
           <Dropdown>
             <DropdownTrigger>
@@ -194,7 +195,7 @@ export default function MainNavbarCustomer() {
             </DropdownTrigger>
             <DropdownMenu aria-label="Login Actions" variant="flat">
               <DropdownItem key="login">
-                <Button
+                <Link
                   as={Link}
                   href="/customer/login"
                   color="primary"
@@ -203,10 +204,10 @@ export default function MainNavbarCustomer() {
                   onPress={handleLinkClick}
                 >
                   Login
-                </Button>
+                </Link>
               </DropdownItem>
               <DropdownItem key="signup">
-                <Button
+                <Link
                   as={Link}
                   href="/customer/sign-up"
                   color="primary"
@@ -215,7 +216,7 @@ export default function MainNavbarCustomer() {
                   onPress={handleLinkClick}
                 >
                   Sign Up
-                </Button>
+                </Link>
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>
@@ -224,7 +225,7 @@ export default function MainNavbarCustomer() {
           {/* Render the ShoppingCartSheet component when the badge is clicked */}
           <Badge
             content={cartItemCount}
-            color="danger"
+            color="success"
             variant="solid"
             showOutline={false}
             isInvisible={cartItemCount === 0}
@@ -247,7 +248,7 @@ export default function MainNavbarCustomer() {
                   color="foreground"
                   href="/customer-profile"
                   className="flex flex-col items-start"
-                  onClick={handleLinkClick}
+                  onPress={handleLinkClick}
                 >
                   <p className="font-semibold">Welcome</p>
                   <p>{session.user.name}</p>
@@ -275,7 +276,7 @@ export default function MainNavbarCustomer() {
                 key="logout"
                 color="danger"
                 variant="solid"
-                onClick={() => {
+                onPress={() => {
                   signOut({ callbackUrl: '/' })
                   setIsMenuOpen(false) // Close menu when logging out
                 }}
@@ -297,7 +298,7 @@ export default function MainNavbarCustomer() {
                 href={item.href}
                 className="w-full "
                 size="lg"
-                onClick={handleLinkClick} // Close the menu after clicking a link
+                onPress={handleLinkClick} // Close the menu after clicking a link
               >
                 {item.label}
               </Link>
