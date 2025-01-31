@@ -115,12 +115,14 @@ export default function MainNavbarCustomer() {
           <CategoryMenuSheet shopCategories={shopCategories} />
         </NavbarItem>
         <NavbarBrand>
-          <Image
-            src="/muchio_logo.webp"
-            alt="Muchio Logo"
-            width={150}
-            height={50}
-          />
+          <Link href="/">
+            <Image
+              src="/muchio_logo.webp"
+              alt="Muchio Logo"
+              width={150}
+              height={50}
+            />
+          </Link>
         </NavbarBrand>
       </NavbarContent>
 
