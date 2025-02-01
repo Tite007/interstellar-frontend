@@ -41,7 +41,7 @@ const AddToCartButton = ({
       <Button
         color="" // Use the color you defined in tailwind.config.js
         size="sm"
-        className="w-full text-white font-medium bg-tealGreen text-sm" // Full width on mobile, adjust as needed
+        className="w-full text-white font-medium bg-redBranding text-sm" // Full width on mobile, adjust as needed
         onPress={handleAddToCart}
         isDisabled={isOutOfStock || !selectedQuantity}
       >

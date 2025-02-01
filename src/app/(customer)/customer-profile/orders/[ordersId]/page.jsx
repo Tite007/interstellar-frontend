@@ -273,7 +273,7 @@ const OrderDetailsPage = () => {
                         '_blank',
                       )
                     }
-                    className="mt-2 px-4 py-2 bg-tealGreen text-white  hover:bg-softGreen"
+                    className="mt-2 px-4 py-2 bg-redBranding text-white  hover:bg-sofRed"
                   >
                     Track Your Package
                   </Button>

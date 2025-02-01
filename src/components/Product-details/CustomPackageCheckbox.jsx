@@ -17,8 +17,8 @@ export default function CustomPackageCheckbox({
       className={`flex items-center  text-sm justify-between mt-2 p-3 border rounded-lg cursor-pointer 
         ${
           isSelected
-            ? 'border-tealGreen font-medium text-white bg-tealGreen'
-            : 'border-gray-200 hover:softGreen hover:bg-softGreen'
+            ? 'border-white font-medium text-white bg-redBranding'
+            : 'border-gray-200 hover:softGreen hover:bg-softRed'
         }`}
       onClick={() => onChange(value)}
     >

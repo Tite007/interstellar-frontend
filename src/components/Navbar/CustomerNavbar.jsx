@@ -101,7 +101,7 @@ export default function MainNavbarCustomer() {
   return (
     <Navbar
       maxWidth="2xl"
-      className=" bg-tealGreen shadow-lg"
+      className=" bg-redBranding shadow-lg"
       isMenuOpen={isMenuOpen} // Control menu visibility
       onMenuOpenChange={(isOpen) => setIsMenuOpen(isOpen)} // Update state when toggling menu
     >

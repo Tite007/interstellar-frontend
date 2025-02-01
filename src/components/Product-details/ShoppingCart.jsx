@@ -1,9 +1,10 @@
-import React, { useContext } from 'react'
-import { CartContext } from '@/src/context/CartContext' // Adjust path as needed
+import React, { useContext, useEffect, useState } from 'react'
+import { CartContext } from '@/src/context/CartContext'
 import { Button } from '@nextui-org/button'
 import Image from 'next/image'
-import QuantityStepper from '@/src/components/Product-details/QuantityStepper' // Adjust path as needed
-import FreeShippingProgress from '@/src/components/Product-details/FreeShippingProgress' // Import the new component
+import Link from 'next/link'
+import QuantityStepper from '@/src/components/Product-details/QuantityStepper'
+import FreeShippingProgress from '@/src/components/Product-details/FreeShippingProgress'
 import { loadStripe } from '@stripe/stripe-js'
 import { useRouter } from 'next/navigation'
 
@@ -13,6 +14,22 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 const ShoppingCart = () => {
   const { cart, removeFromCart, updateQuantity } = useContext(CartContext)
   const router = useRouter()
+  const [categories, setCategories] = useState([])
+
+  // Fetch categories on component mount
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/categories/categories`)
+        const data = await response.json()
+        setCategories(data)
+      } catch (err) {
+        console.error('Error fetching categories:', err)
+      }
+    }
+
+    fetchCategories()
+  }, [])
 
   const handleQuantityChange = (item, newQuantity) => {
     updateQuantity(item.productName, item.productVariant, newQuantity)
@@ -75,6 +92,51 @@ const ShoppingCart = () => {
 
   const finalSubtotal = cartSummary.total
 
+  // Function to map category and subcategory for a product
+  const mapCategoryAndSubcategory = (product) => {
+    let categoryName = 'default-category'
+    let subcategoryName = 'default-subcategory'
+
+    if (product.parentCategory) {
+      const category = categories.find(
+        (cat) => String(cat._id) === String(product.parentCategory),
+      )
+
+      if (category) {
+        categoryName = category.name
+
+        if (product.subcategory) {
+          const subcategory = categories.find(
+            (cat) => String(cat._id) === String(product.subcategory),
+          )
+          if (subcategory) {
+            subcategoryName = subcategory.name
+          }
+        }
+      }
+    }
+
+    return { categoryName, subcategoryName }
+  }
+
+  // Function to generate the product link
+  const generateProductLink = (item) => {
+    const { categoryName, subcategoryName } = mapCategoryAndSubcategory(item)
+    const formattedCategoryName = categoryName
+      .toLowerCase()
+      .replace(/\s+/g, '-')
+    const formattedSubcategoryName = subcategoryName
+      .toLowerCase()
+      .replace(/\s+/g, '-')
+    const productName =
+      item.productName?.toLowerCase().replace(/\s+/g, '-') || 'default-product'
+
+    return {
+      pathname: `/categories/${formattedCategoryName}/${formattedSubcategoryName}/${productName}`,
+      query: { productId: item.productId },
+    }
+  }
+
   return (
     <div className="mt-7">
       {cart.length > 0 && (
@@ -94,27 +156,34 @@ const ShoppingCart = () => {
                 ? (item.compareAtPrice - item.productPrice) * item.quantity
                 : 0
 
+            const productLink = generateProductLink(item)
+
             return (
               <li key={index} className="mb-4 bg-gray-50">
                 <div className="grid grid-cols-1 gap-4 border rounded-lg p-4 shadow-sm">
                   <div className="flex">
                     <div className="mr-4">
-                      <Image
-                        src={item.productImage}
-                        alt={item.productName}
-                        width={100}
-                        height={100}
-                        className="rounded"
-                      />
+                      <Link href={productLink}>
+                        <div className="cursor-pointer">
+                          <Image
+                            src={item.productImage}
+                            alt={item.productName}
+                            width={100}
+                            height={100}
+                            className="rounded"
+                          />
+                        </div>
+                      </Link>
                     </div>
                     <div>
-                      <p className="font-semibold text-lg">
-                        {item.productName}
-                      </p>
+                      <Link href={productLink}>
+                        <p className="font-semibold text-lg cursor-pointer hover:underline">
+                          {item.productName}
+                        </p>
+                      </Link>
                       <p className="text-gray-500 text-sm">
                         Size: {item.productVariant || item.size || 'N/A'}
                       </p>
-                      {/* Conditionally render Grind Type if it exists */}
                       {item.grindType && (
                         <p className="text-gray-500 text-sm mb-2">
                           Grind Type: {item.grindType}
@@ -127,7 +196,7 @@ const ShoppingCart = () => {
                         Subtotal: ${itemSubtotal.toFixed(2)}
                       </p>
                       {itemDiscount > 0 && (
-                        <p className="text-sm text-tealGreen font-bold">
+                        <p className="text-sm text-redBranding font-bold">
                           You save: ${itemDiscount.toFixed(2)}
                         </p>
                       )}
@@ -144,9 +213,9 @@ const ShoppingCart = () => {
                     <div>
                       <Button
                         variant="flat"
-                        className=" bg-tealGreen text-white"
+                        className=" bg-redBranding text-white"
                         size="sm"
-                        onClick={() =>
+                        onPress={() =>
                           removeFromCart(item.productName, item.productVariant)
                         }
                       >
@@ -165,7 +234,7 @@ const ShoppingCart = () => {
         <>
           <div className="mt-6 text-right">
             {cartSummary.discount > 0 && (
-              <p className="text-lg mb-2 font-bold text-tealGreen ">
+              <p className="text-lg mb-2 font-bold text-redBranding ">
                 Total Savings: ${cartSummary.discount.toFixed(2)}
               </p>
             )}
@@ -174,9 +243,9 @@ const ShoppingCart = () => {
             </p>
           </div>
           <Button
-            onClick={handleSubmitStripePayment}
+            onPress={handleSubmitStripePayment}
             variant="solid"
-            className="mt-6 w-full bg-tealGreen text-white font-medium"
+            className="mt-6 w-full bg-redBranding text-white font-medium"
           >
             Proceed to Checkout
           </Button>

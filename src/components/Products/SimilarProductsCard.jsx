@@ -37,6 +37,8 @@ const SimilarProductsCard = ({ product }) => {
       compareAtPrice: product.compareAtPrice,
       quantity: parseInt(selectedQuantity, 10),
       size: product.size,
+      parentCategory: product.parentCategory, // Add this
+      subcategory: product.subcategory, // Add this
     }
     addToCart(cartItem)
     alert(`${product.name} (${product.size}) added to cart`)

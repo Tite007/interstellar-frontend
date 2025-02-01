@@ -329,8 +329,8 @@ export default function MainProductDetails() {
           <div className="grid grid-cols-2 gap-2 ">
             <Button
               size="md"
-              className="mt-9 hidden md:block bg-tealGreen text-white"
-              onClick={handleAddToCart}
+              className="mt-9 hidden md:block bg-redBranding text-white"
+              onPress={handleAddToCart}
               isDisabled={isOutOfStock}
             >
               {isOutOfStock

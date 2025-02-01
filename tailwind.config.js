@@ -17,11 +17,12 @@ module.exports = {
         D9D9D9: '#D9D9D9',
         F2F2F2: '#F2F2F2',
         F5F5F7: '#F5F5F7',
-        tealGreen: '#fe4349',
+        redBranding: '#fe4349',
         softGreen: '#15BFA0',
         softRed: '#F29199',
         DCF230: '#DCF230',
         F2D230: '#F2D230',
+        fc6c74: '#fc6c74',
       },
       screens: {
         sm: '640px',
