@@ -1,9 +1,9 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import { useSession, signOut } from 'next-auth/react'
-import { Button } from '@nextui-org/button'
-import { Input } from '@nextui-org/input'
-import { Checkbox } from '@nextui-org/checkbox'
+import { Button } from "@heroui/button"
+import { Input } from "@heroui/input"
+import { Checkbox } from "@heroui/checkbox"
 import { toast } from 'sonner'
 import { Mail, Smartphone } from 'lucide-react'
 

@@ -1,12 +1,12 @@
 'use client'
 import React, { useState } from 'react'
-import { Button } from '@nextui-org/button'
-import { Textarea } from '@nextui-org/input'
+import { Button } from "@heroui/button"
+import { Textarea } from "@heroui/input"
 import { useSession } from 'next-auth/react'
 import StarRating from '@/src/components/Product-details/StarRating'
 import { format } from 'date-fns'
 import { Trash, Send } from 'lucide-react'
-import { User } from '@nextui-org/user' // Import the User component
+import { User } from "@heroui/user" // Import the User component
 
 const ReviewItem = ({ review, addReply, deleteReview, isReply = false }) => {
   const { data: session, status } = useSession()

@@ -1,7 +1,7 @@
 // pages/unauthorized.js
 
 import Link from 'next/link'
-import { Button } from '@nextui-org/button'
+import { Button } from "@heroui/button"
 
 export default function UnauthorizedPage() {
   return (

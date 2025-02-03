@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { CartContext } from '@/src/context/CartContext'
-import { Button } from '@nextui-org/button'
+import { Button } from '@heroui/button'
 import Image from 'next/image'
 import Link from 'next/link'
 import QuantityStepper from '@/src/components/Product-details/QuantityStepper'
@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation'
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
-const ShoppingCart = () => {
+const ShoppingCart = ({ closeSheet }) => {
   const { cart, removeFromCart, updateQuantity } = useContext(CartContext)
   const router = useRouter()
   const [categories, setCategories] = useState([])
@@ -163,7 +163,7 @@ const ShoppingCart = () => {
                 <div className="grid grid-cols-1 gap-4 border rounded-lg p-4 shadow-sm">
                   <div className="flex">
                     <div className="mr-4">
-                      <Link href={productLink}>
+                      <Link href={productLink} onClick={closeSheet}>
                         <div className="cursor-pointer">
                           <Image
                             src={item.productImage}
@@ -176,7 +176,7 @@ const ShoppingCart = () => {
                       </Link>
                     </div>
                     <div>
-                      <Link href={productLink}>
+                      <Link href={productLink} onClick={closeSheet}>
                         <p className="font-semibold text-lg cursor-pointer hover:underline">
                           {item.productName}
                         </p>

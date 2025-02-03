@@ -8,7 +8,7 @@ import React, {
   useMemo,
 } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
-import { Button } from '@nextui-org/button'
+import { Button } from "@heroui/button"
 import { CartContext } from '@/src/context/CartContext'
 import Image from 'next/image'
 

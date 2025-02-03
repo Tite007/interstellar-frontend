@@ -1,5 +1,5 @@
 import React from 'react'
-import { Breadcrumbs, BreadcrumbItem } from '@nextui-org/breadcrumbs'
+import { Breadcrumbs, BreadcrumbItem } from "@heroui/breadcrumbs"
 
 export default function BreadcrumdsSubcategoryList({ category, subcategory }) {
   // Helper function to format the subcategory name

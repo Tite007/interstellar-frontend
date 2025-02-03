@@ -13,7 +13,7 @@ import HowToBrewModal from '@/src/components/Product-details/HowToBrewModal'
 import BeanTypeModal from '@/src/components/Product-details/BeanTypeModal'
 import ImageCollage from '@/src/components/Product-details/Collage'
 import GrindTypeSelect from '@/src/components/Product-details/GridTypeSelect'
-import { Select, SelectItem } from '@nextui-org/select'
+import { Select, SelectItem } from "@heroui/select"
 import ProductDetailsSkeleton from '@/src/components/Product-details/ProductDetailsSkeleton'
 import { getGrindLabel } from '@/src/utils/grindUtils'
 import { Toaster, toast } from 'sonner'
@@ -23,7 +23,7 @@ import { ReviewProvider } from '@/src/context/ReviewContext'
 import ReviewSection from '@/src/components/Product-details/ReviewSection'
 import ProductRating from '@/src/components/Product-details/ProductRating'
 import { CartContext } from '@/src/context/CartContext'
-import { Button } from '@nextui-org/button'
+import { Button } from "@heroui/button"
 import NotifyMeModal from '@/src/components/Product-details/NotifyMeModal'
 import { Bell } from 'lucide-react'
 

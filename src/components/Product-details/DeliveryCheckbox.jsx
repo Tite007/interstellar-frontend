@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-import { Checkbox } from "@nextui-org/checkbox";
+import { Checkbox } from "@heroui/checkbox";
 import { Truck } from "lucide-react";
 import classNames from "classnames";
 

@@ -1,7 +1,7 @@
 // components/Products/AddToCartButton.jsx
 import React from 'react'
-import { Button } from '@nextui-org/button'
-import { Select, SelectItem } from '@nextui-org/select'
+import { Button } from "@heroui/button"
+import { Select, SelectItem } from "@heroui/select"
 
 const AddToCartButton = ({
   selectedQuantity,

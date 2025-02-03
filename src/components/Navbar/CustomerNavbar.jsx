@@ -8,18 +8,18 @@ import {
   NavbarMenuToggle,
   NavbarMenu,
   NavbarMenuItem,
-} from '@nextui-org/navbar'
-import { Button } from '@nextui-org/button'
-import { Link } from '@nextui-org/link'
+} from '@heroui/navbar'
+import { Button } from '@heroui/button'
+import { Link } from '@heroui/link'
 import {
   Dropdown,
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
-} from '@nextui-org/dropdown'
+} from '@heroui/dropdown'
 import { useSession, signOut } from 'next-auth/react'
-import { Avatar } from '@nextui-org/avatar'
-import { Badge } from '@nextui-org/badge'
+import { Avatar } from '@heroui/avatar'
+import { Badge } from '@heroui/badge'
 import ShoppingCartSheet from '@/src/components/Product-details/ShoppingCartSheet'
 import { CartContext } from '@/src/context/CartContext'
 import { User, ChevronDown, Search } from 'lucide-react'

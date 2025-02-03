@@ -3,9 +3,9 @@
 import React, { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { useRouter, useParams } from 'next/navigation'
-import { Input, Textarea } from '@nextui-org/input'
-import { Button } from '@nextui-org/button'
-import { Tabs, Tab } from '@nextui-org/tabs'
+import { Input, Textarea } from "@heroui/input"
+import { Button } from "@heroui/button"
+import { Tabs, Tab } from "@heroui/tabs"
 import Dropzone from '@/src/components/Admin/Content/Dropzone'
 import BreadcrumbsContent from '@/src/components/Admin/Content/BreadcrumbsContent'
 import { toast } from 'sonner'

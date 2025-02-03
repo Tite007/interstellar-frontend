@@ -1,6 +1,6 @@
 // src/components/Product-details/ProductSelect.jsx
 import React from 'react'
-import { Select, SelectItem } from '@nextui-org/select'
+import { Select, SelectItem } from "@heroui/select"
 import { grindOptions } from './data'
 
 const GrindTypeSelect = ({ selectedGrind, onGrindChange }) => {

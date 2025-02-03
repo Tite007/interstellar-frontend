@@ -12,9 +12,9 @@ import HowToBrewModal from '@/src/components/Product-details/HowToBrewModal'
 import BeanTypeModal from '@/src/components/Product-details/BeanTypeModal'
 import ImageCollage from '@/src/components/Product-details/Collage'
 import GrindTypeSelect from '@/src/components/Product-details/GridTypeSelect'
-import { Select, SelectItem } from '@nextui-org/select'
+import { Select, SelectItem } from "@heroui/select"
 import './embla.css' // Import the Embla Carousel CSS
-import { Button } from '@nextui-org/button'
+import { Button } from "@heroui/button"
 import { CartContext } from '@/src/context/CartContext'
 import ProductDetailsSkeleton from '@/src/components/Product-details/ProductDetailsSkeleton'
 import { getGrindLabel } from '@/src/utils/grindUtils' // Import the helper function

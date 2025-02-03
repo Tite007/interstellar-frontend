@@ -4,10 +4,10 @@
 
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation' // Import useRouter from next/navigation
-import { Input } from '@nextui-org/input'
-import { Select, SelectItem } from '@nextui-org/select'
+import { Input } from "@heroui/input"
+import { Select, SelectItem } from "@heroui/select"
 import { toast } from 'sonner'
-import { Button } from '@nextui-org/button'
+import { Button } from "@heroui/button"
 import { Eye, EyeOff } from 'lucide-react'
 import Link from 'next/link'
 import { months, days } from '@/src/components/customer/data' // Import the months and days data

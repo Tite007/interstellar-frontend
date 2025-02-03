@@ -8,8 +8,10 @@ import {
   SheetHeader,
   SheetTitle,
 } from '../../components/ui/Sheet' // Adjust the path to your Sheet component
-import { Button } from '@nextui-org/button'
+import { Button } from '@heroui/button'
 import { ChevronLeft, Menu, Home } from 'lucide-react' // Import back arrow and home icons
+import Link from 'next/link'
+import Image from 'next/image'
 
 export default function CategoryMenuSheet({ shopCategories }) {
   const [activeCategory, setActiveCategory] = useState(null)
@@ -33,7 +35,14 @@ export default function CategoryMenuSheet({ shopCategories }) {
             </button>
           )}
           <SheetTitle className="text-left text-lg mt-2 font-medium">
-            {activeCategory ? activeCategory.label : 'Menu'}
+            <Link href="/">
+              <Image
+                src="/muchio_logo.webp"
+                alt="Muchio Logo"
+                width={100}
+                height={50}
+              />
+            </Link>
           </SheetTitle>
         </SheetHeader>
         <div className="mt-6 flex flex-col space-y-4">

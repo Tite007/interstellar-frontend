@@ -1,5 +1,5 @@
 import React from 'react'
-import { Input, Textarea } from '@nextui-org/input'
+import { Input, Textarea } from "@heroui/input"
 
 const TechnicalDataFormAdd = ({ technicalData, handleTechnicalDataChange }) => {
   const handleChange = (e) => {

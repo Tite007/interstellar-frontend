@@ -1,6 +1,6 @@
 import React from 'react'
-import { Button } from '@nextui-org/button'
-import { Select, SelectItem } from '@nextui-org/select'
+import { Button } from "@heroui/button"
+import { Select, SelectItem } from "@heroui/select"
 
 const StickyAddToCartButton = ({
   product,
@@ -41,7 +41,7 @@ const StickyAddToCartButton = ({
           color="danger"
           size="lg"
           className="w-1/2 bg-redBranding text-md"
-          onClick={handleAddToCart}
+          onPress={() => handleAddToCart()}
           isDisabled={isOutOfStock || !selectedQuantity} // Disable button if out of stock
         >
           {isOutOfStock

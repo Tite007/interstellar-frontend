@@ -6,7 +6,7 @@ import ContactInfoCard from '@/src/components/Admin/Customers/ContactInfoCard'
 import { useSearchParams } from 'next/navigation'
 import SearchProducts from '@/src/components/Admin/Orders/SearchProducts'
 import Payment from '@/src/components/Admin/Orders/Payment'
-import { Button } from '@nextui-org/button'
+import { Button } from "@heroui/button"
 import { useRouter } from 'next/navigation'
 import { loadStripe } from '@stripe/stripe-js'
 

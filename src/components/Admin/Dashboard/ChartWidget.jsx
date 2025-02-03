@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import { Chart, registerables } from 'chart.js'
 import 'chartjs-adapter-date-fns'
 import { processTransactions } from '@/src/utils/processTransactions'
-import { Tabs, Tab } from '@nextui-org/tabs'
+import { Tabs, Tab } from "@heroui/tabs"
 
 Chart.register(...registerables)
 

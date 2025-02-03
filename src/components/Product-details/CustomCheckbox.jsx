@@ -1,8 +1,8 @@
 // CustomCheckbox.jsx
 
 import React from "react";
-import { Checkbox, Text, } from "@nextui-org/checkbox";
-import { Card } from "@nextui-org/card";
+import { Checkbox, Text, } from "@heroui/checkbox";
+import { Card } from "@heroui/card";
 
 export const CustomCheckbox = ({ title, weight, price, value }) => {
     return (

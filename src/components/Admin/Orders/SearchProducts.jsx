@@ -1,11 +1,11 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { Button } from '@nextui-org/button'
+import { Button } from "@heroui/button"
 import { useRouter } from 'next/navigation' // Import useRouter
-import { Input } from '@nextui-org/input'
+import { Input } from "@heroui/input"
 import { Trash2 } from 'lucide-react'
-import { CheckBox } from '@nextui-org/checkbox'
+import { CheckBox } from "@heroui/checkbox"
 import {
   Modal,
   ModalContent,
@@ -13,7 +13,7 @@ import {
   ModalBody,
   ModalFooter,
   useDisclosure,
-} from '@nextui-org/modal'
+} from "@heroui/modal"
 import { Search } from 'lucide-react'
 import { CornerDownRight } from 'lucide-react'
 

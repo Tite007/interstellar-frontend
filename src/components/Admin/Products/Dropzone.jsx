@@ -1,6 +1,6 @@
 import React from 'react'
 import { useDropzone } from 'react-dropzone'
-import { Button } from '@nextui-org/button'
+import { Button } from "@heroui/button"
 import Image from 'next/image'
 
 //work with the add variants images - good one

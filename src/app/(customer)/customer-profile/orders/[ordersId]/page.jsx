@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import BreadcrumbsUserProfileOrdersDetails from '@/src/components/customer/BreadcrumbsProfileOrdersDetails'
 import Image from 'next/image'
-import { Button } from '@nextui-org/button'
+import { Button } from "@heroui/button"
 const OrderDetailsPage = () => {
   const pathname = usePathname()
   const orderId = pathname.split('/').pop() // Gets the last segment of the path

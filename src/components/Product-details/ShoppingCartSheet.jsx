@@ -1,6 +1,6 @@
 // src/components/Product-details/ShoppingCartSheet.jsx
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import ShoppingCart from '@/src/components/Product-details/ShoppingCart' // Adjust path as needed
 import {
   Sheet,
@@ -9,14 +9,23 @@ import {
   SheetHeader,
   SheetTitle,
 } from '../../components/ui/Sheet' // Adjust the relative path as needed
-import { Button } from '@nextui-org/button'
+import { Button } from '@heroui/button'
 import { ShoppingBag } from 'lucide-react' // Import the ShoppingBag icon
 import Image from 'next/image'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 export function ShoppingCartSheet() {
+  const [isOpen, setIsOpen] = useState(false)
+  const pathname = usePathname()
+
+  // Close the sheet every time the pathname changes
+  useEffect(() => {
+    setIsOpen(false)
+  }, [pathname])
+
   return (
-    <Sheet>
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
         <Button isIconOnly variant="light">
           <ShoppingBag color="white" size={24} strokeWidth={1.5} />{' '}
@@ -37,7 +46,7 @@ export function ShoppingCartSheet() {
             <SheetTitle>Your Shopping Cart</SheetTitle>
           </div>
         </SheetHeader>
-        <ShoppingCart />
+        <ShoppingCart closeSheet={() => setIsOpen(false)} />
       </SheetContent>
     </Sheet>
   )

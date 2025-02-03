@@ -6,8 +6,8 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-} from '@nextui-org/modal'
-import { Button } from '@nextui-org/button'
+} from "@heroui/modal"
+import { Button } from "@heroui/button"
 import { FlaskConical, Mountain, Compass, Tractor, Factory } from 'lucide-react'
 
 export default function TechnicalDataModal({ product }) {

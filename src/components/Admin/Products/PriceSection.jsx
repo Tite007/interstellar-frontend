@@ -1,7 +1,7 @@
 // components/PriceSection.js or pages/products/PriceSection.js
 import React, { useState } from 'react'
-import { Radio, RadioGroup } from '@nextui-org/radio'
-import { Input } from '@nextui-org/input'
+import { Radio, RadioGroup } from "@heroui/radio"
+import { Input } from "@heroui/input"
 import { useEffect } from 'react'
 
 const PriceSection = ({}) => {

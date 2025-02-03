@@ -3,9 +3,9 @@
 'use client'
 import React from 'react'
 import { format } from 'date-fns'
-import { User } from '@nextui-org/user'
+import { User } from "@heroui/user"
 import StarRating from '@/src/components/Product-details/StarRating'
-import { Button } from '@nextui-org/button'
+import { Button } from "@heroui/button"
 import { Trash } from 'lucide-react'
 
 const CustomerReviewItem = ({ review, onDelete }) => {

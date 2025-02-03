@@ -1,19 +1,19 @@
 'use client'
 
 import React, { useState, useEffect, useCallback } from 'react'
-import { Select, SelectItem } from '@nextui-org/select'
-import { Input } from '@nextui-org/input'
-import { Button } from '@nextui-org/button'
-import { Card, CardHeader, CardBody } from '@nextui-org/card'
+import { Select, SelectItem } from "@heroui/select"
+import { Input } from "@heroui/input"
+import { Button } from "@heroui/button"
+import { Card, CardHeader, CardBody } from "@heroui/card"
 import { Plus } from 'lucide-react'
-import { Divider } from '@nextui-org/divider'
+import { Divider } from "@heroui/divider"
 import {
   Modal,
   ModalContent,
   ModalHeader,
   ModalBody,
   ModalFooter,
-} from '@nextui-org/modal'
+} from "@heroui/modal"
 import { ChevronRight } from 'lucide-react'
 import { CornerDownRight } from 'lucide-react'
 

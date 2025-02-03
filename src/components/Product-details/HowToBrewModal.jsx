@@ -7,8 +7,8 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-} from '@nextui-org/modal' // Ensure the correct path
-import { Button } from '@nextui-org/button' // Ensure the correct path
+} from "@heroui/modal" // Ensure the correct path
+import { Button } from "@heroui/button" // Ensure the correct path
 import { Coffee, Weight, Filter, Beaker, Droplet } from 'lucide-react'
 import Image from 'next/image'
 

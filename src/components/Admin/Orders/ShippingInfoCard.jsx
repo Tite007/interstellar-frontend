@@ -1,5 +1,5 @@
 import React from 'react'
-import { RadioGroup, Radio } from '@nextui-org/radio'
+import { RadioGroup, Radio } from "@heroui/radio"
 
 export default function ShippingInfoCard({ user }) {
   return (

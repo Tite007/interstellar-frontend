@@ -1,12 +1,12 @@
 // app/providers.jsx
 'use client';
 
-import {NextUIProvider} from "@nextui-org/system";
+import {HeroUIProvider} from "@heroui/system";
 
 export default function Providers({ children }) {
   return (
-    <NextUIProvider>
+    <HeroUIProvider>
       {children}
-    </NextUIProvider>
+    </HeroUIProvider>
   );
 }

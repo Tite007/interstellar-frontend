@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react'
 import { signIn } from 'next-auth/react'
-import { Button } from '@nextui-org/button'
-import { Input } from '@nextui-org/input'
+import { Button } from "@heroui/button"
+import { Input } from "@heroui/input"
 import { AlertTriangle } from 'lucide-react'
 
 export default function AdminLoginPage() {

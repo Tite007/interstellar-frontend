@@ -1,12 +1,12 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { Input } from '@nextui-org/input'
+import { Input } from "@heroui/input"
 import { useRouter } from 'next/navigation'
-import { Button } from '@nextui-org/button'
+import { Button } from "@heroui/button"
 import { admin } from '@/src/components/Admin/Products/data'
-import { Select, SelectItem } from '@nextui-org/select'
-import { Checkbox } from '@nextui-org/checkbox'
+import { Select, SelectItem } from "@heroui/select"
+import { Checkbox } from "@heroui/checkbox"
 import { toast } from 'sonner'
 import { useSearchParams } from 'next/navigation'
 

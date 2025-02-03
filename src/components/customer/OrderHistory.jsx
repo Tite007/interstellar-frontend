@@ -8,9 +8,9 @@ import {
   TableBody,
   TableRow,
   TableCell,
-} from '@nextui-org/table'
-import { Button } from '@nextui-org/button'
-import { Pagination } from '@nextui-org/pagination'
+} from "@heroui/table"
+import { Button } from "@heroui/button"
+import { Pagination } from "@heroui/pagination"
 import { useRouter } from 'next/navigation'
 import {
   HoverCard,

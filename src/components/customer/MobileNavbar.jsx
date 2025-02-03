@@ -1,7 +1,7 @@
 // client/src/app/(customer)/customer-profile/MobileNavbar.jsx
 import React from 'react'
 import Link from 'next/link'
-import { Button } from '@nextui-org/button'
+import { Button } from "@heroui/button"
 
 const MobileNavbar = () => {
   return (

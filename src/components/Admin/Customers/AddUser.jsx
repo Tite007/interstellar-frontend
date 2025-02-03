@@ -1,12 +1,12 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Input, Textarea } from '@nextui-org/input'
+import { Input, Textarea } from "@heroui/input"
 import { useRouter } from 'next/navigation'
-import { Button } from '@nextui-org/button'
+import { Button } from "@heroui/button"
 import { categories, admin } from '@/src/components/Admin/Products/data'
-import { Select, SelectItem } from '@nextui-org/select'
-import { Checkbox } from '@nextui-org/checkbox'
+import { Select, SelectItem } from "@heroui/select"
+import { Checkbox } from "@heroui/checkbox"
 import { toast } from 'sonner'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Card, CardHeader, CardBody } from '@nextui-org/card'
+import { Card, CardHeader, CardBody } from "@heroui/card"
 import Image from 'next/image'
 import BreadcrumdsSubcategory from '@/src/components/Product-details/BreadcrumbsSubcategory'
 
@@ -54,7 +54,7 @@ const SubcategoryPage = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    (<div className="container mx-auto px-4 py-8">
       <BreadcrumdsSubcategory category={category} />
       <h1 className="text-3xl font-bold mb-6">
         {category.charAt(0).toUpperCase() + category.slice(1)}{' '}
@@ -95,8 +95,8 @@ const SubcategoryPage = () => {
           <p>No {isParentCategory ? 'subcategories' : 'products'} available.</p>
         )}
       </div>
-    </div>
-  )
+    </div>)
+  );
 }
 
 export default SubcategoryPage

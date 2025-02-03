@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import OrderCard from '@/src/components/customer/OrderCard' // Adjust the import path as necessary
-import { Pagination } from '@nextui-org/pagination'
+import { Pagination } from "@heroui/pagination"
 
 const ITEMS_PER_PAGE = 5
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Breadcrumbs, BreadcrumbItem } from '@nextui-org/breadcrumbs'
+import { Breadcrumbs, BreadcrumbItem } from "@heroui/breadcrumbs"
 import Link from 'next/link'
 import { mapCategoryAndSubcategory } from '@/src/utils/categoryMapping'
 

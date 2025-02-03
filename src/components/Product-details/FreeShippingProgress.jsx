@@ -1,7 +1,7 @@
 // src/components/FreeShippingProgress.jsx
 
 import React from 'react'
-import { Progress } from '@nextui-org/progress'
+import { Progress } from "@heroui/progress"
 
 const FREE_SHIPPING_THRESHOLD = 75
 

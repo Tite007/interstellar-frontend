@@ -1,7 +1,7 @@
 'use client'
 // components/ColorLegendPopover.jsx
-import { Popover, PopoverTrigger, PopoverContent } from '@nextui-org/popover'
-import { Button } from '@nextui-org/button'
+import { Popover, PopoverTrigger, PopoverContent } from "@heroui/popover"
+import { Button } from "@heroui/button"
 import React from 'react'
 
 export default function ColorLegendPopover() {

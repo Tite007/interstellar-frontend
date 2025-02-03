@@ -1,14 +1,14 @@
 'use client'
 
 import React, { useState, useEffect, useRef } from 'react'
-import { Navbar } from '@nextui-org/navbar'
+import { Navbar } from "@heroui/navbar"
 import {
   Dropdown,
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
-} from '@nextui-org/dropdown'
-import { Avatar } from '@nextui-org/avatar'
+} from "@heroui/dropdown"
+import { Avatar } from "@heroui/avatar"
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 import { signOut } from 'next-auth/react'
@@ -24,7 +24,7 @@ import {
   FolderOpen,
   Bell,
 } from 'lucide-react'
-import { Button } from '@nextui-org/button'
+import { Button } from "@heroui/button"
 
 const navigation = [
   {

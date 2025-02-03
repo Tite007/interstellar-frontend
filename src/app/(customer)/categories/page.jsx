@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Card, CardHeader, CardBody } from '@nextui-org/card'
+import { Card, CardHeader, CardBody } from "@heroui/card"
 import Image from 'next/image'
 import BreadcrumdsCategory from '@/src/components/Product-details/BreadcrumbsCategories'
 

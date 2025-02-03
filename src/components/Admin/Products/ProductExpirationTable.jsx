@@ -7,11 +7,11 @@ import {
   TableBody,
   TableRow,
   TableCell,
-} from '@nextui-org/table'
-import { Input } from '@nextui-org/input'
-import { Pagination } from '@nextui-org/pagination'
+} from "@heroui/table"
+import { Input } from "@heroui/input"
+import { Pagination } from "@heroui/pagination"
 import { toast } from 'sonner'
-import { Chip } from '@nextui-org/chip'
+import { Chip } from "@heroui/chip"
 import { useRouter } from 'next/navigation'
 import ColorLegendPopover from '@/src/components/Admin/Products/ColorLegendPopover'
 

@@ -1,17 +1,17 @@
 'use client'
 import React, { useState, useEffect } from 'react'
-import { Input, Textarea } from '@nextui-org/input'
-import { Button } from '@nextui-org/button'
-import { Select, SelectItem } from '@nextui-org/select'
-import { RadioGroup, Radio } from '@nextui-org/radio'
+import { Input, Textarea } from "@heroui/input"
+import { Button } from "@heroui/button"
+import { Select, SelectItem } from "@heroui/select"
+import { RadioGroup, Radio } from "@heroui/radio"
 import { toast } from 'sonner'
 import EditProductVariant from '@/src/components/Admin/Products/EditProductVariants'
 import Dropzone from '@/src/components/Admin/Products/Dropzone'
 import { useRouter } from 'next/navigation'
-import { Tabs, Tab } from '@nextui-org/tabs'
+import { Tabs, Tab } from "@heroui/tabs"
 import TechnicalDataFormAdd from './TechnicalDataFormAdd'
 import Image from 'next/image'
-import { DatePicker } from '@nextui-org/date-picker'
+import { DatePicker } from "@heroui/date-picker"
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 

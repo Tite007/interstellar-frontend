@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import ContactInfoCardShipping from '@/src/components/Admin/Customers/ContactInfoCardShipping'
-import { Button } from '@nextui-org/button'
+import { Button } from "@heroui/button"
 import { useRouter } from 'next/navigation'
 import { useSearchParams } from 'next/navigation'
 import {
@@ -12,7 +12,7 @@ import {
   TableBody,
   TableRow,
   TableCell,
-} from '@nextui-org/table'
+} from "@heroui/table"
 import BreadcrumbsOrder from '@/src/components/Admin/Orders/BreadcrumbsOrder'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL

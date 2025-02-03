@@ -1,10 +1,10 @@
 'use client'
 
 import React from 'react'
-import { Input, Textarea } from '@nextui-org/input'
-import { Button } from '@nextui-org/button'
-import { Checkbox } from '@nextui-org/checkbox'
-import { Select, SelectItem, SelectSection } from '@nextui-org/select'
+import { Input, Textarea } from "@heroui/input"
+import { Button } from "@heroui/button"
+import { Checkbox } from "@heroui/checkbox"
+import { Select, SelectItem, SelectSection } from "@heroui/select"
 
 export default function OrdersPage() {
   return (

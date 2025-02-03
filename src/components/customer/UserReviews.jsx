@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import CustomerReviewItem from '@/src/components/customer/CustomerReviewItem'
-import { Spinner } from '@nextui-org/spinner'
+import { Spinner } from "@heroui/spinner"
 import axios from 'axios'
 
 const UserReviews = () => {

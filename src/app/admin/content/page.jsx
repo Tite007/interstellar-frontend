@@ -7,15 +7,15 @@ import {
   TableBody,
   TableRow,
   TableCell,
-} from '@nextui-org/table'
-import { Input } from '@nextui-org/input'
-import { Button } from '@nextui-org/button'
-import { Pagination } from '@nextui-org/pagination'
+} from "@heroui/table"
+import { Input } from "@heroui/input"
+import { Button } from "@heroui/button"
+import { Pagination } from "@heroui/pagination"
 import { PlusIcon } from '@/src/components/Admin/Content/PlusIcon'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
-import { Chip } from '@nextui-org/chip'
-import { Tooltip } from '@nextui-org/tooltip'
+import { Chip } from "@heroui/chip"
+import { Tooltip } from "@heroui/tooltip"
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 

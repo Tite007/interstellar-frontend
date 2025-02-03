@@ -7,17 +7,17 @@ import {
   TableBody,
   TableRow,
   TableCell,
-} from '@nextui-org/table'
+} from "@heroui/table"
 import {
   DropdownTrigger,
   Dropdown,
   DropdownMenu,
   DropdownItem,
-} from '@nextui-org/dropdown'
+} from "@heroui/dropdown"
 import { Search, Plus, MoreVertical } from 'lucide-react'
-import { Input } from '@nextui-org/input'
-import { Button } from '@nextui-org/button'
-import { Pagination } from '@nextui-org/pagination'
+import { Input } from "@heroui/input"
+import { Button } from "@heroui/button"
+import { Pagination } from "@heroui/pagination"
 import { columns } from '@/src/components/Admin/Products/data' // Assuming this contains the necessary columns
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'

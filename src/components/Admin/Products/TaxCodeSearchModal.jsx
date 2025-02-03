@@ -6,9 +6,9 @@ import {
   ModalBody,
   ModalFooter,
   useDisclosure,
-} from '@nextui-org/modal'
-import { Button } from '@nextui-org/button'
-import { Input } from '@nextui-org/input'
+} from "@heroui/modal"
+import { Button } from "@heroui/button"
+import { Input } from "@heroui/input"
 import { Search, SquareArrowOutUpLeft } from 'lucide-react'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL

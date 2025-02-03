@@ -1,8 +1,8 @@
 // src/components/Product-details/NotifyMeModal.jsx
 import React, { useState } from 'react'
-import { Input } from '@nextui-org/input'
+import { Input } from "@heroui/input"
 import axios from 'axios'
-import { Button } from '@nextui-org/button'
+import { Button } from "@heroui/button"
 import {
   Modal,
   ModalContent,
@@ -10,7 +10,7 @@ import {
   ModalBody,
   ModalFooter,
   useDisclosure,
-} from '@nextui-org/modal'
+} from "@heroui/modal"
 import { toast } from 'sonner' // Import toast from sonner
 
 export default function NotifyMeModal({ isVisible, onClose, productId }) {

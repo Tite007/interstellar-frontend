@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Input } from '@nextui-org/input'
+import { Input } from "@heroui/input"
 import {
   Modal,
   ModalContent,
@@ -9,10 +9,10 @@ import {
   ModalBody,
   ModalFooter,
   useDisclosure,
-} from '@nextui-org/modal'
-import { Select, SelectItem } from '@nextui-org/select'
+} from "@heroui/modal"
+import { Select, SelectItem } from "@heroui/select"
 import { toast } from 'sonner'
-import { Button } from '@nextui-org/button'
+import { Button } from "@heroui/button"
 
 const SignUpFormModal = ({ onSubmit }) => {
   const [user, setUser] = useState({

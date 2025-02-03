@@ -1,8 +1,8 @@
 // ReviewSection.js
 'use client'
 import React, { useState, useContext } from 'react'
-import { Button } from '@nextui-org/button'
-import { Textarea } from '@nextui-org/input'
+import { Button } from "@heroui/button"
+import { Textarea } from "@heroui/input"
 import { useSession } from 'next-auth/react'
 import StarRating from '@/src/components/Product-details/StarRating'
 import { Toaster } from 'sonner'

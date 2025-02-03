@@ -8,8 +8,8 @@ import {
   TableBody,
   TableRow,
   TableCell,
-} from '@nextui-org/table'
-import { Pagination } from '@nextui-org/pagination'
+} from "@heroui/table"
+import { Pagination } from "@heroui/pagination"
 import { format } from 'date-fns'
 import { toast } from 'sonner'
 
