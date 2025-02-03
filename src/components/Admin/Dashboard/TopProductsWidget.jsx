@@ -7,8 +7,8 @@ import {
   TableBody,
   TableRow,
   TableCell,
-} from "@heroui/table"
-import { Pagination } from "@heroui/pagination"
+} from '@heroui/table'
+import { Pagination } from '@heroui/pagination'
 
 const TopProductsWidget = ({
   topProducts,
@@ -26,8 +26,10 @@ const TopProductsWidget = ({
   }
 
   return (
-    <div className="bg-white mt-4 shadow-md rounded-2xl p-4">
-      <h3 className="text-xl font-semibold mb-4">Top 10 Most Sold Products</h3>
+    <div className="bg-white mt-4 rounded-3xl p-4">
+      <h3 className="text-xl mt-4 font-semibold mb-4">
+        Top 10 Most Sold Products
+      </h3>
       <Table shadow="none" isCompact aria-label="Top Products Table">
         <TableHeader>
           <TableColumn>Product Description</TableColumn>

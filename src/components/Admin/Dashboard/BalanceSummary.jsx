@@ -14,7 +14,7 @@ const BalanceSummary = ({ summary }) => {
   }
 
   return (
-    <div className="bg-white shadow-md mt-4 rounded-2xl p-4">
+    <div className="bg-white mt-4 rounded-3xl p-4">
       <h2 className="text-xl font-semibold mb-4">Balance Summary</h2>
       <div className="flex justify-center overflow-x-auto pb-4">
         {' '}

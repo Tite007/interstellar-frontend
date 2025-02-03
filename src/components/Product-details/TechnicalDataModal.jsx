@@ -6,8 +6,8 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-} from "@heroui/modal"
-import { Button } from "@heroui/button"
+} from '@heroui/modal'
+import { Button } from '@heroui/button'
 import { FlaskConical, Mountain, Compass, Tractor, Factory } from 'lucide-react'
 
 export default function TechnicalDataModal({ product }) {
@@ -21,7 +21,6 @@ export default function TechnicalDataModal({ product }) {
       <Button
         startContent={<FlaskConical strokeWidth={1.5} />}
         onPress={openModal}
-        className=" bg-fc6c74 text-white "
         variant="flat"
       >
         Technical Data

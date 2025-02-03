@@ -6,8 +6,8 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-} from "@heroui/modal"
-import { Button } from "@heroui/button"
+} from '@heroui/modal'
+import { Button } from '@heroui/button'
 import { CircleUser } from 'lucide-react'
 
 export default function AboutModal({ product }) {
@@ -21,7 +21,7 @@ export default function AboutModal({ product }) {
       <Button
         startContent={<CircleUser strokeWidth={1.5} />}
         onPress={openModal}
-        className=" bg-fc6c74 text-white"
+        className="  "
         variant="flat"
       >
         About

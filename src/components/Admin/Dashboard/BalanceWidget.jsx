@@ -11,7 +11,7 @@ const BalanceWidget = ({ balance }) => {
   }
 
   return (
-    <div className="bg-white shadow-md rounded-2xl p-4">
+    <div className="bg-white border rounded-3xl p-4">
       <h2 className="text-xl font-semibold mb-4">Stripe Balance</h2>
       {balance ? (
         <div>

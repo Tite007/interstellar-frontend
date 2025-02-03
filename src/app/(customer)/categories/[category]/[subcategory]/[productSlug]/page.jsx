@@ -13,7 +13,7 @@ import HowToBrewModal from '@/src/components/Product-details/HowToBrewModal'
 import BeanTypeModal from '@/src/components/Product-details/BeanTypeModal'
 import ImageCollage from '@/src/components/Product-details/Collage'
 import GrindTypeSelect from '@/src/components/Product-details/GridTypeSelect'
-import { Select, SelectItem } from "@heroui/select"
+import { Select, SelectItem } from '@heroui/select'
 import ProductDetailsSkeleton from '@/src/components/Product-details/ProductDetailsSkeleton'
 import { getGrindLabel } from '@/src/utils/grindUtils'
 import { Toaster, toast } from 'sonner'
@@ -23,7 +23,7 @@ import { ReviewProvider } from '@/src/context/ReviewContext'
 import ReviewSection from '@/src/components/Product-details/ReviewSection'
 import ProductRating from '@/src/components/Product-details/ProductRating'
 import { CartContext } from '@/src/context/CartContext'
-import { Button } from "@heroui/button"
+import { Button } from '@heroui/button'
 import NotifyMeModal from '@/src/components/Product-details/NotifyMeModal'
 import { Bell } from 'lucide-react'
 
@@ -167,9 +167,15 @@ export default function MainProductDetails() {
     product?.parentCategory === '670351ab96bf844ee6763504' || // ID for "Coffee"
     product?.subcategory === '67035c09407c1bf49bcf2720' // ID for "Specialty Coffee"
 
+  const isSpecialtyCoffee = product.subcategory === '67035c09407c1bf49bcf2720'
+
   return (
-    <main className="container flex-col items-center justify-between mt-5 p-4">
-      <BreadcrumdsProduct product={product} />
+    <main className="container flex-col items-center justify-between p-4">
+      <div className=" mt-5 hidden md:block">
+        {' '}
+        {/* Add this wrapper div */}
+        <BreadcrumdsProduct product={product} />
+      </div>
       <Toaster position="top-right" richColors />
       <div className="block md:hidden text-left mb-4">
         <p className="tex-lg font-semibold mt-1"> {product.brand}</p>
@@ -184,7 +190,7 @@ export default function MainProductDetails() {
         </h2>
         {isOutOfStock && (
           <div className="flex items-center space-x-3 mb-1">
-            <p className="text-red-600 font-semibold">Out of Stock</p>
+            <p className="text-redBranding font-semibold">Out of Stock</p>
             <Button
               size="sm"
               color="primary"
@@ -203,7 +209,7 @@ export default function MainProductDetails() {
               <span className="text-gray-500 text-lg font-normal line-through ml-2">
                 ${compareAtPrice.toFixed(2)}
               </span>
-              <span className="text-red-500 text-lg font-normal ml-2">
+              <span className="text-redBranding text-lg font-normal ml-2">
                 ({Math.round(((compareAtPrice - price) / compareAtPrice) * 100)}
                 % off)
               </span>
@@ -385,7 +391,7 @@ export default function MainProductDetails() {
         </p>
       </div>
 
-      <ImageCollage />
+      {isSpecialtyCoffee && <ImageCollage />}
 
       <div className="mt-16">
         <h2 className="text-2xl font-semibold mb-6">Similar Products</h2>

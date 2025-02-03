@@ -16,6 +16,7 @@ import {
 } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import { usePathname } from 'next/navigation' // Assuming this is available in your project
+import Image from 'next/image'
 
 // Example structure updated to include potential dropdown items
 const navigation = [
@@ -94,8 +95,18 @@ export default function Sidebar() {
   }
 
   return (
-    <div className="hidden xl:block fixed top-[64px] bottom-0 bg-white start-0 z-50 h-full w-[270px]  2xl:w-72 ">
-      <div className="pt-10 pb-4">
+    <div className="hidden xl:block fixed  bottom-0 bg-white start-0 z-50 h-full w-[270px]  2xl:w-72 ">
+      <div className="flex items-center justify-center p-4 mt-2">
+        <Link href="/">
+          <Image
+            src="/muchio_logo.webp"
+            alt="Muchio Logo"
+            width={100}
+            height={50}
+          />
+        </Link>
+      </div>
+      <div className=" pb-4">
         <nav className="mt-10">
           <ul>
             {navigation.map((item, index) => {

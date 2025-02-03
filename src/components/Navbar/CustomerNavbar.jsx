@@ -239,6 +239,7 @@ export default function MainNavbarCustomer() {
           <Dropdown placement="bottom-end">
             <DropdownTrigger>
               <Avatar
+                size="sm"
                 as="button"
                 className="cursor-pointer bg-white"
                 src={session.user.image}

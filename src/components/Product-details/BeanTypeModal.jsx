@@ -6,8 +6,8 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-} from "@heroui/modal"
-import { Button } from "@heroui/button"
+} from '@heroui/modal'
+import { Button } from '@heroui/button'
 import { ClipboardPenLine } from 'lucide-react'
 
 export default function BeanTypeModal() {
@@ -21,7 +21,6 @@ export default function BeanTypeModal() {
       <Button
         startContent={<ClipboardPenLine strokeWidth={1.5} />}
         onPress={openModal}
-        className=" bg-fc6c74 text-white "
         variant="flat"
       >
         Bean Type

@@ -1,14 +1,14 @@
 'use client'
 
 import React, { useState, useEffect, useRef } from 'react'
-import { Navbar } from "@heroui/navbar"
+import { Navbar } from '@heroui/navbar'
 import {
   Dropdown,
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
-} from "@heroui/dropdown"
-import { Avatar } from "@heroui/avatar"
+} from '@heroui/dropdown'
+import { Avatar } from '@heroui/avatar'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 import { signOut } from 'next-auth/react'
@@ -24,7 +24,8 @@ import {
   FolderOpen,
   Bell,
 } from 'lucide-react'
-import { Button } from "@heroui/button"
+import { Button } from '@heroui/button'
+import Image from 'next/image'
 
 const navigation = [
   {
@@ -100,16 +101,14 @@ export default function MainNavbar() {
   }
 
   return (
-    <Navbar
-      maxWidth="full"
-      className="xl:container bg-white justify-end items-end "
-    >
+    <Navbar maxWidth="full" className=" bg-white justify-end items-end ">
       <div className="hidden lg:block">
         {/* Placeholder for desktop menu items or logo */}
       </div>
 
       <div className="justify-start items-start xl:hidden">
         <Button
+          variant="flat"
           isIconOnly
           onClick={() => {
             setMenuOpen(!menuOpen)
@@ -136,7 +135,16 @@ export default function MainNavbar() {
           </Link>
         ))}
       </div>
-
+      <div className="flex-grow xl:hidden ">
+        <Link href="/">
+          <Image
+            src="/muchio_logo.webp"
+            alt="Muchio Logo"
+            width={100}
+            height={50}
+          />
+        </Link>
+      </div>
       {/* Spacer to push content to the right on mobile */}
       <div className="flex-grow xl:hidden "></div>
 
@@ -144,7 +152,6 @@ export default function MainNavbar() {
       <Dropdown placement="bottom-end">
         <DropdownTrigger>
           <Avatar
-            isBordered
             as="button"
             className="cursor-pointer"
             src={session?.user?.image}

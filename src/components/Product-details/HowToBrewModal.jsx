@@ -7,8 +7,8 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-} from "@heroui/modal" // Ensure the correct path
-import { Button } from "@heroui/button" // Ensure the correct path
+} from '@heroui/modal' // Ensure the correct path
+import { Button } from '@heroui/button' // Ensure the correct path
 import { Coffee, Weight, Filter, Beaker, Droplet } from 'lucide-react'
 import Image from 'next/image'
 
@@ -22,7 +22,6 @@ export default function HowToBrewModal() {
       <Button
         startContent={<Coffee strokeWidth={1.5} />}
         onPress={openModal}
-        className=" bg-fc6c74 text-white "
         variant="flat"
       >
         How to Brew

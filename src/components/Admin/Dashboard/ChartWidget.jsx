@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import { Chart, registerables } from 'chart.js'
 import 'chartjs-adapter-date-fns'
 import { processTransactions } from '@/src/utils/processTransactions'
-import { Tabs, Tab } from "@heroui/tabs"
+import { Tabs, Tab } from '@heroui/tabs'
 
 Chart.register(...registerables)
 
@@ -114,7 +114,7 @@ const ChartWidget = ({ id }) => {
   }
 
   return (
-    <div className="p-4 border rounded-2xl shadow-md bg-white">
+    <div className="p-4 border rounded-3xl  bg-white">
       <Tabs
         selectedKey={selectedDays.toString()}
         onSelectionChange={handleTabChange}

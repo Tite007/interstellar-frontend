@@ -1,12 +1,12 @@
 'use client'
 import React, { useState } from 'react'
-import { Button } from "@heroui/button"
-import { Textarea } from "@heroui/input"
+import { Button } from '@heroui/button'
+import { Textarea } from '@heroui/input'
 import { useSession } from 'next-auth/react'
 import StarRating from '@/src/components/Product-details/StarRating'
 import { format } from 'date-fns'
 import { Trash, Send } from 'lucide-react'
-import { User } from "@heroui/user" // Import the User component
+import { User } from '@heroui/user' // Import the User component
 
 const ReviewItem = ({ review, addReply, deleteReview, isReply = false }) => {
   const { data: session, status } = useSession()
@@ -28,7 +28,7 @@ const ReviewItem = ({ review, addReply, deleteReview, isReply = false }) => {
 
   return (
     <div style={{ marginLeft: isReply ? '20px' : '0' }}>
-      <div className="review-item border shadow-md rounded-2xl mb-2 text-left p-4  w-80 max-h-60 overflow-hidden">
+      <div className="review-item border rounded-2xl mb-2 text-left p-4  w-80 max-h-60 overflow-hidden">
         <div className="flex justify-betwee">
           <div>
             {/** User Info */}
