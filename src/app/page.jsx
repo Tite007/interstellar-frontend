@@ -5,6 +5,7 @@ import { CartProvider } from '../context/CartContext'
 import HeroBanner from '@/src/components/home/HeroBanner'
 import ProductCarouselContainer from '../components/Products/ProductCarouselContainer'
 import SubcategoryProductSection from '@/src/components/home/SubcategoryProductSection'
+import CategoriesCarousel from '../components/home/CategoryCarousel'
 
 export default function Home() {
   return (
@@ -14,6 +15,12 @@ export default function Home() {
         <main className="container items-center justify-between">
           <HeroBanner />
 
+          <div className="mt-16">
+            <h2 className="text-2xl font-semibold font-sans mb-6">
+              Product Categories{' '}
+            </h2>
+            <CategoriesCarousel />
+          </div>
           <div className="mt-16">
             <h2 className="text-2xl font-semibold font-sans mb-6">
               Bakery Goods

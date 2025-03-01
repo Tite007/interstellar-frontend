@@ -1,0 +1,129 @@
+/* src/components/home/CarouselCategoryStyle.css */
+.embla-category {
+  max-width: 100%;
+  margin: auto;
+  --slide-height: 19rem;
+  --slide-spacing: 0.5rem; /* Reduced default spacing for mobile */
+  --slide-size: 90%; /* Larger default size, but we'll adjust below */
+}
+
+.embla-category__viewport {
+  overflow: hidden;
+}
+
+.embla-category__container {
+  display: flex;
+  touch-action: pan-y pinch-zoom;
+  margin-left: calc(var(--slide-spacing) * -1);
+}
+
+.embla-category__slide {
+  transform: translate3d(0, 0, 0);
+  flex: 0 0 var(--slide-size);
+  min-width: 0;
+  padding-left: var(--slide-spacing);
+}
+
+/* Responsive breakpoints */
+@media (min-width: 380px) {
+  .embla-category {
+    --slide-size: 50%; /* Adjusted for small mobile screens */
+    --slide-spacing: 0.3rem; /* Tighter spacing on very small screens */
+  }
+}
+
+@media (min-width: 440px) {
+  .embla-category {
+    --slide-size: 30%;
+    --slide-spacing: 0.5rem;
+  }
+}
+
+@media (min-width: 640px) {
+  .embla-category {
+    --slide-size: 30%;
+    --slide-spacing: 0.8rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .embla-category {
+    --slide-size: 35%;
+    --slide-spacing: 1.9rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .embla-category {
+    --slide-size: 28%;
+    --slide-spacing: 2.8rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .embla-category {
+    --slide-size: 25%;
+    --slide-spacing: 3rem;
+  }
+}
+
+@media (min-width: 1536px) {
+  .embla-category {
+    --slide-size: 26%;
+    --slide-spacing: 4rem;
+  }
+}
+
+.embla-category__controls {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  justify-content: space-between;
+  gap: 1.2rem;
+  margin-top: 1.8rem;
+}
+
+.embla-category__buttons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.embla-category__button {
+  -webkit-tap-highlight-color: rgba(var(--text-high-contrast-rgb-value), 0.5);
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: transparent;
+  touch-action: manipulation;
+  display: inline-flex;
+  text-decoration: none;
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  box-shadow: inset 0 0 0 0.2rem var(--detail-medium-contrast);
+  width: 3.6rem;
+  height: 3.6rem;
+  z-index: 1;
+  border-radius: 50%;
+  color: var(--text-body);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.embla-category__button:disabled {
+  color: var(--detail-high-contrast);
+}
+
+.embla-category__button__svg {
+  width: 35%;
+  height: 35%;
+}
+
+.embla-category__selected-snap-display {
+  justify-self: flex-end;
+  align-self: center;
+  color: var(--text-low-contrast);
+  font-weight: 600;
+}
