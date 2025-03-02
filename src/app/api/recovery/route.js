@@ -5,9 +5,8 @@ export async function POST(request) {
     const body = await request.json()
     console.log('Frontend request body:', body)
 
-    // Use the same domain as the frontend in production, or a specific backend URL
-    const backendUrl =
-      process.env.BACKEND_URL || 'https://www.interstellar-inc.com'
+    // Fix typo: Use NEXT_PUBLIC_API_BASE_URL (one L)
+    const backendUrl = process.env.NEXT_PUBLIC_API_BASE_URL
     console.log('Fetching backend at:', backendUrl)
 
     const res = await fetch(`${backendUrl}/auth/forgot-password`, {
@@ -29,7 +28,7 @@ export async function POST(request) {
 
     return NextResponse.json(data, { status: 200 })
   } catch (error) {
-    console.error('API error:', error.message, error.stack)
+    console.error('API error details:', error.message, error.stack)
     return NextResponse.json(
       { message: 'Internal server error', error: error.message },
       { status: 500 },
