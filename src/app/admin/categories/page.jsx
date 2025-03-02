@@ -1,4 +1,3 @@
-// pages/CategoryAdminPage.js
 'use client'
 
 import React, { useState, useEffect, useCallback } from 'react'
@@ -16,8 +15,8 @@ import {
   ModalFooter,
 } from '@heroui/modal'
 import { ChevronRight, CornerDownRight } from 'lucide-react'
-import { toast } from 'sonner' // Import sonner toast
-import { Toaster } from '@/src/components/ui/Toaster' // Adjust the path to your Toaster component
+import { toast } from 'sonner'
+import { Toaster } from '@/src/components/ui/Toaster'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
@@ -35,6 +34,7 @@ const CategoryAdminPage = () => {
   })
   const [categoryImage, setCategoryImage] = useState(null)
   const [subcategoryImage, setSubcategoryImage] = useState(null)
+  const [toastMessage, setToastMessage] = useState(null) // New state for toast
 
   const fetchCategories = useCallback(async () => {
     try {
@@ -44,12 +44,25 @@ const CategoryAdminPage = () => {
       setCategories(categoryTree)
     } catch (error) {
       console.error('Error fetching categories:', error)
+      setToastMessage({ type: 'error', message: 'Error fetching categories' })
     }
   }, [])
 
   useEffect(() => {
     fetchCategories()
   }, [fetchCategories])
+
+  // Handle toast messages with useEffect
+  useEffect(() => {
+    if (toastMessage) {
+      if (toastMessage.type === 'success') {
+        toast.success(toastMessage.message)
+      } else {
+        toast.error(toastMessage.message)
+      }
+      setToastMessage(null) // Clear after displaying
+    }
+  }, [toastMessage])
 
   const buildCategoryTree = (categories) => {
     const categoryMap = {}
@@ -88,12 +101,16 @@ const CategoryAdminPage = () => {
         setNewCategory('')
         setCategoryImage(null)
         fetchCategories()
-        toast.success('Category added successfully')
+        setToastMessage({
+          type: 'success',
+          message: 'Category added successfully',
+        })
       } else {
-        console.error('Failed to add category')
+        throw new Error('Failed to add category')
       }
     } catch (error) {
       console.error('Error adding category:', error)
+      setToastMessage({ type: 'error', message: 'Error adding category' })
     }
   }
 
@@ -116,12 +133,16 @@ const CategoryAdminPage = () => {
         setNewSubcategory('')
         setSubcategoryImage(null)
         fetchCategories()
-        toast.success('Subcategory added successfully')
+        setToastMessage({
+          type: 'success',
+          message: 'Subcategory added successfully',
+        })
       } else {
-        console.error('Failed to add subcategory')
+        throw new Error('Failed to add subcategory')
       }
     } catch (error) {
       console.error('Error adding subcategory:', error)
+      setToastMessage({ type: 'error', message: 'Error adding subcategory' })
     }
   }
 
@@ -139,12 +160,16 @@ const CategoryAdminPage = () => {
 
       if (res.ok) {
         fetchCategories()
-        toast.success('Category deleted successfully')
+        setToastMessage({
+          type: 'success',
+          message: 'Category deleted successfully',
+        })
       } else {
-        console.error('Failed to delete category')
+        throw new Error('Failed to delete category')
       }
     } catch (error) {
       console.error('Error deleting category:', error)
+      setToastMessage({ type: 'error', message: 'Error deleting category' })
     }
   }
 
@@ -152,7 +177,7 @@ const CategoryAdminPage = () => {
     setEditingCategory(category)
     setModalContent({
       name: category.name,
-      parentId: category.parent ? category.parent : '',
+      parentId: category.parent ? category.parent._id : '',
       image: category.image || null,
     })
     setIsModalOpen(true)
@@ -163,8 +188,13 @@ const CategoryAdminPage = () => {
 
     const formData = new FormData()
     formData.append('name', modalContent.name)
-    if (modalContent.parentId)
+    if (
+      modalContent.parentId &&
+      typeof modalContent.parentId === 'string' &&
+      modalContent.parentId.length > 0
+    ) {
       formData.append('parentId', modalContent.parentId)
+    }
     if (modalContent.image instanceof File)
       formData.append('image', modalContent.image)
 
@@ -180,12 +210,20 @@ const CategoryAdminPage = () => {
       if (res.ok) {
         setIsModalOpen(false)
         fetchCategories()
-        toast.success('Category updated successfully')
+        setToastMessage({
+          type: 'success',
+          message: 'Category updated successfully',
+        })
       } else {
-        console.error('Failed to update category')
+        const errorData = await res.json()
+        throw new Error(errorData.message || 'Failed to update category')
       }
     } catch (error) {
       console.error('Error updating category:', error)
+      setToastMessage({
+        type: 'error',
+        message: `Error updating category: ${error.message}`,
+      })
     }
   }
 
@@ -203,18 +241,22 @@ const CategoryAdminPage = () => {
       if (res.ok) {
         setModalContent({ ...modalContent, image: null })
         fetchCategories()
-        toast.success('Image removed successfully')
+        setToastMessage({
+          type: 'success',
+          message: 'Image removed successfully',
+        })
       } else {
-        console.error('Failed to remove image')
+        throw new Error('Failed to remove image')
       }
     } catch (error) {
       console.error('Error removing image:', error)
+      setToastMessage({ type: 'error', message: 'Error removing image' })
     }
   }
 
   const renderCategoryTree = (category) => (
     <li key={category._id} className="mb-4">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between mt-2 items-center">
         <strong className="text-lg ml-1 flex items-center">
           {category.name}
           {category.image && (
@@ -261,7 +303,7 @@ const CategoryAdminPage = () => {
 
   return (
     <div className="xl:container lg:container">
-      <Toaster /> {/* Add the Toaster component */}
+      <Toaster />
       <h1 className="text-2xl font-bold mb-6">Category Management</h1>
       <div className="grid md:grid-cols-2 gap-6">
         <Card className="max-w-auto">

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button } from "@heroui/button"
+import { Button } from '@heroui/button'
 import Link from 'next/link'
 
 const HeroBanner = () => {
@@ -21,7 +21,7 @@ const HeroBanner = () => {
               as={Link}
               href="/categories"
               radius="lg"
-              className="inline-block bg-tealGreen text-white px-6 py-3 rounded-md mt-4 hover:bg-softGreen transition duration-300"
+              className="inline-block bg-redBranding text-white px-6 py-3 rounded-md mt-4 hover:bg-softRed transition duration-300"
             >
               Shop Now
             </Button>

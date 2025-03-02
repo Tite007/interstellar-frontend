@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Card, CardHeader, CardBody } from "@heroui/card"
+import { Card, CardHeader, CardBody } from '@heroui/card'
 import Image from 'next/image'
 import BreadcrumdsSubcategory from '@/src/components/Product-details/BreadcrumbsSubcategory'
 
@@ -11,7 +11,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
 const SubcategoryPage = () => {
   const pathname = usePathname()
-  const category = pathname.split('/').pop().toLowerCase() // Ensure lowercase category name
+  const category = pathname.split('/').pop().toLowerCase()
   const [data, setData] = useState([])
   const [isParentCategory, setIsParentCategory] = useState(true)
   const [error, setError] = useState(null)
@@ -50,53 +50,57 @@ const SubcategoryPage = () => {
   }, [category])
 
   if (error) {
-    return <div>Error: {error}</div>
+    return <div className="text-center py-8 text-red-500">Error: {error}</div>
   }
 
   return (
-    (<div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 max-w-7xl">
       <BreadcrumdsSubcategory category={category} />
-      <h1 className="text-3xl font-bold mb-6">
-        {category.charAt(0).toUpperCase() + category.slice(1)}{' '}
-        {isParentCategory ? 'Subcategories' : 'Products'}
+      <h1 className="text-3xl font-bold mb-6 text-center md:text-left capitalize">
+        {category} {isParentCategory ? 'Subcategories' : 'Products'}
       </h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {data.length > 0 ? (
           data.map((item) => (
             <Link
               href={{
                 pathname: `/categories/${category}/${item.name
                   .toLowerCase()
-                  .replace(/\s+/g, '-')}`, // Use subcategory name for the URL
-                query: { subcategoryId: item._id }, // Pass subcategoryId as a query parameter
+                  .replace(/\s+/g, '-')}`,
+                query: { subcategoryId: item._id },
               }}
               key={item._id}
             >
               <Card
                 shadow="none"
-                className="py-4 border hover:shadow-lg transition-shadow duration-300"
+                className="border hover:shadow-lg transition-shadow duration-300 flex flex-col h-full"
               >
-                <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
-                  <h4 className="font-bold text-large">{item.name}</h4>
+                <CardHeader className="p-4 flex flex-col items-center">
+                  <h4 className="font-bold text-lg text-center">{item.name}</h4>
                 </CardHeader>
-                <CardBody className="overflow-visible py-2">
-                  <Image
-                    alt={`${item.name} image`}
-                    className="object-cover rounded-xl"
-                    src={item.image || '/placeholder-image.jpg'}
-                    width={270}
-                    height={270}
-                  />
+                <CardBody className="p-4 flex-1 flex items-center justify-center">
+                  <div className="relative w-full aspect-square max-w-[270px]">
+                    <Image
+                      alt={`${item.name} image`}
+                      className="object-cover rounded-xl"
+                      src={item.image || '/placeholder-image.jpg'}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                      priority={false}
+                    />
+                  </div>
                 </CardBody>
               </Card>
             </Link>
           ))
         ) : (
-          <p>No {isParentCategory ? 'subcategories' : 'products'} available.</p>
+          <p className="col-span-full text-center py-4 text-gray-500">
+            No {isParentCategory ? 'subcategories' : 'products'} available.
+          </p>
         )}
       </div>
-    </div>)
-  );
+    </div>
+  )
 }
 
 export default SubcategoryPage
