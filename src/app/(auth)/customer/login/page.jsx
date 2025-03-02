@@ -1,12 +1,12 @@
+// src/app/(auth)/customer-login/page.jsx (or wherever your UserLoginPage is)
 'use client'
 
 import React, { useState } from 'react'
 import { signIn } from 'next-auth/react'
-import { Button } from "@heroui/button"
-import { Eye, EyeOff } from 'lucide-react'
+import { Button } from '@heroui/button'
+import { Eye, EyeOff, AlertTriangle } from 'lucide-react'
 import Link from 'next/link'
-import { Input } from "@heroui/input"
-import { AlertTriangle } from 'lucide-react'
+import { Input } from '@heroui/input'
 
 export default function UserLoginPage() {
   const [error, setError] = useState('')
@@ -36,12 +36,12 @@ export default function UserLoginPage() {
       }
 
       const user = await res.json()
-      console.log('User from custom-login API:', user) // Log user object
+      console.log('User from custom-login API:', user)
 
       const result = await signIn('user-login', {
-        redirect: false, // Prevent automatic redirection
-        email: user.email, // Ensure email is correctly passed
-        password, // Pass the password as well
+        redirect: false,
+        email: user.email,
+        password,
       })
 
       console.log('Sign in result:', result)
@@ -49,7 +49,6 @@ export default function UserLoginPage() {
       if (result.error) {
         setError(result.error)
       } else {
-        // Manually handle redirection
         window.location.href = '/customer-profile'
       }
     } catch (error) {
@@ -77,18 +76,18 @@ export default function UserLoginPage() {
             name="email"
             type="email"
             required
-            style={{ fontSize: '16px' }} // Inline style to ensure 16px on all screen sizes
+            style={{ fontSize: '16px' }}
           />
         </div>
         <div className="mb-4 relative">
           <Input
             name="password"
-            className="text-[17px] "
+            className="text-[17px]"
             type={showPassword ? 'text' : 'password'}
             required
             label="Password"
             size="sm"
-            style={{ fontSize: '16px' }} // Inline style to ensure 16px on all screen sizes
+            style={{ fontSize: '16px' }}
           />
           <div
             className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
@@ -96,6 +95,14 @@ export default function UserLoginPage() {
           >
             {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
           </div>
+        </div>
+        <div className="mb-4 text-right">
+          <Link
+            href="/recovery-password"
+            className="text-blue-500 hover:underline text-sm"
+          >
+            Forgot Password?
+          </Link>
         </div>
         {error && (
           <div className="flex items-center bg-red-100 p-2 rounded-lg mb-4">
@@ -112,7 +119,7 @@ export default function UserLoginPage() {
           {isLoading ? 'Loading...' : 'Log in'}
         </Button>
         <div className="text-center mt-4">
-          <p>Don&apos;t have an account?</p>
+          <p>Don&lsquo;t have an account?</p>
           <Link href="/customer/sign-up">
             <Button
               color="default"
