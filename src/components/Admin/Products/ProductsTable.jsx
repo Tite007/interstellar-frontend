@@ -1,4 +1,3 @@
-// src/components/Admin/Products/ProductsTable.jsx
 'use client'
 import React, { useState, useMemo, useEffect } from 'react'
 import {
@@ -19,7 +18,6 @@ import { Search, Plus, MoreVertical } from 'lucide-react'
 import { Input } from '@heroui/input'
 import { Button } from '@heroui/button'
 import { Pagination } from '@heroui/pagination'
-import { columns } from '@/src/components/Admin/Products/data'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
@@ -105,29 +103,24 @@ export default function ProductsTable() {
 
   // Delete a product and its images
   const deleteProduct = async (id) => {
-    // Remove images parameter since we'll fetch the full product
     if (
       !confirm('Are you sure you want to delete this product and its images?')
     )
       return
 
     try {
-      // Fetch the full product data including variants
       const productResponse = await fetch(
         `${API_BASE_URL}/products/findProduct/${id}`,
       )
-      if (!productResponse.ok) {
+      if (!productResponse.ok)
         throw new Error('Failed to fetch product details')
-      }
       const productData = await productResponse.json()
 
-      // Collect all images: main product images + variant images
       const mainImages = Array.isArray(productData.images)
         ? productData.images
             .map((img) => (typeof img === 'string' ? img : img.url))
             .filter(Boolean)
         : []
-
       const variantImages = Array.isArray(productData.variants)
         ? productData.variants.flatMap((variant) =>
             Array.isArray(variant.images)
@@ -137,15 +130,9 @@ export default function ProductsTable() {
               : [],
           )
         : []
-
       const allImages = [...mainImages, ...variantImages]
 
-      // Delete all images from S3
       if (allImages.length > 0) {
-        console.log('Sending to /delete-images:', {
-          images: allImages,
-          productId: id,
-        })
         const imageDeleteResponse = await fetch(
           `${API_BASE_URL}/delete-images`,
           {
@@ -154,38 +141,16 @@ export default function ProductsTable() {
             body: JSON.stringify({ images: allImages, productId: id }),
           },
         )
-
-        if (!imageDeleteResponse.ok) {
-          const contentType = imageDeleteResponse.headers.get('Content-Type')
-          let errorMessage = 'Failed to delete images from S3'
-          if (contentType && contentType.includes('application/json')) {
-            const errorData = await imageDeleteResponse.json()
-            errorMessage = errorData.message || errorMessage
-          } else {
-            const text = await imageDeleteResponse.text()
-            console.error('Non-JSON response from /delete-images:', text)
-            errorMessage = text || errorMessage
-          }
-          throw new Error(errorMessage)
-        }
-      } else {
-        console.log('No images to delete')
+        if (!imageDeleteResponse.ok)
+          throw new Error('Failed to delete images from S3')
       }
 
-      // Delete the product from MongoDB
-      console.log('Deleting product:', id)
       const response = await fetch(
         `${API_BASE_URL}/products/deleteProduct/${id}`,
-        {
-          method: 'DELETE',
-        },
+        { method: 'DELETE' },
       )
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.message || 'Failed to delete product')
-      }
+      if (!response.ok) throw new Error('Failed to delete product')
 
-      // Update local state
       setProducts(products.filter((product) => product._id !== id))
       toast.success('Product and all associated images deleted successfully!')
     } catch (error) {
@@ -195,6 +160,7 @@ export default function ProductsTable() {
       )
     }
   }
+
   const onSearchChange = (e) => {
     setFilterValue(e.target.value)
     setPage(1)
@@ -219,17 +185,17 @@ export default function ProductsTable() {
           endContent={<Search />}
           style={{ fontSize: '16px' }}
         />
-        <Link href="/admin/products/add" passHref>
-          <Button
-            size="sm"
-            className="ml-6"
-            auto
-            color="primary"
-            endContent={<Plus />}
-          >
-            Add New
-          </Button>
-        </Link>
+
+        <Button
+          size="sm"
+          className="ml-6"
+          auto
+          color="primary"
+          endContent={<Plus />}
+          onPress={() => router.push('/admin/products/add')}
+        >
+          Add New
+        </Button>
       </div>
 
       <div className="overflow-x-auto">
@@ -242,61 +208,64 @@ export default function ProductsTable() {
           className="xl:container bg-white shrink-0 p-2"
         >
           <TableHeader>
-            <TableColumn></TableColumn>
-            {columns.map((column) => (
-              <TableColumn
-                key={column.uid}
-                className={`min-w-[120px] lg:min-w-[150px] ${column.uid === 'price' || column.uid === 'currentStock' ? 'min-w-[80px] lg:min-w-[100px]' : ''}`}
-              >
-                {column.name}
-              </TableColumn>
-            ))}
-            <TableColumn className="min-w-[100px] lg:min-w-[100px]">
+            <TableColumn className="min-w-[200px] lg:min-w-[250px] bg-gray-100">
+              Name
+            </TableColumn>
+            <TableColumn className="min-w-[120px] lg:min-w-[150px] bg-gray-100">
+              SKU
+            </TableColumn>
+            <TableColumn className="min-w-[100px] lg:min-w-[120px] bg-gray-100">
+              Current Stock
+            </TableColumn>
+            <TableColumn className="min-w-[100px] lg:min-w-[120px] bg-gray-100">
+              Price
+            </TableColumn>
+            <TableColumn className="min-w-[120px] lg:min-w-[150px] bg-gray-100">
               Parent Category
             </TableColumn>
-            <TableColumn className="min-w-[100px] lg:min-w-[120px]">
+            <TableColumn className="min-w-[120px] lg:min-w-[150px] bg-gray-100">
               Subcategory
             </TableColumn>
-            <TableColumn className="min-w-[70px] lg:min-w-[80px]">
+            <TableColumn className="min-w-[70px] lg:min-w-[80px] bg-gray-100">
               Actions
             </TableColumn>
           </TableHeader>
-          <TableBody className="font-light">
+          <TableBody className="divide-y divide-gray-200">
             {filteredProducts
               .slice((page - 1) * rowsPerPage, page * rowsPerPage)
               .map((product) => (
                 <TableRow
                   key={product.isVariant ? product.variantId : product._id}
+                  className="hover:bg-gray-50"
                 >
-                  <TableCell
-                    key={`${product.isVariant ? product.variantId : product._id}-empty`}
-                  ></TableCell>
-                  {columns.map((column) => (
-                    <TableCell
-                      key={`${product.isVariant ? product.variantId : product._id}-${column.uid}`}
+                  <TableCell className="p-2 min-w-[200px] lg:min-w-[250px] truncate">
+                    <Link
+                      href={`/admin/products/edit/${product._id}`}
+                      className="text-blue-600 hover:underline block truncate"
                     >
-                      {product.isVariant
-                        ? column.uid === 'name'
-                          ? product.variantName
-                          : column.uid === 'price'
-                            ? formatCurrency(product.variantPrice)
-                            : column.uid === 'currentStock'
-                              ? product.variantQuantity
-                              : product[column.uid]
-                        : column.uid === 'currentStock'
-                          ? product.currentStock
-                          : column.uid === 'price'
-                            ? formatCurrency(product[column.uid])
-                            : product[column.uid]}
-                    </TableCell>
-                  ))}
-                  <TableCell className="min-w-[120px] lg:min-w-[150px]">
+                      {product.isVariant ? product.variantName : product.name}
+                    </Link>
+                  </TableCell>
+                  <TableCell className="p-2 min-w-[120px] lg:min-w-[150px] truncate">
+                    {product.sku || 'N/A'}
+                  </TableCell>
+                  <TableCell className="p-2 min-w-[100px] lg:min-w-[120px] truncate">
+                    {product.isVariant
+                      ? product.variantQuantity
+                      : product.currentStock}
+                  </TableCell>
+                  <TableCell className="p-2 min-w-[100px] lg:min-w-[120px] truncate">
+                    {product.isVariant
+                      ? formatCurrency(product.variantPrice)
+                      : formatCurrency(product.price)}
+                  </TableCell>
+                  <TableCell className="p-2 min-w-[120px] lg:min-w-[150px] truncate">
                     {product.parentCategoryName}
                   </TableCell>
-                  <TableCell className="min-w-[150px] lg:min-w-[150px]">
+                  <TableCell className="p-2 min-w-[120px] lg:min-w-[150px] truncate">
                     {product.subcategoryName}
                   </TableCell>
-                  <TableCell className="min-w-[80px] lg:min-w-[80px]">
+                  <TableCell className="p-2 min-w-[70px] lg:min-w-[80px]">
                     <Dropdown size="small">
                       <DropdownTrigger>
                         <Button
@@ -318,9 +287,7 @@ export default function ProductsTable() {
                         <DropdownItem
                           key="delete"
                           color="danger"
-                          onClick={() =>
-                            deleteProduct(product._id, product.images)
-                          }
+                          onClick={() => deleteProduct(product._id)}
                         >
                           Delete
                         </DropdownItem>

@@ -112,7 +112,7 @@ const ProductDetailsForm = () => {
         <div className="flex items-center gap-2">
           <Input
             readOnly
-            value={selectedTaxCode}
+            value={selectedTaxCode || product.taxCode || ''} // Fallback to raw taxCode
             placeholder="Select a tax code"
           />
           <TaxCodeSearchModal onSelectTaxCode={updateSelectedTaxCode} />

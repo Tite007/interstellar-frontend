@@ -6,9 +6,9 @@ import {
   ModalBody,
   ModalFooter,
   useDisclosure,
-} from "@heroui/modal"
-import { Button } from "@heroui/button"
-import { Input } from "@heroui/input"
+} from '@heroui/modal'
+import { Button } from '@heroui/button'
+import { Input } from '@heroui/input'
 import { Search, SquareArrowOutUpLeft } from 'lucide-react'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
@@ -18,6 +18,7 @@ const TaxCodeSearchModal = ({ onSelectTaxCode }) => {
   const [searchQuery, setSearchQuery] = useState('')
   const [suggestions, setSuggestions] = useState([])
   const [error, setError] = useState(null)
+  const [scrollBehavior, setScrollBehavior] = React.useState('inside')
 
   useEffect(() => {
     fetchAllTaxCodes()
@@ -70,18 +71,20 @@ const TaxCodeSearchModal = ({ onSelectTaxCode }) => {
   return (
     <>
       <Button
-        onClick={onOpen}
+        onPress={onOpen}
         variant="flat"
         endContent={<Search />}
         color="primary"
+        size="sm"
       >
-        Search Tax Codes...
+        Search Tax Codes
       </Button>
       <Modal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         size="2xl"
         placement="center"
+        scrollBehavior={scrollBehavior}
       >
         <ModalContent>
           <ModalHeader className="flex flex-col gap-1">

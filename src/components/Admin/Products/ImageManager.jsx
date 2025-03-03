@@ -23,7 +23,7 @@ const ImageManager = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white pr-4 pl-4 border shadow-md rounded-2xl pt-5 pb-10">
+    <div className="grid grid-cols-1 md:grid-cols-2 mt-4 gap-6 bg-white pr-4 pl-4 border shadow-md rounded-2xl pt-5 pb-10">
       <div>
         <label>Upload new product images</label>
         <Dropzone images={images} setImages={updateImages} />
