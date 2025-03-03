@@ -19,20 +19,37 @@ import { Input } from '@heroui/input'
 import { Button } from '@heroui/button'
 import { Pagination } from '@heroui/pagination'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { toast } from 'sonner'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
 export default function ProductsTable() {
-  const [filterValue, setFilterValue] = useState('')
-  const [page, setPage] = useState(1)
-  const [rowsPerPage, setRowsPerPage] = useState(10)
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
+  // Get initial values from URL parameters
+  const initialPage = Number(searchParams.get('page')) || 1
+  const initialFilter = searchParams.get('search') || ''
+  const initialRows = Number(searchParams.get('rows')) || 10
+
+  const [filterValue, setFilterValue] = useState(initialFilter)
+  const [page, setPage] = useState(initialPage)
+  const [rowsPerPage, setRowsPerPage] = useState(initialRows)
   const [products, setProducts] = useState([])
   const [categories, setCategories] = useState([])
-  const router = useRouter()
 
   const formatCurrency = (amount) => `$${amount.toFixed(2)}`
+
+  // Update URL when parameters change
+  useEffect(() => {
+    const params = new URLSearchParams()
+    if (filterValue) params.set('search', filterValue)
+    if (page !== 1) params.set('page', page.toString())
+    if (rowsPerPage !== 10) params.set('rows', rowsPerPage.toString())
+
+    router.push(`/admin/products?${params.toString()}`, { scroll: false })
+  }, [filterValue, page, rowsPerPage, router])
 
   useEffect(() => {
     const fetchCategoriesAndProducts = async () => {
@@ -101,7 +118,6 @@ export default function ProductsTable() {
 
   const pages = Math.ceil(filteredProducts.length / rowsPerPage)
 
-  // Delete a product and its images
   const deleteProduct = async (id) => {
     if (
       !confirm('Are you sure you want to delete this product and its images?')
@@ -147,7 +163,9 @@ export default function ProductsTable() {
 
       const response = await fetch(
         `${API_BASE_URL}/products/deleteProduct/${id}`,
-        { method: 'DELETE' },
+        {
+          method: 'DELETE',
+        },
       )
       if (!response.ok) throw new Error('Failed to delete product')
 
@@ -240,7 +258,9 @@ export default function ProductsTable() {
                 >
                   <TableCell className="p-2 min-w-[200px] lg:min-w-[250px] truncate">
                     <Link
-                      href={`/admin/products/edit/${product._id}`}
+                      href={`/admin/products/edit/${product._id}?from=${encodeURIComponent(
+                        `/admin/products?page=${page}&search=${filterValue}&rows=${rowsPerPage}`,
+                      )}`}
                       className="text-blue-600 hover:underline block truncate"
                     >
                       {product.isVariant ? product.variantName : product.name}
@@ -271,15 +291,19 @@ export default function ProductsTable() {
                         <Button
                           size="sm"
                           endContent={<MoreVertical />}
-                          variant="light"
+                          variant="flat"
                         />
                       </DropdownTrigger>
                       <DropdownMenu aria-label="Actions">
                         <DropdownItem key="view">View</DropdownItem>
                         <DropdownItem
                           key="edit"
-                          onClick={() =>
-                            router.push(`/admin/products/edit/${product._id}`)
+                          onPress={() =>
+                            router.push(
+                              `/admin/products/edit/${product._id}?from=${encodeURIComponent(
+                                `/admin/products?page=${page}&search=${filterValue}&rows=${rowsPerPage}`,
+                              )}`,
+                            )
                           }
                         >
                           Edit
@@ -287,7 +311,7 @@ export default function ProductsTable() {
                         <DropdownItem
                           key="delete"
                           color="danger"
-                          onClick={() => deleteProduct(product._id)}
+                          onPress={() => deleteProduct(product._id)}
                         >
                           Delete
                         </DropdownItem>
@@ -311,7 +335,7 @@ export default function ProductsTable() {
         />
         <select
           onChange={onRowsPerPageChange}
-          defaultValue={rowsPerPage}
+          value={rowsPerPage}
           className="border rounded-lg p-1 h-9 w-19 text-center"
         >
           <option value="5">5</option>
