@@ -1,3 +1,4 @@
+// src/components/Admin/Products/ProductsTable.jsx
 'use client'
 import React, { useState, useMemo, useEffect } from 'react'
 import {
@@ -7,18 +8,18 @@ import {
   TableBody,
   TableRow,
   TableCell,
-} from "@heroui/table"
+} from '@heroui/table'
 import {
   DropdownTrigger,
   Dropdown,
   DropdownMenu,
   DropdownItem,
-} from "@heroui/dropdown"
+} from '@heroui/dropdown'
 import { Search, Plus, MoreVertical } from 'lucide-react'
-import { Input } from "@heroui/input"
-import { Button } from "@heroui/button"
-import { Pagination } from "@heroui/pagination"
-import { columns } from '@/src/components/Admin/Products/data' // Assuming this contains the necessary columns
+import { Input } from '@heroui/input'
+import { Button } from '@heroui/button'
+import { Pagination } from '@heroui/pagination'
+import { columns } from '@/src/components/Admin/Products/data'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
@@ -30,29 +31,25 @@ export default function ProductsTable() {
   const [page, setPage] = useState(1)
   const [rowsPerPage, setRowsPerPage] = useState(10)
   const [products, setProducts] = useState([])
-  const [categories, setCategories] = useState([]) // Store category data
+  const [categories, setCategories] = useState([])
   const router = useRouter()
 
   const formatCurrency = (amount) => `$${amount.toFixed(2)}`
 
-  // Fetch categories and products from the API
   useEffect(() => {
     const fetchCategoriesAndProducts = async () => {
       try {
-        // Fetch categories
         const categoryResponse = await fetch(
           `${API_BASE_URL}/categories/categories`,
         )
         const categoryData = await categoryResponse.json()
-        setCategories(categoryData) // Save category data
+        setCategories(categoryData)
 
-        // Fetch products
         const productResponse = await fetch(
           `${API_BASE_URL}/products/getAllProducts`,
         )
         const productData = await productResponse.json()
 
-        // Map product category and subcategory names
         const mappedProducts = productData.map((product) => ({
           ...product,
           parentCategoryName:
@@ -76,7 +73,8 @@ export default function ProductsTable() {
     const result = []
     products.forEach((product) => {
       result.push({ ...product, isVariant: false })
-      product.variants.forEach((variant, index) => {
+      const variants = Array.isArray(product.variants) ? product.variants : []
+      variants.forEach((variant, index) => {
         result.push({
           ...product,
           isVariant: true,
@@ -105,41 +103,98 @@ export default function ProductsTable() {
 
   const pages = Math.ceil(filteredProducts.length / rowsPerPage)
 
-  const deleteProduct = async (id, images) => {
+  // Delete a product and its images
+  const deleteProduct = async (id) => {
+    // Remove images parameter since we'll fetch the full product
     if (
-      confirm('Are you sure you want to delete this product and its images?')
-    ) {
-      try {
+      !confirm('Are you sure you want to delete this product and its images?')
+    )
+      return
+
+    try {
+      // Fetch the full product data including variants
+      const productResponse = await fetch(
+        `${API_BASE_URL}/products/findProduct/${id}`,
+      )
+      if (!productResponse.ok) {
+        throw new Error('Failed to fetch product details')
+      }
+      const productData = await productResponse.json()
+
+      // Collect all images: main product images + variant images
+      const mainImages = Array.isArray(productData.images)
+        ? productData.images
+            .map((img) => (typeof img === 'string' ? img : img.url))
+            .filter(Boolean)
+        : []
+
+      const variantImages = Array.isArray(productData.variants)
+        ? productData.variants.flatMap((variant) =>
+            Array.isArray(variant.images)
+              ? variant.images
+                  .map((img) => (typeof img === 'string' ? img : img.url))
+                  .filter(Boolean)
+              : [],
+          )
+        : []
+
+      const allImages = [...mainImages, ...variantImages]
+
+      // Delete all images from S3
+      if (allImages.length > 0) {
+        console.log('Sending to /delete-images:', {
+          images: allImages,
+          productId: id,
+        })
         const imageDeleteResponse = await fetch(
           `${API_BASE_URL}/delete-images`,
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ images, productId: id }),
+            body: JSON.stringify({ images: allImages, productId: id }),
           },
         )
 
         if (!imageDeleteResponse.ok) {
-          throw new Error('Failed to delete images from S3')
+          const contentType = imageDeleteResponse.headers.get('Content-Type')
+          let errorMessage = 'Failed to delete images from S3'
+          if (contentType && contentType.includes('application/json')) {
+            const errorData = await imageDeleteResponse.json()
+            errorMessage = errorData.message || errorMessage
+          } else {
+            const text = await imageDeleteResponse.text()
+            console.error('Non-JSON response from /delete-images:', text)
+            errorMessage = text || errorMessage
+          }
+          throw new Error(errorMessage)
         }
-
-        const response = await fetch(
-          `${API_BASE_URL}/products/deleteProduct/${id}`,
-          {
-            method: 'DELETE',
-          },
-        )
-        if (!response.ok) throw new Error('Failed to delete product')
-
-        setProducts(products.filter((product) => product._id !== id))
-        toast('Product and images deleted successfully!', {})
-      } catch (error) {
-        console.error('Failed to delete product or images:', error)
-        toast('Failed to delete product. Please try again.', {})
+      } else {
+        console.log('No images to delete')
       }
+
+      // Delete the product from MongoDB
+      console.log('Deleting product:', id)
+      const response = await fetch(
+        `${API_BASE_URL}/products/deleteProduct/${id}`,
+        {
+          method: 'DELETE',
+        },
+      )
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.message || 'Failed to delete product')
+      }
+
+      // Update local state
+      setProducts(products.filter((product) => product._id !== id))
+      toast.success('Product and all associated images deleted successfully!')
+    } catch (error) {
+      console.error('Failed to delete product or images:', error)
+      toast.error(
+        error.message || 'Failed to delete product. Please try again.',
+      )
     }
   }
-
   const onSearchChange = (e) => {
     setFilterValue(e.target.value)
     setPage(1)
@@ -191,7 +246,7 @@ export default function ProductsTable() {
             {columns.map((column) => (
               <TableColumn
                 key={column.uid}
-                className={`min-w-[120px] lg:min-w-[150px] ${column.uid === 'price' || column.uid === 'currentStock' ? 'min-w-[80px] lg:min-w-[100px] ' : ''}`}
+                className={`min-w-[120px] lg:min-w-[150px] ${column.uid === 'price' || column.uid === 'currentStock' ? 'min-w-[80px] lg:min-w-[100px]' : ''}`}
               >
                 {column.name}
               </TableColumn>
@@ -235,14 +290,12 @@ export default function ProductsTable() {
                             : product[column.uid]}
                     </TableCell>
                   ))}
-                  {/* Render Parent Category and Subcategory columns */}
                   <TableCell className="min-w-[120px] lg:min-w-[150px]">
                     {product.parentCategoryName}
                   </TableCell>
                   <TableCell className="min-w-[150px] lg:min-w-[150px]">
                     {product.subcategoryName}
                   </TableCell>
-                  {/* Render Action Button */}
                   <TableCell className="min-w-[80px] lg:min-w-[80px]">
                     <Dropdown size="small">
                       <DropdownTrigger>

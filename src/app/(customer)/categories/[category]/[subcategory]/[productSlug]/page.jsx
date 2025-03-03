@@ -28,10 +28,9 @@ import NotifyMeModal from '@/src/components/Product-details/NotifyMeModal'
 import { Bell } from 'lucide-react'
 
 export default function MainProductDetails() {
-  const searchParams = useSearchParams() // To extract query parameters
+  const searchParams = useSearchParams()
   const { addToCart } = useContext(CartContext)
 
-  // State to store product data -GOOD TO GO
   const [product, setProduct] = useState(null)
   const [selectedQuantity, setSelectedQuantity] = useState('1')
   const [selectedGrind, setSelectedGrind] = useState('whole_bean')
@@ -43,7 +42,6 @@ export default function MainProductDetails() {
   const [isOutOfStock, setIsOutOfStock] = useState(false)
   const [showNotifyModal, setShowNotifyModal] = useState(false)
 
-  // Fetch product details by productId from query params
   useEffect(() => {
     const productId = searchParams.get('productId')
     if (productId) {
@@ -53,7 +51,6 @@ export default function MainProductDetails() {
     }
   }, [searchParams])
 
-  // Fetch product details from API by productId
   const fetchProductDetails = async (productId) => {
     try {
       const response = await axios.get(
@@ -62,7 +59,6 @@ export default function MainProductDetails() {
       const productData = response.data
       setProduct(productData)
 
-      // Set defaults to the main product
       setSelectedPackage(productData.size)
       setPrice(productData.price)
       setCompareAtPrice(productData.compareAtPrice)
@@ -76,50 +72,99 @@ export default function MainProductDetails() {
     }
   }
 
-  // Handle package change
   const handlePackageChange = (value) => {
     setSelectedPackage(value)
 
-    const selectedVariant = product.variants.find((variant) =>
-      variant.optionValues.some((option) => option.value === value),
-    )
-
-    if (selectedVariant) {
-      const variantOption = selectedVariant.optionValues.find(
-        (option) => option.value === value,
+    if (Array.isArray(product.variants) && product.variants.length > 0) {
+      const selectedVariant = product.variants.find((variant) =>
+        variant.optionValues.some((option) => option.value === value),
       )
-      setPrice(variantOption.price || product.price)
-      setCompareAtPrice(variantOption.compareAtPrice || product.compareAtPrice)
-      setSelectedImages(selectedVariant.images || product.images)
 
-      // Check if the selected variant is out of stock
-      if (variantOption.quantity === 0) {
-        setIsOutOfStock(true)
-      } else {
-        setIsOutOfStock(false)
+      if (selectedVariant) {
+        const variantOption = selectedVariant.optionValues.find(
+          (option) => option.value === value,
+        )
+        setPrice(variantOption.price || product.price)
+        setCompareAtPrice(
+          variantOption.compareAtPrice || product.compareAtPrice,
+        )
+        setSelectedImages(selectedVariant.images || product.images)
+
+        if (variantOption.quantity === 0) {
+          setIsOutOfStock(true)
+        } else {
+          setIsOutOfStock(false)
+        }
+        return
       }
+    }
+
+    setPrice(product.price)
+    setCompareAtPrice(product.compareAtPrice)
+    setSelectedImages(product.images)
+
+    if (product.currentStock === 0) {
+      setIsOutOfStock(true)
     } else {
-      setPrice(product.price)
-      setCompareAtPrice(product.compareAtPrice)
-      setSelectedImages(product.images)
-
-      // Check if the parent product is out of stock
-      if (product.currentStock === 0) {
-        setIsOutOfStock(true)
-      } else {
-        setIsOutOfStock(false)
-      }
+      setIsOutOfStock(false)
     }
   }
 
-  // Handle quantity change
   const handleQuantityChange = (keys) => {
     setSelectedQuantity(keys.anchorKey)
   }
 
-  // Handle grind change
   const handleGrindChange = (keys) => {
     setSelectedGrind(keys.anchorKey)
+  }
+
+  const handleAddToCart = () => {
+    let cartItem
+
+    if (Array.isArray(product.variants) && product.variants.length > 0) {
+      const selectedVariant = product.variants.find((variant) =>
+        variant.optionValues.some((option) => option.value === selectedPackage),
+      )
+
+      if (selectedVariant) {
+        const variantOption = selectedVariant.optionValues.find(
+          (option) => option.value === selectedPackage,
+        )
+        cartItem = {
+          productId: product._id,
+          variantId: selectedVariant._id,
+          productImage: selectedVariant.images?.[0] || product.images[0],
+          productName: product.name,
+          productVariant: selectedPackage,
+          productPrice: variantOption.price,
+          compareAtPrice: variantOption.compareAtPrice || null,
+          quantity: parseInt(selectedQuantity, 10) || 1,
+        }
+      }
+    }
+
+    if (!cartItem) {
+      cartItem = {
+        productId: product._id,
+        variantId: null,
+        productImage: product.images[0],
+        productName: product.name,
+        productVariant: selectedPackage || product.size,
+        productPrice: price,
+        compareAtPrice: compareAtPrice || null,
+        quantity: parseInt(selectedQuantity, 10) || 1,
+      }
+    }
+
+    if (isCoffeeProduct) {
+      cartItem.grindType = getGrindLabel(selectedGrind)
+    }
+
+    console.log('Adding to cart:', cartItem) // Log the cart item
+    addToCart(cartItem)
+    toast.success(
+      `${product.name} ${selectedPackage || product.size} added to the cart!`,
+    )
   }
 
   if (!product) {
@@ -130,61 +175,26 @@ export default function MainProductDetails() {
     )
   }
 
-  const handleAddToCart = () => {
-    const selectedVariant = product.variants.find((variant) =>
-      variant.optionValues.some((option) => option.value === selectedPackage),
-    )
-
-    const variantOption = selectedVariant?.optionValues.find(
-      (option) => option.value === selectedPackage,
-    )
-
-    // Create the base cart item
-    const cartItem = {
-      productId: product._id,
-      variantId: variantOption ? variantOption._id : null,
-      productImage: selectedVariant?.images?.[0] || product.images[0],
-      productName: product.name,
-      productVariant: selectedPackage,
-      productPrice: price,
-      compareAtPrice: compareAtPrice,
-      quantity: parseInt(selectedQuantity, 10) || 1,
-    }
-
-    // Include grindType only if the product is a coffee-related product
-    if (isCoffeeProduct) {
-      cartItem.grindType = getGrindLabel(selectedGrind)
-    }
-
-    addToCart(cartItem)
-    toast.success(`${product.name} ${selectedPackage} added to the cart!`)
-  }
-
   const images = product.images || []
 
-  // Determine if the product is coffee-related
   const isCoffeeProduct =
-    product?.parentCategory === '670351ab96bf844ee6763504' || // ID for "Coffee"
-    product?.subcategory === '67035c09407c1bf49bcf2720' // ID for "Specialty Coffee"
+    product?.parentCategory === '670351ab96bf844ee6763504' ||
+    product?.subcategory === '67035c09407c1bf49bcf2720'
 
   const isSpecialtyCoffee = product.subcategory === '67035c09407c1bf49bcf2720'
 
   return (
     <main className="container flex-col items-center justify-between p-4">
-      <div className=" mt-5 hidden md:block">
-        {' '}
-        {/* Add this wrapper div */}
+      <div className="mt-5 hidden md:block">
         <BreadcrumdsProduct product={product} />
       </div>
       <Toaster position="top-right" richColors />
       <div className="block md:hidden text-left mb-4">
-        <p className="tex-lg font-semibold mt-1"> {product.brand}</p>
-
-        <h1 className="text-xl mt-1 mb-1 font-semibold ">
+        <p className="text-lg font-semibold mt-1">{product.brand}</p>
+        <h1 className="text-xl mt-1 mb-1 font-semibold">
           {product.name || 'N/A'}
         </h1>
         <ProductRating productId={product._id} />
-
         <h2 className="text-md font-semi-bold text-stone-500 mb-2">
           {product.technicalData?.tasteNotes || 'No taste notes available'}
         </h2>
@@ -232,9 +242,8 @@ export default function MainProductDetails() {
 
         <div className="w-full md:w-1/2 md:ml-20 md:text-left">
           <div className="hidden md:block">
-            <p className="tex-lg font-semibold mt-1"> {product.brand}</p>
-
-            <h1 className="text-2xl mb-1 font-semibold ">
+            <p className="text-lg font-semibold mt-1">{product.brand}</p>
+            <h1 className="text-2xl mb-1 font-semibold">
               {product.name || 'N/A'}
             </h1>
             <ProductRating productId={product._id} />
@@ -271,7 +280,7 @@ export default function MainProductDetails() {
                     (
                     {Math.round(
                       ((compareAtPrice - price) / compareAtPrice) * 100,
-                    )}{' '}
+                    )}
                     % off)
                   </span>
                 </>
@@ -279,7 +288,7 @@ export default function MainProductDetails() {
             </p>
           </div>
           <div>
-            <h3 className="text-md font-semibold ">
+            <h3 className="text-md font-semibold">
               Which is the Best for You:
             </h3>
             <div className="grid grid-cols-2 gap-4">
@@ -291,16 +300,18 @@ export default function MainProductDetails() {
                 selectedValue={selectedPackage}
                 onChange={handlePackageChange}
               />
-              {product.variants.map((variant) => (
-                <CustomPackageCheckbox
-                  key={variant._id}
-                  title={variant.optionValues[0]?.value || 'N/A'}
-                  weight={variant.optionValues[0]?.value || 'N/A'}
-                  value={variant.optionValues[0]?.value || 'N/A'}
-                  selectedValue={selectedPackage}
-                  onChange={handlePackageChange}
-                />
-              ))}
+              {Array.isArray(product.variants) &&
+                product.variants.length > 0 &&
+                product.variants.map((variant) => (
+                  <CustomPackageCheckbox
+                    key={variant._id}
+                    title={variant.optionValues[0]?.value || 'N/A'}
+                    weight={variant.optionValues[0]?.value || 'N/A'}
+                    value={variant.optionValues[0]?.value || 'N/A'}
+                    selectedValue={selectedPackage}
+                    onChange={handlePackageChange}
+                  />
+                ))}
             </div>
             <p className="text-sm mt-2">
               Selected Package: {selectedPackage || 'N/A'}
@@ -332,7 +343,7 @@ export default function MainProductDetails() {
               Selected Delivery: {selectedDelivery || 'N/A'}
             </p>
           </div>
-          <div className="grid grid-cols-2 gap-2 ">
+          <div className="grid grid-cols-2 gap-2">
             <Button
               size="md"
               className="mt-9 hidden md:block bg-redBranding text-white"
@@ -355,7 +366,7 @@ export default function MainProductDetails() {
               onSelectionChange={(value) =>
                 setSelectedQuantity(value.anchorKey)
               }
-              className="max-w-xs   mt-4 hidden md:block"
+              className="max-w-xs mt-4 hidden md:block"
             >
               {[1, 2, 3, 4, 5].map((quantity) => (
                 <SelectItem

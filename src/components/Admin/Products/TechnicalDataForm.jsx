@@ -1,10 +1,19 @@
-import React, { useState, useEffect } from 'react'
-import { Input, Textarea } from "@heroui/input"
-import { Button } from "@heroui/button"
-import { toast } from 'sonner'
+// src/components/Admin/Products/TechnicalDataForm.jsx
+import React, { useEffect } from 'react'
+import { Input, Textarea } from '@heroui/input'
+import { useProduct } from '@/src/context/ProductContext'
 
-const TechnicalDataForm = ({ productId }) => {
-  const [technicalData, setTechnicalData] = useState({
+const TechnicalDataForm = () => {
+  const { product, updateProduct } = useProduct()
+
+  // Log to confirm data is received
+  useEffect(() => {
+    console.log('TechnicalDataForm Mounted')
+    console.log('Product from Context:', product)
+    console.log('Technical Data:', product.technicalData)
+  }, [product])
+
+  const technicalData = product.technicalData || {
     country: '',
     region: '',
     producer: '',
@@ -12,48 +21,17 @@ const TechnicalDataForm = ({ productId }) => {
     dryingMethod: '',
     processingMethod: '',
     tasteNotes: '',
-  })
-
-  useEffect(() => {
-    const fetchTechnicalData = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/products/getTechnicalData/${productId}`,
-        )
-        if (!response.ok) throw new Error('Failed to fetch technical data')
-        const data = await response.json()
-        setTechnicalData(data.technicalData || {})
-      } catch (error) {
-        console.error('Error fetching technical data:', error)
-      }
-    }
-
-    if (productId) {
-      fetchTechnicalData()
-    }
-  }, [productId])
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target
-    setTechnicalData((prev) => ({ ...prev, [name]: value }))
-  }
-
-  const handleSave = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/products/updateTechnicalData/${productId}`,
-        {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(technicalData),
-        },
-      )
-      if (!response.ok) throw new Error('Failed to update technical data')
-      toast('Technical data updated successfully!', {})
-    } catch (error) {
-      console.error('Error updating technical data:', error)
-      toast('Failed to update technical data', { type: 'error' })
-    }
+    console.log(`Updating ${name} to:`, value) // Log changes for debugging
+    updateProduct({
+      technicalData: {
+        ...technicalData,
+        [name]: value,
+      },
+    })
   }
 
   return (
@@ -68,7 +46,7 @@ const TechnicalDataForm = ({ productId }) => {
         type="text"
         label="Country"
         name="country"
-        value={technicalData.country}
+        value={technicalData.country || ''}
         onChange={handleChange}
       />
       <Input
@@ -78,7 +56,7 @@ const TechnicalDataForm = ({ productId }) => {
         type="text"
         label="Region"
         name="region"
-        value={technicalData.region}
+        value={technicalData.region || ''}
         onChange={handleChange}
       />
       <Input
@@ -88,7 +66,7 @@ const TechnicalDataForm = ({ productId }) => {
         type="text"
         label="Producer"
         name="producer"
-        value={technicalData.producer}
+        value={technicalData.producer || ''}
         onChange={handleChange}
       />
       <Input
@@ -98,7 +76,7 @@ const TechnicalDataForm = ({ productId }) => {
         type="text"
         label="Elevation Range"
         name="elevationRange"
-        value={technicalData.elevationRange}
+        value={technicalData.elevationRange || ''}
         onChange={handleChange}
       />
       <Input
@@ -108,7 +86,7 @@ const TechnicalDataForm = ({ productId }) => {
         type="text"
         label="Drying Method"
         name="dryingMethod"
-        value={technicalData.dryingMethod}
+        value={technicalData.dryingMethod || ''}
         onChange={handleChange}
       />
       <Input
@@ -118,24 +96,21 @@ const TechnicalDataForm = ({ productId }) => {
         type="text"
         label="Processing Method"
         name="processingMethod"
-        value={technicalData.processingMethod}
+        value={technicalData.processingMethod || ''}
         onChange={handleChange}
       />
       <Textarea
         labelPlacement="outside"
         isRequired
         isClearable={true}
-        value={technicalData.tasteNotes}
-        clearable
+        value={technicalData.tasteNotes || ''}
         bordered
         label="Taste Notes"
         name="tasteNotes"
         onChange={handleChange}
         className="md:col-span-2"
       />
-      <Button onClick={handleSave} className=" w-52" size="sm" color="success">
-        Save Technical Data
-      </Button>
+      {/* Removed Save button; handled by ProductEditForm */}
     </div>
   )
 }

@@ -41,7 +41,7 @@ const EmblaCarouselCategories = ({ categories = [], options }) => {
                     className="h-full w-full sm:w-40 md:w-56 lg:w-64 xl:w-72 2xl:w-80 py-2 sm:py-4 border hover:shadow-lg transition-shadow duration-300 flex flex-col justify-center items-center"
                   >
                     <CardHeader className="pb-0 pt-1 sm:pt-2 px-2 sm:px-4 flex justify-center items-center">
-                      <h4 className="font-bold text-large text-center text-sm sm:text-large">
+                      <h4 className="font-bold text-large text-center  sm:text-large">
                         {category.name}
                       </h4>
                     </CardHeader>

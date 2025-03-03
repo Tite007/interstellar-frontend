@@ -1,10 +1,28 @@
+// src/components/Admin/Products/TechnicalDataFormAdd.jsx
 import React from 'react'
-import { Input, Textarea } from "@heroui/input"
+import { Input, Textarea } from '@heroui/input'
+import { useProduct } from '@/src/context/ProductContext'
 
-const TechnicalDataFormAdd = ({ technicalData, handleTechnicalDataChange }) => {
+const TechnicalDataFormAdd = () => {
+  const { product, updateProduct } = useProduct()
+  const technicalData = product.technicalData || {
+    country: '',
+    region: '',
+    producer: '',
+    elevationRange: '',
+    dryingMethod: '',
+    processingMethod: '',
+    tasteNotes: '',
+  }
+
   const handleChange = (e) => {
     const { name, value } = e.target
-    handleTechnicalDataChange(name, value)
+    updateProduct({
+      technicalData: {
+        ...technicalData,
+        [name]: value,
+      },
+    })
   }
 
   return (

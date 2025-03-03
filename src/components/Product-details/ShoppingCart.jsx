@@ -39,19 +39,26 @@ const ShoppingCart = ({ closeSheet }) => {
     const stripe = await stripePromise
 
     try {
+      const payload = {
+        items: cart.map((item) => ({
+          productId: item.productId,
+          variantId: item.variantId || null,
+          quantity: item.quantity,
+          productPrice: item.productPrice,
+          productImage: item.productImage || 'https://via.placeholder.com/150',
+        })),
+        success_url: `${window.location.origin}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${window.location.origin}/cancel`,
+      }
+      console.log(
+        'Checkout payload being sent:',
+        JSON.stringify(payload, null, 2),
+      )
+
       const response = await fetch(`${API_BASE_URL}/payment/checkout`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          items: cart.map((item) => ({
-            productId: item.productId,
-            variantId: item.variantId || null,
-            quantity: item.quantity,
-            productPrice: item.productPrice,
-            productImage: item.productImage,
-          })),
-          YOUR_DOMAIN: window.location.origin,
-        }),
+        body: JSON.stringify(payload),
       })
 
       if (response.ok) {
@@ -59,9 +66,8 @@ const ShoppingCart = ({ closeSheet }) => {
         const result = await stripe.redirectToCheckout({
           sessionId: session.id,
         })
-
         if (result.error) {
-          console.log(result.error.message)
+          console.log('Stripe redirect error:', result.error.message)
         }
       } else {
         console.error('Failed to create checkout session', response.status)

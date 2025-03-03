@@ -1,14 +1,19 @@
+// src/components/Admin/Products/EditProductVariants.jsx
 import React, { useState, useEffect } from 'react'
-import { Input } from "@heroui/input"
-import { Button } from "@heroui/button"
+import { Input } from '@heroui/input'
+import { Button } from '@heroui/button'
 import Dropzone from '@/src/components/Admin/Products/Dropzone'
 import { toast } from 'sonner'
 import Image from 'next/image'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
-const EditProductVariant = ({ initialVariants, productId }) => {
-  const [variants, setVariants] = useState(initialVariants || [])
+const EditProductVariant = ({
+  initialVariants = [],
+  productId,
+  onVariantsChange,
+}) => {
+  const [variants, setVariants] = useState(initialVariants)
   const [variantCounter, setVariantCounter] = useState(initialVariants.length)
 
   useEffect(() => {
@@ -28,13 +33,12 @@ const EditProductVariant = ({ initialVariants, productId }) => {
           if (oIdx === optionIndex) {
             const updatedOption = { ...option, [field]: value }
             if (field === 'price' || field === 'costPrice') {
-              if (updatedOption.price && updatedOption.costPrice) {
-                updatedOption.profit =
-                  updatedOption.price - updatedOption.costPrice
+              const price = Number(updatedOption.price) || 0
+              const costPrice = Number(updatedOption.costPrice) || 0
+              if (price && costPrice) {
+                updatedOption.profit = price - costPrice
                 updatedOption.margin =
-                  ((updatedOption.profit / updatedOption.price) * 100).toFixed(
-                    2,
-                  ) + '%'
+                  ((updatedOption.profit / price) * 100).toFixed(2) + '%'
               }
             }
             return updatedOption
@@ -59,24 +63,22 @@ const EditProductVariant = ({ initialVariants, productId }) => {
   }
 
   const addVariant = () => {
-    setVariants((prevVariants) => [
-      ...prevVariants,
-      {
-        optionName: `Option ${variantCounter + 1}`,
-        optionValues: [
-          {
-            value: '',
-            price: '',
-            quantity: '',
-            costPrice: '',
-            profit: '',
-            margin: '',
-            compareAtPrice: '',
-          },
-        ],
-        images: [],
-      },
-    ])
+    const newVariant = {
+      optionName: `Option ${variantCounter + 1}`,
+      optionValues: [
+        {
+          value: '',
+          price: '',
+          quantity: '',
+          costPrice: '',
+          profit: '',
+          margin: '',
+          compareAtPrice: '',
+        },
+      ],
+      images: [],
+    }
+    setVariants((prevVariants) => [...prevVariants, newVariant])
     setVariantCounter(variantCounter + 1)
   }
 
@@ -99,63 +101,71 @@ const EditProductVariant = ({ initialVariants, productId }) => {
     const imageUrl = typeof image === 'string' ? image : image.url
     if (!imageUrl) {
       console.error('Invalid image:', image)
+      toast.error('Invalid image URL')
       return
     }
 
-    if (window.confirm('Are you sure you want to delete this image?')) {
-      try {
-        await fetch(`${API_BASE_URL}/delete-images`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ images: [imageUrl], productId }),
-        })
+    if (!window.confirm('Are you sure you want to delete this image?')) return
 
-        const updatedImages = variants[variantIndex].images.filter(
-          (img) => img !== imageUrl,
-        )
+    try {
+      await fetch(`${API_BASE_URL}/delete-images`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ images: [imageUrl], productId }),
+      })
 
-        const updatedVariants = [...variants]
-        updatedVariants[variantIndex].images = updatedImages
-        setVariants(updatedVariants)
-        toast('Image deleted successfully!', {})
-      } catch (error) {
-        console.error('Error deleting image:', error)
-        toast('Error deleting image', { type: 'error' })
-      }
+      const updatedImages = variants[variantIndex].images.filter(
+        (img) => img !== imageUrl,
+      )
+      const updatedVariants = [...variants]
+      updatedVariants[variantIndex].images = updatedImages
+      setVariants(updatedVariants)
+      toast.success('Image deleted successfully!')
+    } catch (error) {
+      console.error('Error deleting image:', error)
+      toast.error('Error deleting image')
     }
   }
 
   const handleDeleteVariant = async (variantId, variantIndex) => {
-    if (window.confirm('Are you sure you want to delete this variant?')) {
-      try {
-        const imagesToDelete = variants[variantIndex].images
+    if (!window.confirm('Are you sure you want to delete this variant?')) return
 
-        await fetch(`${API_BASE_URL}/delete-images`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ images: imagesToDelete, productId }),
-        })
+    try {
+      const imagesToDelete = variants[variantIndex].images
 
-        const response = await fetch(
-          `${API_BASE_URL}/products/deleteProductVariant/${productId}/${variantId}`,
-          { method: 'DELETE' },
-        )
+      await fetch(`${API_BASE_URL}/delete-images`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ images: imagesToDelete, productId }),
+      })
 
-        if (!response.ok) throw new Error('Failed to delete variant')
+      const response = await fetch(
+        `${API_BASE_URL}/products/deleteProductVariant/${productId}/${variantId}`,
+        { method: 'DELETE' },
+      )
 
-        const updatedVariants = variants.filter(
-          (variant) => variant._id !== variantId,
-        )
-        setVariants(updatedVariants)
-        toast('Variant and associated images deleted successfully!', {})
-      } catch (error) {
-        console.error('Error deleting variant:', error)
-        toast('Error deleting variant', { type: 'error' })
+      if (!response.ok) throw new Error('Failed to delete variant')
+
+      const updatedVariants = variants.filter(
+        (variant) => variant._id !== variantId,
+      )
+      setVariants(updatedVariants)
+      if (onVariantsChange) {
+        onVariantsChange(updatedVariants)
       }
+      toast.success('Variant and associated images deleted successfully!')
+    } catch (error) {
+      console.error('Error deleting variant:', error)
+      toast.error('Error deleting variant')
     }
   }
 
   const handleSaveVariant = async (variant, variantIndex) => {
+    if (!productId) {
+      toast.error('Product ID is missing. Cannot save variant.')
+      return
+    }
+
     const newImages = variant.images.filter((image) => image.file)
     const uploadedImages = []
 
@@ -179,7 +189,7 @@ const EditProductVariant = ({ initialVariants, productId }) => {
       }
     } catch (error) {
       console.error('Error uploading images:', error)
-      toast('Error uploading images', { type: 'error' })
+      toast.error('Error uploading images')
       return
     }
 
@@ -188,7 +198,18 @@ const EditProductVariant = ({ initialVariants, productId }) => {
       ...uploadedImages,
     ]
 
-    const formattedVariant = { ...variant, images: allImages }
+    const formattedVariant = {
+      ...variant,
+      images: allImages,
+      optionValues: variant.optionValues.map((ov) => ({
+        ...ov,
+        price: Number(ov.price) || 0,
+        quantity: Number(ov.quantity) || 0,
+        costPrice: Number(ov.costPrice) || 0,
+        profit: Number(ov.profit) || 0,
+        compareAtPrice: Number(ov.compareAtPrice) || 0,
+      })),
+    }
 
     const url = formattedVariant._id
       ? `${API_BASE_URL}/products/updateProductVariant/${productId}/${formattedVariant._id}`
@@ -196,33 +217,41 @@ const EditProductVariant = ({ initialVariants, productId }) => {
     const method = formattedVariant._id ? 'PUT' : 'POST'
 
     try {
+      console.log('Saving variant with payload:', formattedVariant)
       const response = await fetch(url, {
         method: method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formattedVariant),
       })
 
-      if (!response.ok) throw new Error('Failed to save variant')
-
-      const updatedVariants = await response.json()
-
-      if (method === 'POST') {
-        setVariants(updatedVariants.variants)
-      } else {
-        const updatedVariant = updatedVariants.variant
-        const newVariants = variants.map((v, index) =>
-          index === variantIndex ? updatedVariant : v,
+      if (!response.ok) {
+        const errorText = await response.text()
+        console.error('Server response:', errorText)
+        throw new Error(
+          `Failed to ${method === 'POST' ? 'add' : 'update'} variant: ${errorText}`,
         )
-        setVariants(newVariants)
       }
 
-      toast('Variant saved successfully!', {})
+      const updatedVariantsData = await response.json()
+      console.log('Server response data:', updatedVariantsData)
+
+      const updatedVariants =
+        method === 'POST'
+          ? updatedVariantsData.variants // Expecting { message: "...", variants: [...] }
+          : variants.map((v, idx) =>
+              idx === variantIndex ? updatedVariantsData.variant : v,
+            )
+
+      setVariants(updatedVariants)
+      if (onVariantsChange) {
+        onVariantsChange(updatedVariants)
+      }
+      toast.success('Variant saved successfully!')
     } catch (error) {
       console.error('Error saving variant:', error)
-      toast('Error saving variant', { type: 'error' })
+      toast.error(error.message || 'Error saving variant')
     }
   }
-
   return (
     <>
       {variants.map((variant, index) => (
@@ -293,7 +322,7 @@ const EditProductVariant = ({ initialVariants, productId }) => {
                   labelPlacement="outside"
                   bordered
                   label="Quantity"
-                  name="availableQuantity"
+                  name="quantity"
                   type="number"
                   onChange={(e) =>
                     handleOptionChange(
