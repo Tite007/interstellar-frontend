@@ -1,43 +1,65 @@
-import React, { useState } from 'react'
-import Link from 'next/link'
-import OrderCard from '@/src/components/customer/OrderCard' // Adjust the import path as necessary
-import { Pagination } from "@heroui/pagination"
+// @/src/components/customer/OrderHistoryCard.jsx
+'use client'
+import React, { useEffect, useState } from 'react'
+import OrderCard from './OrderCard'
 
-const ITEMS_PER_PAGE = 5
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
 const OrderHistoryCard = ({ userOrders, onCardClick }) => {
-  const [currentPage, setCurrentPage] = useState(1)
+  const [ordersWithImages, setOrdersWithImages] = useState([])
 
-  const handlePageChange = (page) => {
-    setCurrentPage(page)
-  }
+  useEffect(() => {
+    const fetchImagesForOrders = async () => {
+      const updatedOrders = await Promise.all(
+        userOrders.map(async (order) => {
+          if (order.items && order.items.length > 0) {
+            const firstItem = order.items[0]
+            try {
+              const productResponse = await fetch(
+                `${API_BASE_URL}/products/findProduct/${firstItem.productId}`,
+              )
+              if (productResponse.ok) {
+                const productData = await productResponse.json()
+                let image = productData.images?.[0] || null
 
-  const paginatedOrders = userOrders.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE,
-  )
+                if (firstItem.variantId) {
+                  const variantResponse = await fetch(
+                    `${API_BASE_URL}/products/findVariant/${firstItem.variantId}`,
+                  )
+                  if (variantResponse.ok) {
+                    const variantData = await variantResponse.json()
+                    image = variantData.images?.[0] || image
+                  }
+                }
+
+                // Add the image as productImage to match OrderCard's expectation
+                const updatedItems = [...order.items]
+                updatedItems[0] = { ...updatedItems[0], productImage: image }
+                return { ...order, items: updatedItems }
+              }
+            } catch (err) {
+              console.error(
+                `Error fetching image for product ${firstItem.productId}:`,
+                err,
+              )
+            }
+          }
+          return { ...order } // Return unchanged if no image fetched
+        }),
+      )
+      setOrdersWithImages(updatedOrders)
+    }
+
+    fetchImagesForOrders()
+  }, [userOrders])
 
   return (
     <div>
-      <div className="order-history">
-        {paginatedOrders.map((order, index) => (
-          <Link key={index} href={`/customer-profile/orders/${order._id}`}>
-            <OrderCard
-              key={order._id}
-              order={order}
-              onCardClick={onCardClick}
-            />
-          </Link>
-        ))}
-      </div>
-      <div className="pagination">
-        <Pagination
-          total={Math.ceil(userOrders.length / ITEMS_PER_PAGE)}
-          initialPage={currentPage}
-          onChange={handlePageChange}
-          className="mt-4"
-        />
-      </div>
+      {ordersWithImages.map((order) => (
+        <div key={order._id} onClick={() => onCardClick(order)}>
+          <OrderCard order={order} />
+        </div>
+      ))}
     </div>
   )
 }

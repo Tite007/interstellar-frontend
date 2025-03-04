@@ -8,7 +8,7 @@ import React, {
   useMemo,
 } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
-import { Button } from "@heroui/button"
+import { Button } from '@heroui/button'
 import { CartContext } from '@/src/context/CartContext'
 import Image from 'next/image'
 
@@ -256,7 +256,7 @@ const PaymentSuccessPage = () => {
       <Button
         size="sm"
         onPress={handleGoToOrders}
-        className="mt-4 bg-tealGreen text-white"
+        className="mt-4 bg-redBranding text-white"
       >
         Go to Orders Page
       </Button>

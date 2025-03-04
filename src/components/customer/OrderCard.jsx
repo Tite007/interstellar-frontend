@@ -15,8 +15,8 @@ const OrderCard = ({ order }) => {
         <Image
           src={order.items[0]?.productImage || placeholderImage}
           alt={order.items[0]?.name || 'Product Image'}
-          width={100}
-          height={100}
+          width={80}
+          height={80}
           className="rounded"
         />
       </div>
