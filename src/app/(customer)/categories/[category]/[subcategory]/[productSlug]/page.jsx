@@ -26,6 +26,7 @@ import { CartContext } from '@/src/context/CartContext'
 import { Button } from '@heroui/button'
 import NotifyMeModal from '@/src/components/Product-details/NotifyMeModal'
 import { Bell } from 'lucide-react'
+import ShareModal from '@/src/components/Products/ShareModal'
 
 export default function MainProductDetails() {
   const searchParams = useSearchParams()
@@ -41,6 +42,11 @@ export default function MainProductDetails() {
   const [selectedImages, setSelectedImages] = useState([])
   const [isOutOfStock, setIsOutOfStock] = useState(false)
   const [showNotifyModal, setShowNotifyModal] = useState(false)
+
+  const shareUrl =
+    typeof window !== 'undefined'
+      ? `${window.location.origin}/product?productId=${searchParams.get('productId')}`
+      : ''
 
   useEffect(() => {
     const productId = searchParams.get('productId')
@@ -239,7 +245,6 @@ export default function MainProductDetails() {
             <p>No images available</p>
           )}
         </div>
-
         <div className="w-full md:w-1/2 md:ml-20 md:text-left">
           <div className="hidden md:block">
             <p className="text-lg font-semibold mt-1">{product.brand}</p>
@@ -287,6 +292,11 @@ export default function MainProductDetails() {
               )}
             </p>
           </div>
+          <ShareModal
+            productName={product.name}
+            shareUrl={shareUrl}
+            imageUrl={product.images?.[0]} // Pass the first image if available
+          />{' '}
           <div>
             <h3 className="text-md font-semibold">
               Which is the Best for You:
@@ -329,7 +339,6 @@ export default function MainProductDetails() {
               </p>
             </div>
           )}
-
           <div className="mt-4">
             <h3 className="text-md font-semibold mb-4">
               Choose Your Delivery Option:

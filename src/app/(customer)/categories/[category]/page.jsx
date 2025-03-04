@@ -11,7 +11,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
 const SubcategoryPage = () => {
   const pathname = usePathname()
-  const category = pathname.split('/').pop().toLowerCase()
+  const category = decodeURIComponent(pathname.split('/').pop().toLowerCase()) // Decode the category
   const [data, setData] = useState([])
   const [isParentCategory, setIsParentCategory] = useState(true)
   const [error, setError] = useState(null)

@@ -1,31 +1,31 @@
 // client/src/components/SkeletonProductCard.jsx
 import React from 'react'
-import { Skeleton } from "@heroui/skeleton"
-import { Card } from "@heroui/card"
+import { Skeleton } from '@heroui/skeleton'
+import { Card } from '@heroui/card'
 
 const SkeletonProductCard = () => {
   return (
-    <Card className="border border-gray-200 rounded-xl p-4 m-4 shadow-md text-left w-full max-w-xs">
+    <Card className="border border-gray-200 rounded-xl p-4 shadow-md text-left w-full">
+      {/* Image placeholder */}
       <Skeleton className="rounded-lg">
-        <div className="h-80 w-full bg-default-300"></div>{' '}
-        {/* Matches the 300px height of the image */}
+        <div className="h-48 sm:h-56 md:h-64 w-full bg-default-300"></div>
       </Skeleton>
+
+      {/* Text placeholders */}
       <div className="space-y-3 mt-4">
+        {/* Title */}
         <Skeleton className="w-full rounded-lg">
-          <div className="h-5 w-full bg-default-200"></div>{' '}
-          {/* Matches the title */}
+          <div className="h-5 w-full bg-default-200"></div>
         </Skeleton>
-        <Skeleton className="w-3/5 rounded-lg">
-          <div className="h-4 w-full bg-default-200"></div>{' '}
-          {/* Matches the taste notes */}
+
+        {/* Subtitle or secondary info */}
+        <Skeleton className="w-4/5 rounded-lg">
+          <div className="h-4 w-full bg-default-200"></div>
         </Skeleton>
-        <Skeleton className="w-1/2 rounded-lg">
-          <div className="h-4 w-full bg-default-200"></div>{' '}
-          {/* Matches the category */}
-        </Skeleton>
-        <Skeleton className="w-1/3 rounded-lg">
-          <div className="h-4 w-full bg-default-300"></div>{' '}
-          {/* Matches the price */}
+
+        {/* Price or additional info */}
+        <Skeleton className="w-2/5 rounded-lg">
+          <div className="h-4 w-full bg-default-300"></div>
         </Skeleton>
       </div>
     </Card>

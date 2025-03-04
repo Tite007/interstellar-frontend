@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react'
-import { usePathname, useSearchParams } from 'next/navigation' // To get query parameters
+import { usePathname, useSearchParams } from 'next/navigation'
 import axios from 'axios'
 import Sidebar from '@/src/components/Products/Sidebar'
 import ProductCardCategory from '@/src/components/Products/ProductCardCategory'
@@ -14,12 +14,11 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 const SubcategoryProductsListPage = () => {
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const subcategoryId = searchParams.get('subcategoryId') // Extract subcategoryId from query parameters
+  const subcategoryId = searchParams.get('subcategoryId')
 
-  // Extract category and subcategory from pathname
   const pathParts = pathname.split('/')
-  const category = pathParts[2] // This gets 'grocery'
-  const subcategory = pathParts[3] // This gets 'bakery-goods'
+  const category = pathParts[2]
+  const subcategory = pathParts[3]
 
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
@@ -28,7 +27,6 @@ const SubcategoryProductsListPage = () => {
   const [selectedCountry, setSelectedCountry] = useState(null)
   const [error, setError] = useState(null)
 
-  // Fetch products by subcategory ID
   useEffect(() => {
     if (subcategoryId) {
       const fetchProductsBySubcategory = async () => {
@@ -36,13 +34,11 @@ const SubcategoryProductsListPage = () => {
           const response = await axios.get(
             `${API_BASE_URL}/products/products/bySubcategory/${subcategoryId}`,
           )
-
           if (!response.data || response.data.length === 0) {
             setError('No products found for this subcategory')
             return
           }
-
-          setProducts(response.data) // Set products fetched for the subcategory
+          setProducts(response.data)
         } catch (err) {
           setError('Failed to fetch products')
           console.error('Error fetching products:', err)
@@ -50,14 +46,12 @@ const SubcategoryProductsListPage = () => {
           setLoading(false)
         }
       }
-
       fetchProductsBySubcategory()
     } else {
       setError('Subcategory ID not found')
     }
   }, [subcategoryId])
 
-  // Filter products based on selected filters
   const filteredProducts = products.filter((product) => {
     return (
       (!selectedCategory || product.category === selectedCategory) &&
@@ -67,23 +61,15 @@ const SubcategoryProductsListPage = () => {
   })
 
   const handleSelectCategory = (type, value) => {
-    if (type === 'category') {
-      setSelectedCategory(value)
-    } else if (type === 'roastLevel') {
-      setSelectedRoastLevel(value)
-    } else if (type === 'country') {
-      setSelectedCountry(value)
-    }
+    if (type === 'category') setSelectedCategory(value)
+    else if (type === 'roastLevel') setSelectedRoastLevel(value)
+    else if (type === 'country') setSelectedCountry(value)
   }
 
   const clearFilter = (type) => {
-    if (type === 'category') {
-      setSelectedCategory(null)
-    } else if (type === 'roastLevel') {
-      setSelectedRoastLevel(null)
-    } else if (type === 'country') {
-      setSelectedCountry(null)
-    }
+    if (type === 'category') setSelectedCategory(null)
+    else if (type === 'roastLevel') setSelectedRoastLevel(null)
+    else if (type === 'country') setSelectedCountry(null)
   }
 
   const categories = [...new Set(products.map((product) => product.category))]
@@ -113,8 +99,7 @@ const SubcategoryProductsListPage = () => {
           <div className="hidden md:block">
             <SkeletonSidebar />
           </div>
-
-          <div className="flex flex-wrap justify-center p-4 w-full">
+          <div className="xl:container lg:container md:container sm:container mb-5 sm:mt-5 md:mt-10 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 p-4">
             {Array.from({ length: 9 }).map((_, index) => (
               <SkeletonProductCard key={index} />
             ))}
@@ -146,8 +131,7 @@ const SubcategoryProductsListPage = () => {
               selectedCountry={selectedCountry}
             />
           </div>
-
-          <div className=" xl:container lg:container md:container sm:container mb-5 sm:mt-5 md:mt-10 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 ">
+          <div className="xl:container lg:container md:container sm:container mb-5 sm:mt-5 md:mt-10 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
             {filteredProducts.map((product) => (
               <ProductCardCategory key={product._id} product={product} />
             ))}

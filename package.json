@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@eslint/object-schema": "^2.1.4",
-    "@internationalized/date": "^3.5.6",
     "@heroui/accordion": "2.2.8",
     "@heroui/avatar": "2.2.7",
     "@heroui/badge": "2.2.6",
@@ -37,6 +36,7 @@
     "@heroui/theme": "2.4.6",
     "@heroui/tooltip": "2.2.8",
     "@heroui/user": "2.2.7",
+    "@internationalized/date": "^3.5.6",
     "@radix-ui/react-dialog": "^1.1.1",
     "@radix-ui/react-hover-card": "^1.0.7",
     "@react-pdf/renderer": "^3.3.8",
@@ -66,6 +66,7 @@
     "react-dom": "^18.3.1",
     "react-dropzone": "^14.2.3",
     "react-medium-image-zoom": "^5.2.8",
+    "react-share": "^5.2.2",
     "sonner": "^1.4.0",
     "tinymce": "^7.2.1"
   },
