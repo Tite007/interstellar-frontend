@@ -42,11 +42,7 @@ export default function MainProductDetails() {
   const [selectedImages, setSelectedImages] = useState([])
   const [isOutOfStock, setIsOutOfStock] = useState(false)
   const [showNotifyModal, setShowNotifyModal] = useState(false)
-
-  const shareUrl =
-    typeof window !== 'undefined'
-      ? `${window.location.origin}/product?productId=${searchParams.get('productId')}`
-      : ''
+  const [categories, setCategories] = useState([]) // Add state for categories
 
   useEffect(() => {
     const productId = searchParams.get('productId')
@@ -77,6 +73,66 @@ export default function MainProductDetails() {
       console.error('Error fetching product details:', error)
     }
   }
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/categories/categories`,
+      )
+      const data = await response.json()
+      setCategories(data)
+    } catch (err) {
+      console.error('Error fetching categories:', err)
+    }
+  }
+
+  // Map category and subcategory like in ProductCardCategory
+  const mapCategoryAndSubcategory = (product) => {
+    let categoryName = 'default-category'
+    let subcategoryName = 'default-subcategory'
+
+    if (product?.parentCategory) {
+      const category = categories.find(
+        (cat) => String(cat._id) === String(product.parentCategory),
+      )
+      if (category) {
+        categoryName = category.name
+      }
+    }
+
+    if (product?.subcategory) {
+      const subcategory = categories.find(
+        (cat) => String(cat._id) === String(product.subcategory),
+      )
+      if (subcategory) {
+        subcategoryName = subcategory.name
+      }
+    }
+
+    return { categoryName, subcategoryName }
+  }
+
+  // Generate the share URL
+  const generateShareUrl = () => {
+    if (!product) return ''
+    const { categoryName, subcategoryName } = mapCategoryAndSubcategory(product)
+    const productName = product.name
+      ? product.name.toLowerCase().replace(/\s+/g, '-')
+      : 'default-product'
+    const formattedCategoryName = categoryName
+      .toLowerCase()
+      .replace(/\s+/g, '-')
+    const formattedSubcategoryName = subcategoryName
+      .toLowerCase()
+      .replace(/\s+/g, '-')
+    const productId = searchParams.get('productId')
+
+    return typeof window !== 'undefined'
+      ? `${window.location.origin}/categories/${formattedCategoryName}/${formattedSubcategoryName}/${productName}?productId=${productId}`
+      : ''
+  }
+
+  const shareUrl = generateShareUrl()
 
   const handlePackageChange = (value) => {
     setSelectedPackage(value)
