@@ -48,14 +48,14 @@
 
 @media (min-width: 768px) {
   .embla-category {
-    --slide-size: 35%;
+    --slide-size: 32%;
     --slide-spacing: 1.9rem;
   }
 }
 
 @media (min-width: 1024px) {
   .embla-category {
-    --slide-size: 28%;
+    --slide-size: 27%;
     --slide-spacing: 2.8rem;
   }
 }
@@ -69,7 +69,7 @@
 
 @media (min-width: 1536px) {
   .embla-category {
-    --slide-size: 26%;
+    --slide-size: 29%;
     --slide-spacing: 4rem;
   }
 }

@@ -28,15 +28,35 @@ const CategoriesCarousel = ({ subcategoryId, subcategoryName }) => {
   }, [])
 
   return (
-    <div>
-      <EmblaCarouselCategories
-        categories={categories}
-        options={{
-          loop: true,
-          align: 'start',
-          slidesToScroll: 1,
-        }}
-      />
+    <div className=" text-center sm:px-6 lg:px-8">
+      {/* Welcome Message Section */}
+      <div className="mb-8 sm:mb-12">
+        <h1 className="text-3xl font-bold text-gray-900 sm:text-4xl md:text-5xl">
+          Welcome Home—Rediscover the Joy of Yesterday
+        </h1>
+        <p className="mt-4 text-lg text-gray-600 max-w-3xl mx-auto sm:text-xl">
+          Step into a world where every product tells a story. From the flavors
+          of childhood to the fabrics of tradition, our store is your gateway to
+          the memories and comforts of home. Explore a curated collection of
+          nostalgic treasures, designed to bring joy and connection to your
+          everyday life.
+        </p>
+      </div>
+
+      {/* Categories Title and Carousel */}
+      <div className="mt-8">
+        <h2 className="text-xl md:text-2xl font-semibold text-gray-800 mb-6 sm:text-3xl">
+          Categories
+        </h2>
+        <EmblaCarouselCategories
+          categories={categories}
+          options={{
+            loop: true,
+            align: 'start',
+            slidesToScroll: 1,
+          }}
+        />
+      </div>
     </div>
   )
 }
