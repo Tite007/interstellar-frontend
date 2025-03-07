@@ -1,4 +1,3 @@
-// src/app/(customer)/categories/[category]/[subcategory]/[productSlug]/page.jsx
 import axios from 'axios'
 import MainProductDetailsClient from './MainProductDetailsClient'
 
@@ -11,21 +10,19 @@ async function fetchProductDetails(productId) {
     )
     return response.data
   } catch (error) {
-    console.error('Error fetching product:', error)
     throw new Error('Failed to fetch product data')
   }
 }
 
-// Fetch review details by ID
-async function fetchReviewDetails(reviewId) {
+// Fetch all reviews for a product
+async function fetchProductReviews(productId) {
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/reviews/getReview/${reviewId}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/reviews/getByProduct/${productId}`,
     )
     return response.data
   } catch (error) {
-    console.error(`Error fetching review ${reviewId}:`, error)
-    return null // Return null if review fetch fails
+    return []
   }
 }
 
@@ -64,38 +61,36 @@ function prepareDescription(description) {
     .replace(/</g, '<')
     .replace(/>/g, '>')
     .replace(/"/g, '"')
-    .replace(/'/g, "'")
-    .replace(/ /g, ' ')
+    .replace(/'/g, '`')
     .replace(/\s+/g, ' ')
     .trim()
 }
 
-// Generate dynamic metadata with Google best practices
+// Generate dynamic metadata
 export async function generateMetadata({ params, searchParams }) {
   const { category, subcategory, productSlug } = params
   const productId = searchParams.productId
 
   const productData = await fetchProductDetails(productId)
+  const reviews = await fetchProductReviews(productId)
   const { categoryName, subcategoryName } =
     mapCategoryAndSubcategory(productData)
 
-  // Fetch reviews if they exist
-  let reviews = []
-  if (productData.reviews && productData.reviews.length > 0) {
-    reviews = await Promise.all(
-      productData.reviews.map(
-        async (reviewId) => await fetchReviewDetails(reviewId),
-      ),
-    )
-    reviews = reviews.filter((review) => review !== null)
-  }
-
-  const title = `${productData.name || 'Product'} | ${category} - ${subcategory} | Muchio Shop`
+  const variantSnippet =
+    productData.variants?.length > 0
+      ? ` Available in ${productData.size}, ${productData.variants.map((v) => v.optionValues.map((ov) => ov.value).join(', ')).join(', ')}.`
+      : ` Available in ${productData.size}.`
   const reviewSnippet =
     reviews.length > 0
-      ? ` Rated ${reviews[0].rating || 'N/A'}/5 by ${reviews[0].user.name || 'a customer'}.`
+      ? ` Rated ${(
+          reviews.reduce((sum, review) => sum + (review.rating || 0), 0) /
+          reviews.length
+        ).toFixed(
+          1,
+        )}/5 based on ${reviews.length} review${reviews.length > 1 ? 's' : ''}.`
       : ''
-  const description = `${productData.seoDescription || productData.description || 'No description available.'}${reviewSnippet}`
+  const title = `${productData.name || 'Product'} | ${categoryName} | ${subcategoryName} | Muchio Shop`
+  const description = `${productData.seoDescription || productData.description || 'No description available.'}${variantSnippet}${reviewSnippet}`
 
   return {
     title,
@@ -141,70 +136,105 @@ export default async function Page({ params, searchParams }) {
   const productId = searchParams.productId
 
   const productData = await fetchProductDetails(productId)
+  const reviews = await fetchProductReviews(productId)
   const { categoryName, subcategoryName } =
     mapCategoryAndSubcategory(productData)
 
-  // Fetch reviews if they exist
-  let reviews = []
-  if (productData.reviews && productData.reviews.length > 0) {
-    reviews = await Promise.all(
-      productData.reviews.map(
-        async (reviewId) => await fetchReviewDetails(reviewId),
-      ),
-    )
-    reviews = reviews.filter((review) => review !== null)
-  }
-
-  // JSON-LD structured data conforming to Google's Product snippet requirements
+  // JSON-LD structured data with ProductGroup and variants
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'Product',
-    name: productData.name, // Required: Product name
-    image: productData.images || ['/default-og-image.jpg'], // Recommended: Product image(s)
-    description: prepareDescription(productData.description), // Recommended: Product description
-    sku: productData.sku, // Recommended: Stock Keeping Unit
+    '@type': 'ProductGroup',
+    name: productData.name || 'Unnamed Product',
+    description: prepareDescription(productData.description),
+    sku: productData.sku || 'N/A',
     brand: {
       '@type': 'Brand',
-      name: productData.brand || 'Muchio Shop', // Recommended: Brand name
+      name: productData.brand || 'Muchio Shop',
     },
-    offers: {
-      '@type': 'Offer',
-      price: productData.price?.toFixed(2), // Required: Offer price
-      priceCurrency: 'USD', // Recommended (required for merchant listings): Currency in ISO 4217 format
-      availability:
-        productData.currentStock > 0
-          ? 'https://schema.org/InStock'
-          : 'https://schema.org/OutOfStock', // Recommended: Availability status
-      itemCondition: 'https://schema.org/NewCondition', // Recommended: Condition of the item
-      priceValidUntil: new Date(
-        productData.expirationDate || Date.now() + 30 * 24 * 60 * 60 * 1000,
-      ) // Recommended: Price validity (default to 30 days if not specified)
-        .toISOString()
-        .split('T')[0],
-      url: `${process.env.NEXT_PUBLIC_BASE_URL}/categories/${category}/${subcategory}/${productSlug}?productId=${productId}`, // Recommended: URL of the offer
-    },
+    productGroupID: productData.sku || 'N/A',
+    variesBy: ['https://schema.org/size'],
+    hasVariant: [
+      {
+        '@type': 'Product',
+        name: `${productData.name || 'Unnamed Product'} - ${productData.size || 'N/A'}`,
+        image:
+          productData.images?.length > 0
+            ? productData.images
+            : ['/default-og-image.jpg'],
+        description: prepareDescription(productData.description),
+        sku: productData.sku || 'N/A',
+        size: productData.size || 'N/A',
+        offers: {
+          '@type': 'Offer',
+          url: `${process.env.NEXT_PUBLIC_BASE_URL}/categories/${category}/${subcategory}/${productSlug}?productId=${productId}`,
+          priceCurrency: 'USD',
+          price: productData.price ? productData.price.toFixed(2) : '0.00',
+          availability:
+            productData.currentStock > 0
+              ? 'https://schema.org/InStock'
+              : 'https://schema.org/OutOfStock',
+          itemCondition: 'https://schema.org/NewCondition',
+          priceValidUntil: new Date(
+            productData.expirationDate || Date.now() + 30 * 24 * 60 * 60 * 1000,
+          )
+            .toISOString()
+            .split('T')[0],
+        },
+      },
+      ...(productData.variants?.map((variant) => ({
+        '@type': 'Product',
+        name: `${productData.name || 'Unnamed Product'} - ${variant.optionValues[0].value}`,
+        image:
+          variant.images?.length > 0
+            ? variant.images
+            : productData.images?.length > 0
+              ? productData.images
+              : ['/default-og-image.jpg'],
+        description: prepareDescription(productData.description),
+        sku: `${productData.sku || 'N/A'}-${variant.optionValues[0].value}`,
+        size: variant.optionValues[0].value,
+        offers: {
+          '@type': 'Offer',
+          url: `${process.env.NEXT_PUBLIC_BASE_URL}/categories/${category}/${subcategory}/${productSlug}?productId=${productId}&variant=${variant.optionValues[0].value}`,
+          priceCurrency: 'USD',
+          price: variant.optionValues[0].price
+            ? variant.optionValues[0].price.toFixed(2)
+            : '0.00',
+          availability:
+            variant.optionValues[0].quantity > 0
+              ? 'https://schema.org/InStock'
+              : 'https://schema.org/OutOfStock',
+          itemCondition: 'https://schema.org/NewCondition',
+          priceValidUntil: new Date(
+            productData.expirationDate || Date.now() + 30 * 24 * 60 * 60 * 1000,
+          )
+            .toISOString()
+            .split('T')[0],
+        },
+      })) || []),
+    ],
     ...(reviews.length > 0 && {
       aggregateRating: {
         '@type': 'AggregateRating',
         ratingValue: (
           reviews.reduce((sum, review) => sum + (review.rating || 0), 0) /
           reviews.length
-        ).toFixed(1), // Recommended: Average rating
-        reviewCount: reviews.length, // Recommended: Number of reviews
+        ).toFixed(1),
+        reviewCount: reviews.length,
       },
       review: reviews.map((review) => ({
         '@type': 'Review',
         reviewRating: {
           '@type': 'Rating',
-          ratingValue: review.rating || '4', // Required: Rating value
-          bestRating: '5', // Recommended: Best possible rating
+          ratingValue: review.rating || '4',
+          bestRating: '5',
         },
         author: {
           '@type': 'Person',
-          name: review.user.name || 'Unknown Reviewer', // Required: Author name
+          name: review.user.name || 'Unknown Reviewer',
         },
-        reviewBody: review.comment || '', // Recommended: Review text
-        datePublished: new Date(review.time).toISOString().split('T')[0], // Recommended: Publication date
+        reviewBody: review.comment || '',
+        datePublished: new Date(review.time).toISOString().split('T')[0],
       })),
     }),
   }
@@ -218,51 +248,138 @@ export default async function Page({ params, searchParams }) {
       />
 
       {/* Microdata */}
-      <div itemScope itemType="https://schema.org/Product">
-        <meta itemProp="name" content={productData.name} />
+      <div itemScope itemType="https://schema.org/ProductGroup">
+        <meta itemProp="name" content={productData.name || 'Unnamed Product'} />
         <meta
           itemProp="description"
           content={prepareDescription(productData.description)}
         />
-        <meta itemProp="sku" content={productData.sku} />
-        <meta
-          itemProp="image"
-          content={productData.images?.[0] || '/default-og-image.jpg'}
-        />
+        <meta itemProp="productGroupID" content={productData.sku || 'N/A'} />
         <div itemProp="brand" itemScope itemType="https://schema.org/Brand">
           <meta itemProp="name" content={productData.brand || 'Muchio Shop'} />
         </div>
-        <div itemProp="offers" itemScope itemType="https://schema.org/Offer">
+        {/* Base Product */}
+        <div
+          itemProp="hasVariant"
+          itemScope
+          itemType="https://schema.org/Product"
+        >
           <meta
-            itemProp="url"
-            content={`${process.env.NEXT_PUBLIC_BASE_URL}/categories/${category}/${subcategory}/${productSlug}?productId=${productId}`}
-          />
-          <meta itemProp="priceCurrency" content="USD" />
-          <meta itemProp="price" content={productData.price?.toFixed(2)} />
-          <meta
-            itemProp="availability"
-            content={
-              productData.currentStock > 0
-                ? 'https://schema.org/InStock'
-                : 'https://schema.org/OutOfStock'
-            }
+            itemProp="name"
+            content={`${productData.name || 'Unnamed Product'} - ${productData.size || 'N/A'}`}
           />
           <meta
-            itemProp="itemCondition"
-            content="https://schema.org/NewCondition"
+            itemProp="image"
+            content={productData.images?.[0] || '/default-og-image.jpg'}
           />
-          <meta
-            itemProp="priceValidUntil"
-            content={
-              new Date(
-                productData.expirationDate ||
-                  Date.now() + 30 * 24 * 60 * 60 * 1000,
-              )
-                .toISOString()
-                .split('T')[0]
-            }
-          />
+          <meta itemProp="sku" content={productData.sku || 'N/A'} />
+          <meta itemProp="size" content={productData.size || 'N/A'} />
+          <div itemProp="offers" itemScope itemType="https://schema.org/Offer">
+            <meta
+              itemProp="url"
+              content={`${process.env.NEXT_PUBLIC_BASE_URL}/categories/${category}/${subcategory}/${productSlug}?productId=${productId}`}
+            />
+            <meta itemProp="priceCurrency" content="USD" />
+            <meta
+              itemProp="price"
+              content={
+                productData.price ? productData.price.toFixed(2) : '0.00'
+              }
+            />
+            <meta
+              itemProp="availability"
+              content={
+                productData.currentStock > 0
+                  ? 'https://schema.org/InStock'
+                  : 'https://schema.org/OutOfStock'
+              }
+            />
+            <meta
+              itemProp="itemCondition"
+              content="https://schema.org/NewCondition"
+            />
+            <meta
+              itemProp="priceValidUntil"
+              content={
+                new Date(
+                  productData.expirationDate ||
+                    Date.now() + 30 * 24 * 60 * 60 * 1000,
+                )
+                  .toISOString()
+                  .split('T')[0]
+              }
+            />
+          </div>
         </div>
+        {/* Variants */}
+        {productData.variants?.map((variant) => (
+          <div
+            key={variant._id}
+            itemProp="hasVariant"
+            itemScope
+            itemType="https://schema.org/Product"
+          >
+            <meta
+              itemProp="name"
+              content={`${productData.name || 'Unnamed Product'} - ${variant.optionValues[0].value}`}
+            />
+            <meta
+              itemProp="image"
+              content={
+                variant.images?.[0] ||
+                productData.images?.[0] ||
+                '/default-og-image.jpg'
+              }
+            />
+            <meta
+              itemProp="sku"
+              content={`${productData.sku || 'N/A'}-${variant.optionValues[0].value}`}
+            />
+            <meta itemProp="size" content={variant.optionValues[0].value} />
+            <div
+              itemProp="offers"
+              itemScope
+              itemType="https://schema.org/Offer"
+            >
+              <meta
+                itemProp="url"
+                content={`${process.env.NEXT_PUBLIC_BASE_URL}/categories/${category}/${subcategory}/${productSlug}?productId=${productId}&variant=${variant.optionValues[0].value}`}
+              />
+              <meta itemProp="priceCurrency" content="USD" />
+              <meta
+                itemProp="price"
+                content={
+                  variant.optionValues[0].price
+                    ? variant.optionValues[0].price.toFixed(2)
+                    : '0.00'
+                }
+              />
+              <meta
+                itemProp="availability"
+                content={
+                  variant.optionValues[0].quantity > 0
+                    ? 'https://schema.org/InStock'
+                    : 'https://schema.org/OutOfStock'
+                }
+              />
+              <meta
+                itemProp="itemCondition"
+                content="https://schema.org/NewCondition"
+              />
+              <meta
+                itemProp="priceValidUntil"
+                content={
+                  new Date(
+                    productData.expirationDate ||
+                      Date.now() + 30 * 24 * 60 * 60 * 1000,
+                  )
+                    .toISOString()
+                    .split('T')[0]
+                }
+              />
+            </div>
+          </div>
+        ))}
         {reviews.length > 0 && (
           <>
             <div
