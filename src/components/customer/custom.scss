@@ -1,0 +1,390 @@
+// Define custom variables
+$primary-color: #007bff;
+$secondary-color: #6c757d;
+$chat-background-color: #ffffff;
+$font-color: #000000;
+$bubble-background: #e9ecef;
+$support-bubble-color: #f0f7ff;
+$user-bubble-color: #007bff;
+$border-radius: 15px;
+$font-family: 'Inter', sans-serif;
+$red-branding: #e53e3e;
+$soft-red: #f56565;
+$light-gray: #f8f9fa;
+$border-color: #dee2e6;
+$shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+$transition: all 0.3s ease;
+
+// Import the library's SCSS
+@import '~@chatscope/chat-ui-kit-styles/themes/default/main';
+
+// Main chat container
+.chat-container {
+  position: fixed;
+  bottom: 60px;
+  right: 20px;
+  width: 90vw;
+  max-width: 600px;
+  height: 600px;
+  border-radius: $border-radius;
+  box-shadow: $shadow;
+  background-color: $chat-background-color;
+  overflow: hidden;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+
+  .chat-header {
+    background-color: $light-gray;
+    border-bottom: 1px solid $border-color;
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+
+    h2 {
+      color: $font-color;
+      margin: 0;
+      font-size: 1.2rem;
+    }
+
+    button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      transition: $transition;
+
+      &:hover {
+        color: $red-branding;
+      }
+    }
+  }
+}
+
+// Override chatscope components
+.cs-main-container {
+  border: none !important;
+  border-radius: 0 0 $border-radius $border-radius;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.cs-chat-container {
+  background-color: $chat-background-color !important;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.cs-message-list {
+  background-color: $chat-background-color !important;
+  padding: 16px !important;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; // Ensures messages start from the bottom
+  min-height: 0;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $light-gray;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $secondary-color;
+    border-radius: 20px;
+  }
+}
+
+// Message styling
+.cs-message {
+  margin-bottom: 12px !important;
+  animation: message-appear 0.3s ease-out;
+
+  &__content {
+    padding: 12px 16px !important;
+    border-radius: $border-radius !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+    font-size: 0.95rem !important;
+    line-height: 1.5 !important;
+
+    a {
+      color: $primary-color;
+      text-decoration: underline;
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+
+    ul,
+    ol {
+      margin: 8px 0;
+      padding-left: 20px;
+    }
+
+    strong {
+      font-weight: 600;
+    }
+  }
+
+  &--outgoing &__content {
+    background-color: $user-bubble-color !important;
+    color: white !important;
+    box-shadow: $shadow !important;
+    border-top-right-radius: 15px !important;
+  }
+
+  &--incoming &__content {
+    background-color: $support-bubble-color !important;
+    color: $font-color !important;
+    border-top-left-radius: 15px !important;
+  }
+
+  &__avatar {
+    margin-right: 8px !important;
+  }
+
+  &__sender-name {
+    font-size: 0.8rem !important;
+    margin-bottom: 4px !important;
+    color: $secondary-color !important;
+  }
+
+  &__direction-next {
+    margin-top: 2px !important;
+  }
+}
+
+// Typing indicator
+.cs-typing-indicator {
+  background-color: rgba($light-gray, 0.7) !important;
+  border-radius: $border-radius !important;
+  padding: 8px 16px !important;
+
+  &__text {
+    color: $secondary-color !important;
+    font-size: 0.85rem !important;
+  }
+
+  &__dot {
+    background-color: $secondary-color !important;
+  }
+}
+
+// Message input
+.cs-message-input {
+  border-top: 1px solid $border-color !important;
+  background-color: $chat-background-color !important;
+  padding: 12px !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+
+  & .cs-message-input__content-editor-wrapper {
+    flex: 1;
+    background-color: $chat-background-color !important;
+    border: 1px solid $border-color !important;
+    border-radius: $border-radius !important;
+    padding: 10px 12px !important;
+    min-height: 40px;
+    transition: $transition !important;
+
+    &:focus-within {
+      border-color: $primary-color !important;
+      box-shadow: 0 0 0 2px rgba($primary-color, 0.2) !important;
+    }
+  }
+
+  & .cs-message-input__content-editor {
+    font-family: $font-family !important;
+    font-size: 0.95rem !important;
+    min-height: 30px;
+    resize: none;
+    color: $font-color !important;
+    background-color: $chat-background-color !important;
+
+    &::placeholder {
+      color: lighten($secondary-color, 20%) !important;
+      font-family: $font-family !important;
+      font-style: italic;
+      background-color: transparent !important;
+    }
+  }
+
+  & .cs-message-input__send-button {
+    background-color: $primary-color !important;
+    color: white !important;
+    border-radius: 50% !important;
+    width: 40px !important;
+    height: 40px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: $transition !important;
+    padding: 0;
+
+    &:hover:not(:disabled) {
+      background-color: darken($primary-color, 10%) !important;
+    }
+
+    &:disabled {
+      background-color: lighten($primary-color, 20%) !important;
+      opacity: 0.7 !important;
+    }
+  }
+}
+
+// Suggested questions
+.suggested-questions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px;
+  background-color: $chat-background-color;
+  border-top: 1px solid $border-color;
+}
+
+.suggested-button {
+  background: linear-gradient(90deg, $light-gray, #ffffff);
+  border: 1px solid $border-color;
+  color: $secondary-color;
+  padding: 8px 16px;
+  border-radius: $border-radius;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: $transition;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+
+  &:hover {
+    background: lighten($light-gray, 10%);
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: darken($secondary-color, 10%);
+  }
+
+  &:active {
+    transform: scale(0.98);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  &:disabled {
+    background: $light-gray;
+    color: lighten($secondary-color, 30%);
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+}
+
+// Error alert
+.error-alert {
+  background-color: rgba($red-branding, 0.1);
+  color: $red-branding;
+  padding: 8px 12px;
+  border-left: 4px solid $red-branding;
+  margin-top: -1px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: $red-branding;
+
+    &:hover {
+      color: darken($red-branding, 10%);
+    }
+  }
+}
+
+// Navigation buttons
+.bg-blue-500 {
+  background-color: $primary-color !important;
+  transition: $transition;
+
+  &:hover {
+    background-color: darken($primary-color, 10%) !important;
+  }
+}
+
+// Custom branding colors
+.bg-redBranding {
+  background-color: $red-branding !important;
+
+  &:hover {
+    background-color: $soft-red !important;
+  }
+}
+
+// HTML content styling
+.cs-message__html-content {
+  ul,
+  ol {
+    margin: 8px 0;
+    padding-left: 20px;
+  }
+
+  li {
+    margin-bottom: 4px;
+  }
+
+  strong {
+    font-weight: 600;
+  }
+
+  a {
+    color: $primary-color;
+    text-decoration: underline;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 640px) {
+  .chat-container {
+    max-width: 90vw !important;
+  }
+
+  .cs-message-input__content-editor-wrapper {
+    padding: 8px 10px !important;
+  }
+
+  .cs-message__content {
+    padding: 10px 12px !important;
+    font-size: 0.9rem !important;
+  }
+}
+
+// Accessibility focus styles
+button:focus,
+.cs-message-input__content-editor-wrapper:focus-within {
+  outline: 2px solid $primary-color !important;
+  outline-offset: 2px !important;
+}
+
+// Animation for new messages
+@keyframes message-appear {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

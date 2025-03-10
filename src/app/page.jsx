@@ -7,12 +7,14 @@ import ProductCarouselContainer from '../components/Products/ProductCarouselCont
 import SubcategoryProductSection from '@/src/components/home/SubcategoryProductSection'
 import CategoriesCarousel from '../components/home/CategoryCarousel'
 import Banner from '../components/home/Banner'
+import CustomerChatBox from '../components/customer/CustomerChatBox'
 
 export default function Home() {
   return (
     <>
       <CartProvider>
         <MainNavbarCustomer />
+        {/*  <CustomerChatBox /> {/* Added here */}
         <main className="xl:container mx-auto items-center justify-between">
           {/* Add the banner at the top */}
           <HeroBanner />
