@@ -117,7 +117,7 @@ export default function CustomerChatBox({
       }, 10000)
 
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/ai/ask`, // Use env variable
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/ai/ask`,
         payload,
         {
           headers: { 'Content-Type': 'application/json' },

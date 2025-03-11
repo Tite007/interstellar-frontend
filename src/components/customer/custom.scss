@@ -207,7 +207,7 @@ $transition: all 0.3s ease;
 
   & .cs-message-input__content-editor {
     font-family: $font-family !important;
-    font-size: 0.95rem !important;
+    font-size: 1rem !important; /* Changed to 16px to prevent zoom */
     min-height: 30px;
     resize: none;
     color: $font-color !important;
@@ -367,6 +367,13 @@ $transition: all 0.3s ease;
   .cs-message__content {
     padding: 10px 12px !important;
     font-size: 0.9rem !important;
+  }
+
+  // Prevent zooming on mobile
+  .cs-message-input__content-editor {
+    font-size: 16px !important; /* Explicitly 16px */
+    -webkit-text-size-adjust: 100%; /* Prevent iOS text adjustment */
+    touch-action: manipulation; /* Improve touch responsiveness */
   }
 }
 
