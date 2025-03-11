@@ -14,7 +14,7 @@ export default function Home() {
     <>
       <CartProvider>
         <MainNavbarCustomer />
-        {/*  <CustomerChatBox /> {/* Added here */}
+         <CustomerChatBox /> {/* Added here */}
         <main className="xl:container mx-auto items-center justify-between">
           {/* Add the banner at the top */}
           <HeroBanner />

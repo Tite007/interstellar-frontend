@@ -7,6 +7,7 @@ export default function CustomerRootLayout({ children }) {
     <div className="">
       <CartProvider>
         <MainNavbarCustomer />
+        <CustomerChatBox /> {/* Added here */}
         {children}
         {/* <CustomerChatBox /> {/* Added here */}
       </CartProvider>
