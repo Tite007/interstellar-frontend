@@ -84,11 +84,8 @@ export default function ChatBox() {
     setError(null)
 
     try {
-      // Use environment variable for the API base URL
-      const apiBaseUrl =
-        process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001'
       const response = await axios.post(
-        `${apiBaseUrl}/ai/ask-business-intel`, // Dynamically construct the URL
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/ai/ask-business-intel`, // Only use NEXT_PUBLIC_API_BASE_URL
         { question: text },
         { headers: { 'Content-Type': 'application/json' } },
       )

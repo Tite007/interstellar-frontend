@@ -116,11 +116,8 @@ export default function CustomerChatBox({
         throw new Error('Request timed out. Please try again.')
       }, 10000)
 
-      // Use environment variable for the API base URL
-      const apiBaseUrl =
-        process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001'
       const response = await axios.post(
-        `${apiBaseUrl}/ai/ask`, // Dynamically construct the URL
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/ai/ask`, // Use env variable
         payload,
         {
           headers: { 'Content-Type': 'application/json' },
