@@ -176,8 +176,10 @@ export default function CustomerChatBox({
             <button
               onClick={() => setIsOpen(false)}
               aria-label="Close chat window"
+              className="focus:outline-none" // Ensure focus ring is manageable
             >
-              <X size={20} strokeWidth={1.5} />
+              <X size={24} strokeWidth={1.5} />{' '}
+              {/* Increased size for better tap area */}
             </button>
           </div>
 
