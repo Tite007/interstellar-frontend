@@ -198,11 +198,6 @@ $transition: all 0.3s ease;
     padding: 10px 12px !important;
     min-height: 40px;
     transition: $transition !important;
-
-    &:focus-within {
-      border-color: $primary-color !important;
-      box-shadow: 0 0 0 2px rgba($primary-color, 0.2) !important;
-    }
   }
 
   & .cs-message-input__content-editor {
@@ -357,26 +352,37 @@ $transition: all 0.3s ease;
 // Responsive adjustments
 @media (max-width: 640px) {
   .chat-container {
-    max-width: 90vw !important;
+    max-width: 100vw !important; // Full viewport width
+    width: 100vw !important; // Full viewport width
+    height: 100vh !important; // Full viewport height
+    bottom: 0 !important; // Align to bottom of screen
+    right: 0 !important; // Align to right of screen
+    border-radius: 0 !important; // Remove rounded corners for full-screen effect
+    box-shadow: none !important; // Optional: Remove shadow for a flat sheet look
   }
 
-  .cs-message-input__content-editor-wrapper {
-    padding: 8px 10px !important;
+  // Ensure the header remains usable
+  .chat-header {
+    padding: 10px 12px !important; // Slightly adjust padding for mobile
   }
 
-  .cs-message__content {
-    padding: 10px 12px !important;
-    font-size: 0.9rem !important;
+  // Adjust message list to fit full height
+  .cs-message-list {
+    padding: 12px !important; // Adjust padding for mobile
   }
 
-  // Prevent zooming on mobile
+  // Ensure input stays at the bottom
+  .cs-message-input {
+    padding: 10px !important; // Adjust padding for mobile
+  }
+
+  // Prevent zooming on mobile (already in your code, just ensuring it stays)
   .cs-message-input__content-editor {
     font-size: 16px !important; /* Explicitly 16px */
     -webkit-text-size-adjust: 100%; /* Prevent iOS text adjustment */
     touch-action: manipulation; /* Improve touch responsiveness */
   }
 }
-
 // Accessibility focus styles
 button:focus,
 .cs-message-input__content-editor-wrapper:focus-within {
