@@ -35,10 +35,10 @@ $transition: all 0.3s ease;
   bottom: 60px;
   right: 20px;
   width: 90vw;
-  max-width: 500px;
+  max-width: 600px;
   height: 600px;
   border-radius: $border-radius;
-  box-shadow: 1px 15px 20px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: $shadow;
   background-color: $chat-background-color;
   overflow: hidden;
   z-index: 1000;
@@ -283,9 +283,15 @@ $transition: all 0.3s ease;
     flex: 1;
     background-color: $chat-background-color !important;
     border: 1px solid $border-color !important;
+    border-radius: $border-radius !important;
     padding: 10px 12px !important;
     min-height: 40px;
     transition: $transition !important;
+
+    &:focus-within {
+      border-color: $primary-color !important;
+      box-shadow: 0 0 0 2px rgba($primary-color, 0.2) !important;
+    }
   }
 
   & .cs-message-input__content-editor {
@@ -421,7 +427,7 @@ $transition: all 0.3s ease;
     right: 0 !important;
     bottom: 0 !important;
     border-radius: 20px 20px 0 0 !important; // Rounded top corners
-    box-shadow: 0 -4px 25px rgba(0, 0, 0, 0.15) !important;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15) !important;
     height: 85vh !important;
     max-height: 90vh !important;
 

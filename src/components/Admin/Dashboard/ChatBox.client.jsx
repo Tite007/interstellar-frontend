@@ -14,11 +14,7 @@ import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css'
 import { Button } from '@heroui/button'
 import { MessagesSquare, X } from 'lucide-react'
 
-const customStyles = `
-  .chat-link { color: #1e90ff; text-decoration: underline; font-weight: 500; }
-  .chat-link:hover { color: #ff4500; text-decoration: underline; }
-  .cs-message__content { line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
-`
+import './custom.scss'
 
 export default function ChatBox() {
   const [messages, setMessages] = useState([])
@@ -37,7 +33,6 @@ export default function ChatBox() {
   const formatBusinessResponse = (data) => {
     if (!data) return 'No data available.'
 
-    // Handle BCG Matrix response
     if (data.bcg_analysis && data.strategic_advice) {
       let message = '<h3>BCG Matrix Analysis</h3><ul>'
       data.bcg_analysis.forEach((item) => {
@@ -49,7 +44,6 @@ export default function ChatBox() {
       return message
     }
 
-    // Handle Top Products by City response
     if (data.top_products && data.top_products_by_city && data.insights) {
       let message = '<h3>Top Sold Products</h3><ul>'
       data.top_products.forEach((item) => {
@@ -64,7 +58,6 @@ export default function ChatBox() {
       return message
     }
 
-    // Fallback for generic responses
     return data.answer || JSON.stringify(data, null, 2).replace(/\n/g, '<br>')
   }
 
@@ -85,7 +78,7 @@ export default function ChatBox() {
 
     try {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/ai/ask-business-intel`, // Only use NEXT_PUBLIC_API_BASE_URL
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/ai/ask-business-intel`,
         { question: text },
         { headers: { 'Content-Type': 'application/json' } },
       )
@@ -116,7 +109,6 @@ export default function ChatBox() {
 
   return (
     <div className="fixed bottom-4 right-4 z-50">
-      <style>{customStyles}</style>
       <Button
         endContent={<MessagesSquare size={20} strokeWidth={1.5} />}
         onPress={() => setIsOpen(!isOpen)}
@@ -124,65 +116,71 @@ export default function ChatBox() {
       >
         {isOpen ? 'Close Chat' : 'Business Insights'}
       </Button>
+
       {isOpen && (
-        <div className="w-[500px] bg-white rounded-lg shadow-lg mt-2 relative">
-          <div className="flex items-center justify-between p-2 bg-gray-100 rounded-t-lg">
-            <div className="flex items-center gap-2">
-              <MessagesSquare size={20} strokeWidth={1.5} />
-              <h2 className="text-xl font-semibold">Business Insights</h2>
+        <>
+          <div className="chat-backdrop" onClick={() => setIsOpen(false)} />
+          <div className={`chat-container ${isOpen ? 'open' : ''}`}>
+            <div className="chat-header">
+              <div className="flex items-center gap-2">
+                <MessagesSquare size={20} strokeWidth={1.5} />
+                <h2>Business Insights</h2>
+              </div>
+              <button onClick={() => setIsOpen(false)} aria-label="Close chat">
+                <X size={20} strokeWidth={1.5} />
+              </button>
             </div>
-            <button
-              onClick={() => setIsOpen(false)}
-              className="text-gray-500 hover:text-gray-700 focus:outline-none"
-            >
-              <X size={20} strokeWidth={1.5} />
-            </button>
+            <MainContainer>
+              <ChatContainer>
+                <MessageList
+                  ref={messageListRef}
+                  typingIndicator={
+                    loading ? <TypingIndicator content="Analyzing..." /> : null
+                  }
+                  scrollBehavior="smooth"
+                >
+                  {messages.length === 0 && (
+                    <Message
+                      model={{
+                        message: 'Ask me about sales, products, or trends!',
+                        sender: 'Business Intel',
+                        direction: 'incoming',
+                        position: 'single',
+                        type: 'html',
+                      }}
+                    />
+                  )}
+                  {messages.map((msg, index) => (
+                    <Message
+                      key={index}
+                      model={{
+                        ...msg,
+                        type: 'html',
+                        payload: msg.message,
+                      }}
+                    />
+                  ))}
+                </MessageList>
+                <MessageInput
+                  placeholder="Ask about top products, sales, etc."
+                  value={input}
+                  onChange={(val) => setInput(val)}
+                  onSend={handleSendMessage}
+                  disabled={loading}
+                  sendDisabled={loading || !input.trim()}
+                  attachButton={false}
+                  autoFocus
+                />
+              </ChatContainer>
+            </MainContainer>
+            {error && (
+              <div className="error-alert">
+                <span>{error}</span>
+                <button onClick={() => setError(null)}>✕</button>
+              </div>
+            )}
           </div>
-          <MainContainer style={{ height: '600px' }}>
-            <ChatContainer>
-              <MessageList
-                ref={messageListRef}
-                typingIndicator={
-                  loading ? <TypingIndicator content="Analyzing..." /> : null
-                }
-                scrollBehavior="smooth"
-              >
-                {messages.length === 0 && (
-                  <Message
-                    model={{
-                      message: 'Ask me about sales, products, or trends!',
-                      sender: 'Business Intel',
-                      direction: 'incoming',
-                      position: 'single',
-                      type: 'html',
-                    }}
-                  />
-                )}
-                {messages.map((msg, index) => (
-                  <Message
-                    key={index}
-                    model={{
-                      ...msg,
-                      type: 'html',
-                      payload: msg.message,
-                    }}
-                  />
-                ))}
-              </MessageList>
-              <MessageInput
-                placeholder="Ask about top products, sales, etc."
-                value={input}
-                onChange={(val) => setInput(val)}
-                onSend={handleSendMessage}
-                disabled={loading}
-                sendDisabled={loading || !input.trim()}
-                attachButton={false}
-                autoFocus
-              />
-            </ChatContainer>
-          </MainContainer>
-          {error && <p className="text-red-500 text-sm p-2">{error}</p>}
-        </div>
+        </>
       )}
     </div>
   )
