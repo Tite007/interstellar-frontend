@@ -24,7 +24,6 @@ export default function CustomerChatBox({
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [isOpen, setIsOpen] = useState(false)
-  const [scrollPosition, setScrollPosition] = useState(0) // Track scroll position
   const messageListRef = useRef(null)
   const sendTimeoutRef = useRef(null)
 
@@ -52,29 +51,15 @@ export default function CustomerChatBox({
     }
   }, [messages, userId])
 
-  // Handle scroll position when closing the chat
-  const handleCloseChat = () => {
-    if (messageListRef.current) {
-      setScrollPosition(messageListRef.current.scrollTop) // Save scroll position
-    }
-    setIsOpen(false)
-  }
-
-  // Restore scroll position or scroll to bottom when messages change, loading changes, or chat opens
+  // Scroll to bottom when messages change, loading changes, or chat opens
   useEffect(() => {
     if (messageListRef.current && isOpen) {
       const scrollContainer = messageListRef.current
       requestAnimationFrame(() => {
-        // If there are new messages or loading state changes, scroll to bottom
-        if (messages.length > 0 || loading) {
-          scrollContainer.scrollTop = scrollContainer.scrollHeight
-        } else {
-          // Otherwise, restore the previous scroll position
-          scrollContainer.scrollTop = scrollPosition
-        }
+        scrollContainer.scrollTop = scrollContainer.scrollHeight
       })
     }
-  }, [messages, loading, isOpen, scrollPosition])
+  }, [messages, loading, isOpen])
 
   // Debounce message sending to prevent rapid API calls
   const debounceSendMessage = (text) => {
@@ -189,12 +174,10 @@ export default function CustomerChatBox({
               <h2 className="text-xl font-semibold">Customer Support</h2>
             </div>
             <button
-              onClick={handleCloseChat}
-              onTouchEnd={handleCloseChat} // Ensure touch support
+              onClick={() => setIsOpen(false)}
               aria-label="Close chat window"
-              className="focus:outline-none"
             >
-              <X size={24} strokeWidth={1.5} />
+              <X size={20} strokeWidth={1.5} />
             </button>
           </div>
 
