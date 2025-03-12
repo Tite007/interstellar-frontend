@@ -167,7 +167,7 @@ export default function CustomerChatBox({
         {isOpen ? 'Close Chat' : 'Customer Support'}
       </Button>
       {isOpen && (
-        <div className="chat-container">
+        <div className={`chat-container ${isOpen ? 'open' : ''}`}>
           <div className="chat-header">
             <div className="flex items-center gap-2">
               <MessagesSquare size={20} strokeWidth={1.5} />
@@ -203,17 +203,17 @@ export default function CustomerChatBox({
                   />
                 ))}
               </MessageList>
-              <div className="flex flex-wrap gap-2 p-2 bg-gray-50">
+              <div className="suggested-questions">
                 {suggestedQuestions.map((question, index) => (
-                  <Button
+                  <button
                     key={index}
-                    onPress={() => handleSendMessage(question)}
-                    className="text-sm bg-gray-200 hover:bg-gray-300 rounded-full px-3 py-1"
+                    onClick={() => handleSendMessage(question)}
+                    className="suggested-button"
                     disabled={loading}
                     aria-label={`Ask: ${question}`}
                   >
                     {question}
-                  </Button>
+                  </button>
                 ))}
               </div>
               <MessageInput
@@ -230,7 +230,14 @@ export default function CustomerChatBox({
               />
             </ChatContainer>
           </MainContainer>
-          {error && <p className="text-red-500 text-sm p-2">{error}</p>}
+          {error && (
+            <div className="error-alert">
+              <p>{error}</p>
+              <button onClick={() => setError(null)} aria-label="Dismiss error">
+                <X size={16} />
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>
