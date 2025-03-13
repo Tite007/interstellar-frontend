@@ -24,15 +24,19 @@ export default function ChatBox() {
   const [isOpen, setIsOpen] = useState(false)
   const messageListRef = useRef(null)
 
+  // Scroll to bottom using direct DOM manipulation
   useEffect(() => {
     if (messageListRef.current && isOpen) {
-      messageListRef.current.scrollToBottom()
+      const scrollContainer = messageListRef.current
+      requestAnimationFrame(() => {
+        scrollContainer.scrollTop = scrollContainer.scrollHeight
+        console.log('Scrolled to bottom, height:', scrollContainer.scrollHeight)
+      })
     }
   }, [messages, loading, isOpen])
 
   const formatBusinessResponse = (data) => {
     if (!data) return 'No data available.'
-
     if (data.bcg_analysis && data.strategic_advice) {
       let message = '<h3>BCG Matrix Analysis</h3><ul>'
       data.bcg_analysis.forEach((item) => {
@@ -43,7 +47,6 @@ export default function ChatBox() {
       message += `<p>${data.strategic_advice.replace(/\n/g, '<br>')}</p>`
       return message
     }
-
     if (data.top_products && data.top_products_by_city && data.insights) {
       let message = '<h3>Top Sold Products</h3><ul>'
       data.top_products.forEach((item) => {
@@ -57,7 +60,6 @@ export default function ChatBox() {
       message += `<p>${data.insights.replace(/\n/g, '<br>')}</p>`
       return message
     }
-
     return data.answer || JSON.stringify(data, null, 2).replace(/\n/g, '<br>')
   }
 
@@ -137,7 +139,7 @@ export default function ChatBox() {
                   typingIndicator={
                     loading ? <TypingIndicator content="Analyzing..." /> : null
                   }
-                  scrollBehavior="smooth"
+                  scrollBehavior="auto" // Changed to "auto" for instant scrolling
                 >
                   {messages.length === 0 && (
                     <Message
