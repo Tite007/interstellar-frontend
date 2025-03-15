@@ -104,6 +104,16 @@ $transition: all 0.3s ease;
         font-size: 1.5rem;
       }
     }
+
+    button:first-of-type {
+      color: $secondary-color;
+      font-size: 0.9rem;
+      padding: 8px;
+
+      &:hover {
+        color: $red-branding;
+      }
+    }
   }
 }
 
@@ -151,7 +161,6 @@ $transition: all 0.3s ease;
 // Message styling
 .cs-message {
   margin-bottom: 12px !important;
-  animation: message-appear 0.3s ease-out;
 
   &__content {
     padding: 12px 16px !important;
@@ -159,13 +168,51 @@ $transition: all 0.3s ease;
     box-shadow: $shadow !important;
     font-size: 0.95rem !important;
     line-height: 1.5 !important;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 
-    a {
-      color: $primary-color;
-      text-decoration: underline;
+    img.product-image {
+      max-width: 150px !important;
+      height: auto;
+      margin-bottom: 2px !important; // Increased margin for better spacing
+      border-radius: 5px;
+      justify-self: center;
+      margin-top: 2px !important; // Add some space above the image
+    }
+
+    .button-container {
+      margin-top: 12px; // Ensure button is at the bottom
+      width: 100%;
+      text-align: center;
+    }
+
+    a.product-link {
+      display: inline-block;
+      background-color: $primary-color;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 18px;
+      text-decoration: none;
+      font-weight: 400;
+      transition: $transition;
 
       &:hover {
-        text-decoration: none;
+        background-color: darken($primary-color, 10%);
+      }
+
+      &.comprar-ahora {
+        background-color: $red-branding; // Green color for "Comprar Ahora" to distinguish it
+        padding: 10px 20px; // Slightly larger padding
+        font-size: 1rem; // Slightly larger text
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); // Add a subtle shadow
+        transition: $transition;
+
+        &:hover {
+          background-color: $soft-red;
+          transform: translateY(-2px); // Slight lift on hover
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
       }
     }
 
@@ -181,6 +228,7 @@ $transition: all 0.3s ease;
 
     strong {
       font-weight: 600;
+      color: $primary-color;
     }
   }
 
@@ -195,10 +243,11 @@ $transition: all 0.3s ease;
 
     a {
       color: white;
-      text-decoration: underline;
+      background-color: darken($user-bubble-color, 10%);
+      text-decoration: none;
 
       &:hover {
-        text-decoration: none;
+        background-color: darken($user-bubble-color, 20%);
       }
     }
   }
@@ -240,15 +289,42 @@ $transition: all 0.3s ease;
 
     strong {
       font-weight: 600;
+      color: $primary-color;
     }
 
     a {
-      color: $primary-color;
-      text-decoration: underline;
+      display: inline-block;
+      background-color: $primary-color;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: $transition;
 
       &:hover {
-        text-decoration: none;
+        background-color: darken($primary-color, 10%);
       }
+
+      &.comprar-ahora {
+        background-color: #28a745;
+        padding: 10px 20px;
+        font-size: 1rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+        &:hover {
+          background-color: darken(#28a745, 10%);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+      }
+    }
+
+    img.product-image {
+      max-width: 100px;
+      height: auto;
+      margin-bottom: 12px;
+      border-radius: 5px;
     }
   }
 }
@@ -331,12 +407,11 @@ $transition: all 0.3s ease;
 .suggested-questions {
   display: flex;
   flex-wrap: wrap;
-  flex-direction: column;
-  align-items: stretch;
   gap: 8px;
   padding: 12px;
   background-color: $chat-background-color;
   border-top: 1px solid $border-color;
+  justify-content: center;
 }
 
 .suggested-button {
@@ -350,6 +425,7 @@ $transition: all 0.3s ease;
   transition: $transition;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   cursor: pointer;
+  white-space: nowrap;
 
   &:hover {
     background: lighten($light-gray, 10%);
@@ -480,24 +556,16 @@ button:focus,
   outline-offset: 2px !important;
 }
 
-// Animation for new messages
+// Animation for new messages with a more pronounced slide-up effect
 @keyframes message-appear {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(
+      20px
+    ); // Start further down for a more noticeable effect
   }
   to {
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-.chat-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.3);
-  z-index: 999; // Below the chat container
 }

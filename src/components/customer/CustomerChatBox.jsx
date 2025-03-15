@@ -157,8 +157,23 @@ export default function CustomerChatBox({
     'What is your return policy?',
   ]
 
+  const clearChat = () => {
+    sessionStorage.removeItem(`chatMessages_${userId}`)
+    const welcomeMessage = {
+      message: `Hello ${userName}! I'm here to help with your orders or products. What can I assist you with today?`,
+      sentTime: new Date().toLocaleTimeString(),
+      sender: 'Support Bot',
+      direction: 'incoming',
+      position: 'single',
+    }
+    setMessages([welcomeMessage])
+  }
+
   return (
     <div className="fixed bottom-4 right-4 z-50">
+      {isOpen && (
+        <div className="chat-backdrop" onClick={() => setIsOpen(false)} />
+      )}
       <Button
         endContent={<MessagesSquare size={20} strokeWidth={1.5} />}
         onPress={() => setIsOpen(!isOpen)}
@@ -174,12 +189,17 @@ export default function CustomerChatBox({
               <MessagesSquare size={20} strokeWidth={1.5} />
               <h2 className="text-xl font-semibold">Customer Support</h2>
             </div>
-            <button
-              onClick={() => setIsOpen(false)}
-              aria-label="Close chat window"
-            >
-              <X size={20} strokeWidth={1.5} />
-            </button>
+            <div className="flex items-center gap-2">
+              <button onClick={clearChat} aria-label="Clear chat history">
+                Clear
+              </button>
+              <button
+                onClick={() => setIsOpen(false)}
+                aria-label="Close chat window"
+              >
+                <X size={20} strokeWidth={1.5} />
+              </button>
+            </div>
           </div>
 
           <MainContainer className="cs-main-container">
