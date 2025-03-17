@@ -207,12 +207,6 @@ $transition: all 0.3s ease;
         font-size: 1rem; // Slightly larger text
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); // Add a subtle shadow
         transition: $transition;
-
-        &:hover {
-          background-color: $soft-red;
-          transform: translateY(-2px); // Slight lift on hover
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-        }
       }
     }
 
@@ -307,13 +301,13 @@ $transition: all 0.3s ease;
       }
 
       &.comprar-ahora {
-        background-color: #28a745;
+        background-color: #f56565;
         padding: 10px 20px;
         font-size: 1rem;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 
         &:hover {
-          background-color: darken(#28a745, 10%);
+          background-color: darken(#f56565, 10%);
           transform: translateY(-2px);
           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
@@ -321,7 +315,9 @@ $transition: all 0.3s ease;
     }
 
     img.product-image {
-      max-width: 100px;
+      justify-self: center;
+      margin-top: 2px !important; // Add some space above the image
+      max-width: 150px;
       height: auto;
       margin-bottom: 12px;
       border-radius: 5px;
@@ -483,10 +479,6 @@ $transition: all 0.3s ease;
 // Custom branding colors
 .bg-redBranding {
   background-color: $red-branding !important;
-
-  &:hover {
-    background-color: $soft-red !important;
-  }
 }
 
 // Responsive adjustments for mobile (bottom-sheet style)
