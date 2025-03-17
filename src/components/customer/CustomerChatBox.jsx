@@ -114,7 +114,7 @@ export default function CustomerChatBox({
       const timeoutId = setTimeout(() => {
         controller.abort()
         throw new Error('Request timed out. Please try again.')
-      }, 10000)
+      }, 40000) // 40 seconds
 
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/ai/ask`,
