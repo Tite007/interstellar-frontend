@@ -1,4 +1,4 @@
-const { heroui } = require("@heroui/theme")
+const { heroui } = require('@heroui/theme')
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -6,8 +6,8 @@ module.exports = {
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
-    "./node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}",
-    "./node_modules/@heroui/theme/dist/components/{accordion,date-picker,divider,button,date-picker,checkbox,card,dropdown,avatar,table,pagination,chip,user,modal,select,radio,tabs,tooltip,popover,badge,skeleton,progress,breadcrumbs,user,link}.js",
+    './node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}',
+    './node_modules/@heroui/theme/dist/components/{accordion,date-picker,divider,button,date-picker,checkbox,card,dropdown,avatar,table,pagination,chip,user,modal,select,radio,tabs,tooltip,popover,badge,skeleton,progress,breadcrumbs,user,link}.js',
   ],
   theme: {
     extend: {
@@ -43,6 +43,7 @@ module.exports = {
       width: {
         150: '150px',
         200: '200px',
+        230: '230px',
         300: '300px',
         400: '400px',
         500: '500px',

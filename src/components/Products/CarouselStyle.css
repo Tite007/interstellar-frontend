@@ -16,12 +16,13 @@
   margin-left: calc(var(--slide-spacing) * -1);
 }
 
-.embla-product__slide {
+/* .embla-product__slide {
   transform: translate3d(0, 0, 0);
   flex: 0 0 var(--slide-size);
   min-width: 0;
   padding-left: var(--slide-spacing);
-}
+}*/
+
 /* Small screens: 640px and above */
 @media (min-width: 380px) {
   .embla-product {
