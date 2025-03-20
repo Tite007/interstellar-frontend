@@ -8,6 +8,7 @@ const nextConfig = {
         pathname: '**', // This matches all paths under the hostname
       },
     ],
+    unoptimized: true, // Add this line to disable image optimization globally
   },
 }
 
