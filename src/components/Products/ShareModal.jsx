@@ -36,7 +36,7 @@ const ShareModal = ({ productName, shareUrl }) => {
         variant="flat"
         color="primary"
         onPress={onOpen}
-        className="mb-2 mt-2"
+        className="mb-2 mt-3"
       >
         Share
       </Button>
@@ -60,7 +60,6 @@ const ShareModal = ({ productName, shareUrl }) => {
                     className="flex flex-col items-center"
                   >
                     <FacebookMessengerIcon size={32} round />
-                    <span className="mt-1 text-sm">Messenger</span>
                   </FacebookMessengerShareButton>
                   <FacebookShareButton
                     url={shareUrl}
@@ -68,7 +67,7 @@ const ShareModal = ({ productName, shareUrl }) => {
                     className="flex flex-col items-center"
                   >
                     <FacebookIcon size={32} round />
-                    <span className="mt-1 text-sm">Facebook</span>
+                    <span className="mt-1 text-sm"></span>
                   </FacebookShareButton>
                   <TwitterShareButton
                     url={shareUrl}
@@ -77,7 +76,6 @@ const ShareModal = ({ productName, shareUrl }) => {
                     className="flex flex-col items-center"
                   >
                     <XIcon size={32} round />
-                    <span className="mt-1 text-sm">X</span>
                   </TwitterShareButton>
                   <WhatsappShareButton
                     url={shareUrl}
@@ -86,7 +84,6 @@ const ShareModal = ({ productName, shareUrl }) => {
                     className="flex flex-col items-center"
                   >
                     <WhatsappIcon size={32} round />
-                    <span className="mt-1 text-sm">WhatsApp</span>
                   </WhatsappShareButton>
                   <TelegramShareButton
                     url={shareUrl}
@@ -95,7 +92,6 @@ const ShareModal = ({ productName, shareUrl }) => {
                     className="flex flex-col items-center"
                   >
                     <TelegramIcon size={32} round />
-                    <span className="mt-1 text-sm">Telegram</span>
                   </TelegramShareButton>
                   <EmailShareButton
                     url={shareUrl}
@@ -104,7 +100,6 @@ const ShareModal = ({ productName, shareUrl }) => {
                     className="flex flex-col items-center"
                   >
                     <EmailIcon size={32} round />
-                    <span className="mt-1 text-sm">Email</span>
                   </EmailShareButton>
                 </div>
               </ModalBody>

@@ -239,7 +239,7 @@ export default function MainProductDetailsClient({ initialProduct }) {
             <p className="text-redBranding font-semibold">Out of Stock</p>
             <Button
               size="sm"
-              color="primary"
+              className="bg-redBranding text-white"
               variant="flat"
               onPress={() => setShowNotifyModal(true)}
               startContent={<Bell size={16} strokeWidth={1.75} />}
@@ -290,8 +290,8 @@ export default function MainProductDetailsClient({ initialProduct }) {
                 <p className="text-red-600 font-semibold">Out of Stock</p>
                 <Button
                   size="sm"
-                  color="primary"
                   variant="flat"
+                  className="bg-redBranding text-white"
                   onPress={() => setShowNotifyModal(true)}
                   startContent={<Bell size={16} strokeWidth={2.0} />}
                 >
@@ -327,7 +327,7 @@ export default function MainProductDetailsClient({ initialProduct }) {
             imageUrl={product.images?.[0]}
           />
           <div>
-            <h3 className="text-md font-semibold">
+            <h3 className="text-md font-semibold mt-2">
               Which is the Best for You:
             </h3>
             <div className="grid grid-cols-2 gap-4">
@@ -368,7 +368,7 @@ export default function MainProductDetailsClient({ initialProduct }) {
               </p>
             </div>
           )}
-          <div className="mt-4">
+          {/* <div className="mt-4">
             <h3 className="text-md font-semibold mb-4">
               Choose Your Delivery Option:
             </h3>
@@ -380,7 +380,7 @@ export default function MainProductDetailsClient({ initialProduct }) {
             <p className="mt-2 text-sm">
               Selected Delivery: {selectedDelivery || 'N/A'}
             </p>
-          </div>
+          </div>*/}
           <div className="grid grid-cols-2 gap-2">
             <Button
               size="md"
