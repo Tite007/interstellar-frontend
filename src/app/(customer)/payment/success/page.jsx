@@ -21,6 +21,7 @@ const PaymentSuccessPage = () => {
   const [error, setError] = useState(null)
   const [sessionDetails, setSessionDetails] = useState(null)
   const [sessionId, setSessionId] = useState(null)
+  const [discountDetails, setDiscountDetails] = useState(null)
 
   useEffect(() => {
     const query = new URLSearchParams(window.location.search)
@@ -44,6 +45,29 @@ const PaymentSuccessPage = () => {
         }
         const sessionData = await response.json()
         setSessionDetails(sessionData)
+
+        // Handle discount details only if there's a discount
+        if (sessionData.total_details?.amount_discount > 0) {
+          const promoCodeId = sessionData.discounts?.[0]?.promotion_code
+          let promoCodeName = 'Discount'
+
+          if (promoCodeId) {
+            try {
+              const promoResponse = await fetch(
+                `${baseURL}/payment/stripe/promotion_codes/${promoCodeId}`,
+              )
+              const promoData = await promoResponse.json()
+              promoCodeName = promoData.code || promoCodeName
+            } catch (promoError) {
+              console.warn('Failed to fetch promo code details:', promoError)
+            }
+          }
+
+          setDiscountDetails({
+            amount: sessionData.total_details.amount_discount,
+            promoCode: promoCodeName,
+          })
+        }
 
         await fetchItems(sessionId)
         clearCart()
@@ -102,7 +126,7 @@ const PaymentSuccessPage = () => {
       return productData
     } catch (error) {
       console.error('Fetch product details error:', error)
-      return null // or handle error accordingly
+      return null
     }
   }
 
@@ -116,8 +140,9 @@ const PaymentSuccessPage = () => {
   const calculateTotal = useMemo(() => {
     const shipping = (sessionDetails?.shipping_cost?.amount_subtotal || 0) / 100
     const tax = (sessionDetails?.total_details?.amount_tax || 0) / 100
-    return calculateSubtotal + tax + shipping
-  }, [calculateSubtotal, sessionDetails])
+    const discount = (discountDetails?.amount || 0) / 100
+    return calculateSubtotal + shipping + tax - discount
+  }, [calculateSubtotal, sessionDetails, discountDetails])
 
   const handleGoToOrders = () => {
     router.push('/')
@@ -204,7 +229,7 @@ const PaymentSuccessPage = () => {
               {items.map((item, index) => (
                 <div
                   key={index}
-                  className="border p-4 bg-white rounded-2xl  border-gray-200 pb-4 mb-4"
+                  className="border p-4 bg-white rounded-2xl border-gray-200 pb-4 mb-4"
                 >
                   <div className="flex items-center">
                     <Image
@@ -231,21 +256,27 @@ const PaymentSuccessPage = () => {
               ))}
             </div>
 
-            {/* Totals Section for Both Views */}
+            {/* Totals Section */}
             <div className="mt-4 space-y-2 text-right sm:text-right">
               <div className="font-medium">
                 Subtotal: ${calculateSubtotal.toFixed(2)}
               </div>
               <div className="font-medium">
-                Tax: $
-                {(sessionDetails?.total_details?.amount_tax / 100).toFixed(2)}
-              </div>
-              <div className="font-medium">
-                Shipping (Standard Shipping): $
+                Shipping: $
                 {(sessionDetails?.shipping_cost?.amount_subtotal / 100).toFixed(
                   2,
                 )}
               </div>
+              <div className="font-medium">
+                Tax: $
+                {(sessionDetails?.total_details?.amount_tax / 100).toFixed(2)}
+              </div>
+              {discountDetails && (
+                <div className="font-medium text-green-600">
+                  Discount ({discountDetails.promoCode}): -$
+                  {(discountDetails.amount / 100).toFixed(2)}
+                </div>
+              )}
               <div className="font-bold">
                 Total: ${calculateTotal.toFixed(2)}
               </div>
