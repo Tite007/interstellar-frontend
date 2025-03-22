@@ -1,15 +1,21 @@
+// /Users/titesanchez/Desktop/interstellar-frontend/src/components/customer/EditProfileFrom.jsx
 'use client'
 import React, { useEffect, useState } from 'react'
-import { useSession, signOut } from 'next-auth/react'
-import { Button } from "@heroui/button"
-import { Input } from "@heroui/input"
-import { Checkbox } from "@heroui/checkbox"
+import { useSession } from 'next-auth/react'
+import { Button } from '@heroui/button'
+import { Input } from '@heroui/input'
+import { Checkbox } from '@heroui/checkbox'
 import { toast } from 'sonner'
 import { Mail, Smartphone } from 'lucide-react'
+import Link from 'next/link'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
-export default function CustomerProfilePage() {
+export default function CustomerProfilePage({
+  isReadOnly = true,
+  onSave,
+  showSaveCancel = false,
+}) {
   const { data: session, status } = useSession()
   const [user, setUser] = useState({
     name: '',
@@ -24,11 +30,8 @@ export default function CustomerProfilePage() {
     phone: '',
     emailSubscribed: false,
     smsSubscribed: false,
-    role: 'user', // Default role
-    password: '', // Added to handle password
+    role: 'user',
   })
-
-  const [initialPassword, setInitialPassword] = useState('')
 
   useEffect(() => {
     const fetchData = async () => {
@@ -56,46 +59,38 @@ export default function CustomerProfilePage() {
             emailSubscribed: userData.emailSubscribed || false,
             smsSubscribed: userData.smsSubscribed || false,
             role: userData.role || 'user',
-            password: '', // Initialize password as an empty string
           })
-
-          setInitialPassword('') // Set the initial password to empty
         } catch (error) {
           console.error('Failed to fetch data:', error)
         }
       }
     }
-
     fetchData()
   }, [session])
 
   const handleChange = (e) => {
     const { name, value } = e.target
-    setUser({ ...user, [name]: value })
+    setUser((prev) => ({ ...prev, [name]: value }))
   }
 
   const handlePhoneChange = (e) => {
     const formattedPhoneNumber = formatPhoneNumber(e.target.value)
-    setUser({ ...user, phone: formattedPhoneNumber })
+    setUser((prev) => ({ ...prev, phone: formattedPhoneNumber }))
   }
 
   const handleCheckboxChange = (name, isChecked) => {
-    setUser({ ...user, [name]: isChecked })
+    setUser((prev) => ({ ...prev, [name]: isChecked }))
   }
 
   const formatPhoneNumber = (value) => {
     if (!value) return value
     const phoneNumber = value.replace(/[^\d]/g, '')
     const phoneNumberLength = phoneNumber.length
-
     if (phoneNumberLength < 4) return phoneNumber
     if (phoneNumberLength < 7) {
       return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`
     }
-    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(
-      3,
-      6,
-    )}-${phoneNumber.slice(6, 10)}`
+    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`
   }
 
   const calculateDurationInDays = (time) => {
@@ -112,7 +107,6 @@ export default function CustomerProfilePage() {
     const requiredFields = ['name', 'email']
     for (const field of requiredFields) {
       if (!user[field]) {
-        console.error(`${field} is required.`)
         toast(`Error: ${field} is required.`, {
           description: `Please fill in the ${field}.`,
         })
@@ -120,23 +114,14 @@ export default function CustomerProfilePage() {
       }
     }
 
-    const userData = { ...user }
-
-    // Remove password from the user object if it hasn't been changed
-    if (userData.password === initialPassword) {
-      delete userData.password
-    }
-
     try {
       const url = `${API_BASE_URL}/auth/updateUser/${session.user.id}`
-      const method = 'PUT'
-
       const response = await fetch(url, {
-        method,
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(userData),
+        body: JSON.stringify(user),
       })
 
       if (!response.ok) {
@@ -144,15 +129,13 @@ export default function CustomerProfilePage() {
         throw new Error(`Failed to submit user data: ${errorText}`)
       }
 
-      const result = await response.json()
-      console.log('User updated successfully:', result)
-
       toast('User updated successfully!', {
         description: 'Your profile has been successfully updated.',
       })
+
+      if (onSave) onSave() // Call the onSave callback to redirect
     } catch (error) {
       console.error('Error submitting form:', error)
-
       toast('Failed to update profile. Please try again.', {
         description: error.toString(),
       })
@@ -168,7 +151,7 @@ export default function CustomerProfilePage() {
   }
 
   return (
-    <div className=" xl:container mb-10">
+    <div className="xl:container mb-10">
       <div>
         <h1 className="mt-2 font-semibold mb-2 text-2xl">
           {user.name} {user.lastName}
@@ -183,30 +166,37 @@ export default function CustomerProfilePage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 border bg-white pr-4 pl-4 rounded-2xl pt-10 pb-10 md:grid-cols-2 gap-6">
               <Input
-                isClearable={true}
+                isClearable={!isReadOnly}
                 value={user.name}
                 bordered
+                labelPlacement="outside"
                 label="First Name"
                 name="name"
                 onChange={handleChange}
-                onClear={() => console.log('input cleared')}
+                isReadOnly={isReadOnly}
+                isRequired
               />
               <Input
-                isClearable={true}
+                isClearable={!isReadOnly}
                 value={user.lastName}
                 bordered
+                labelPlacement="outside"
                 label="Last Name"
                 name="lastName"
                 onChange={handleChange}
+                isReadOnly={isReadOnly}
               />
               <Input
-                isClearable={true}
+                isClearable={!isReadOnly}
                 type="email"
                 value={user.email}
                 bordered
+                labelPlacement="outside"
                 label="Email"
                 name="email"
                 onChange={handleChange}
+                isReadOnly={isReadOnly}
+                isRequired
                 startContent={
                   <Mail
                     size={20}
@@ -216,12 +206,14 @@ export default function CustomerProfilePage() {
                 }
               />
               <Input
-                isClearable={true}
+                isClearable={!isReadOnly}
                 value={user.phone}
                 bordered
+                labelPlacement="outside"
                 label="Phone"
                 name="phone"
                 onChange={handlePhoneChange}
+                isReadOnly={isReadOnly}
                 startContent={
                   <Smartphone
                     size={20}
@@ -230,98 +222,113 @@ export default function CustomerProfilePage() {
                   />
                 }
               />
-
               <Checkbox
                 isSelected={user.emailSubscribed}
                 onChange={(e) =>
                   handleCheckboxChange('emailSubscribed', e.target.checked)
                 }
-                className="mt-4 "
+                className="mt-4"
+                isDisabled={isReadOnly}
               >
                 <p className="text-sm font-light">Email Subscribed</p>
               </Checkbox>
-
               <Checkbox
                 isSelected={user.smsSubscribed}
                 onChange={(e) =>
                   handleCheckboxChange('smsSubscribed', e.target.checked)
                 }
-                className="mt-4 "
+                className="mt-4"
+                isDisabled={isReadOnly}
               >
                 <p className="text-sm font-light">SMS Subscribed</p>
               </Checkbox>
             </div>
 
-            <h1 className="col-span-3 text-lg  text-black">Address</h1>
-            <div className="grid grid-cols-1 border bg-white pr-4 pl-4 rounded-2xl  pt-10 pb-10 md:grid-cols-2 gap-6">
+            <h1 className="col-span-3 text-lg text-black">Address</h1>
+            <div className="grid grid-cols-1 border bg-white pr-4 pl-4 rounded-2xl pt-10 pb-10 md:grid-cols-2 gap-6">
               <Input
-                isClearable={true}
+                isClearable={!isReadOnly}
                 value={user.street}
                 bordered
+                labelPlacement="outside"
                 label="Street Address"
                 name="street"
                 onChange={handleChange}
+                isReadOnly={isReadOnly}
               />
               <Input
-                isClearable={true}
+                isClearable={!isReadOnly}
                 value={user.number}
                 bordered
+                labelPlacement="outside"
                 label="Apartment, suite, etc. (optional)"
                 name="number"
                 onChange={handleChange}
+                isReadOnly={isReadOnly}
               />
               <Input
-                isClearable={true}
+                isClearable={!isReadOnly}
                 value={user.city}
                 bordered
+                labelPlacement="outside"
                 label="City"
                 name="city"
                 onChange={handleChange}
+                isReadOnly={isReadOnly}
               />
               <Input
-                isClearable={true}
+                isClearable={!isReadOnly}
                 value={user.province}
                 bordered
+                labelPlacement="outside"
                 label="Province"
                 name="province"
                 onChange={handleChange}
+                isReadOnly={isReadOnly}
               />
               <Input
-                isClearable={true}
+                isClearable={!isReadOnly}
                 value={user.country}
                 bordered
+                labelPlacement="outside"
                 label="Country"
                 name="country"
                 onChange={handleChange}
+                isReadOnly={isReadOnly}
               />
               <Input
-                isClearable={true}
+                isClearable={!isReadOnly}
                 value={user.postalCode}
                 bordered
+                labelPlacement="outside"
                 label="Postal Code"
                 name="postalCode"
                 onChange={handleChange}
-              />
-            </div>
-            <div>
-              <h1 className="col-span-3 text-lg  text-blakc">
-                Change Password
-              </h1>
-            </div>
-            <div className="grid grid-cols-1 border  bg-white pr-4 pl-4 rounded-2xl pt-10 pb-10 md:grid-cols-2 gap-6">
-              <Input
-                clearable
-                bordered
-                label="Password"
-                name="password"
-                onChange={handleChange}
-                type="password"
+                isReadOnly={isReadOnly}
               />
             </div>
 
-            <Button onClick={handleSubmit} type="submit" color="primary">
-              Update Profile
-            </Button>
+            {showSaveCancel ? (
+              <div className="flex gap-4">
+                <Button type="submit" color="primary" className="mt-4">
+                  Save Changes
+                </Button>
+                <Button
+                  as={Link}
+                  href="/customer-profile"
+                  color="default"
+                  className="mt-4"
+                >
+                  Cancel
+                </Button>
+              </div>
+            ) : (
+              !isReadOnly && (
+                <Button type="submit" color="primary" className="mt-4">
+                  Update Profile
+                </Button>
+              )
+            )}
           </form>
         </div>
       </div>
