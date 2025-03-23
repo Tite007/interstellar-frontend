@@ -1,10 +1,9 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { Button } from "@heroui/button"
+import { Button } from '@heroui/button'
 import { useRouter } from 'next/navigation'
-import { Input } from "@heroui/input"
-import { Checkbox } from "@heroui/checkbox"
+import { Input } from '@heroui/input'
 import { PDFDownloadLink } from '@react-pdf/renderer'
 import MyDocument from '@/src/components/Admin/Orders/PDFPackingSlip'
 import {
@@ -14,7 +13,7 @@ import {
   TableBody,
   TableRow,
   TableCell,
-} from "@heroui/table"
+} from '@heroui/table'
 import ContactInfoCardShipping from '@/src/components/Admin/Customers/ContactInfoCardShipping'
 import BreadcrumbsFullfill from '@/src/components/Admin/Orders/BreadcrumbsFullfil'
 
@@ -26,7 +25,6 @@ export default function Orderfullfill() {
   const [userDetails, setUserDetails] = useState(null)
   const [trackingNumber, setTrackingNumber] = useState('')
   const [carrier, setCarrier] = useState('')
-  const [sendEmailToCustomer, setSendEmailToCustomer] = useState(false) // Checkbox state to send email
   const router = useRouter()
 
   useEffect(() => {
@@ -61,7 +59,6 @@ export default function Orderfullfill() {
     fetchOrderDetails()
   }, [orderId])
 
-  // Function to update the tracking information
   const handleUpdateTrackingInfo = async () => {
     try {
       const response = await fetch(
@@ -87,7 +84,6 @@ export default function Orderfullfill() {
     }
   }
 
-  // Function to fulfill the order
   const handleFulfillment = async () => {
     try {
       const response = await fetch(
@@ -109,15 +105,8 @@ export default function Orderfullfill() {
           fulfillmentStatus: 'fulfilled',
         }))
 
-        // If checkbox is selected, send email to the customer
-        if (sendEmailToCustomer) {
-          console.log('Send email checkbox is selected, triggering email...')
-          await sendFulfillmentEmail()
-        } else {
-          console.log(
-            'Send email checkbox is not selected, email will not be sent.',
-          )
-        }
+        // Automatically send fulfillment email
+        await sendFulfillmentEmail()
       } else {
         throw new Error('Failed to fulfill order')
       }
@@ -127,7 +116,6 @@ export default function Orderfullfill() {
     }
   }
 
-  // Function to trigger fulfillment email
   const sendFulfillmentEmail = async () => {
     try {
       const orderData = {
@@ -137,17 +125,16 @@ export default function Orderfullfill() {
         totalPrice: order.totalPrice,
       }
 
-      // Ensure that the product images are included in lineItems
       const lineItems = order.items.map((item) => ({
         description: item.name,
         quantity: item.quantity,
         price: {
-          unit_amount: item.price * 100, // Convert to cents if needed
+          unit_amount: item.price * 100,
         },
         productDetails: {
           size: item.size || 'N/A',
           sku: item.sku || 'N/A',
-          images: [item.imageUrl], // Ensure you pass the image URL here
+          images: [item.imageUrl],
           color: item.color || 'N/A',
         },
       }))
@@ -179,7 +166,6 @@ export default function Orderfullfill() {
     }
   }
 
-  // Show a loading state while the order details are being fetched
   if (!order || !userDetails) {
     return <div>Loading...</div>
   }
@@ -240,7 +226,7 @@ export default function Orderfullfill() {
                 label="Tracking Number"
                 value={trackingNumber}
                 onChange={(e) => setTrackingNumber(e.target.value)}
-                style={{ fontSize: '16px' }} // Inline style to ensure 16px on all screen sizes
+                style={{ fontSize: '16px' }}
               />
               <Input
                 size="sm"
@@ -249,23 +235,13 @@ export default function Orderfullfill() {
                 label="Carrier"
                 value={carrier}
                 onChange={(e) => setCarrier(e.target.value)}
-                style={{ fontSize: '16px' }} // Inline style to ensure 16px on all screen sizes
+                style={{ fontSize: '16px' }}
               />
             </div>
             <div className="mt-5 flex justify-end">
               <Button size="sm" onClick={handleUpdateTrackingInfo}>
                 Update Tracking Info
               </Button>
-            </div>
-            <div className="flex-1 border-t-1 pt-4 mt-10">
-              <h1 className="font-medium">Additional Information</h1>
-              <Checkbox
-                className="mt-1 font-light"
-                isSelected={sendEmailToCustomer}
-                onChange={setSendEmailToCustomer}
-              >
-                Send Shipment details to customer
-              </Checkbox>
             </div>
           </div>
         </div>
