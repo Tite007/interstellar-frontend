@@ -114,6 +114,9 @@ export default function CustomerProfilePage({
       }
     }
 
+    // Explicitly exclude password from the payload
+    const { password, ...updateData } = user
+
     try {
       const url = `${API_BASE_URL}/auth/updateUser/${session.user.id}`
       const response = await fetch(url, {
@@ -121,7 +124,7 @@ export default function CustomerProfilePage({
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(user),
+        body: JSON.stringify(updateData), // Send data without password
       })
 
       if (!response.ok) {

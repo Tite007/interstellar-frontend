@@ -1,14 +1,12 @@
+// EditUserForm.jsx
 'use client'
-
 import React, { useState, useEffect } from 'react'
-import { Input } from "@heroui/input"
-import { useRouter } from 'next/navigation'
-import { Button } from "@heroui/button"
-import { admin } from '@/src/components/Admin/Products/data'
-import { Select, SelectItem } from "@heroui/select"
-import { Checkbox } from "@heroui/checkbox"
+import { Input } from '@heroui/input'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { Button } from '@heroui/button'
+import { Select, SelectItem } from '@heroui/select'
+import { Checkbox } from '@heroui/checkbox'
 import { toast } from 'sonner'
-import { useSearchParams } from 'next/navigation'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
@@ -27,10 +25,10 @@ const EditUserForm = () => {
     postalCode: '',
     country: '',
     phone: '',
-    password: '',
+    password: '', // Leave empty by default
     emailSubscribed: false,
     smsSubscribed: false,
-    role: 'user', // Default role
+    role: 'user',
   })
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -38,29 +36,31 @@ const EditUserForm = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target
-    setUser({ ...user, [name]: value })
+    setUser((prev) => ({ ...prev, [name]: value }))
   }
 
   const handleAdminChange = (selectedKey) => {
     const isAdmin = selectedKey.currentKey === 'true'
-    setUser((prevUser) => ({ ...prevUser, admin: isAdmin }))
+    setUser((prev) => ({ ...prev, admin: isAdmin }))
   }
 
   const handleIsActiveChange = (selectedKey) => {
     const isActive = selectedKey.currentKey === 'true'
-    setUser((prevUser) => ({ ...prevUser, isActive: isActive }))
+    setUser((prev) => ({ ...prev, isActive: isActive }))
   }
 
   const handleCheckboxChange = (name, isChecked) => {
-    setUser({ ...user, [name]: isChecked })
+    setUser((prev) => ({ ...prev, [name]: isChecked }))
   }
 
   const handleRoleChange = (selectedKey) => {
-    setUser((prevUser) => ({ ...prevUser, role: selectedKey.currentKey }))
+    setUser((prev) => ({ ...prev, role: selectedKey.currentKey }))
   }
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!id) return
+
       try {
         const response = await fetch(`${API_BASE_URL}/auth/findUser/${id}`)
         if (!response.ok) {
@@ -83,10 +83,10 @@ const EditUserForm = () => {
           postalCode: data.postalCode || '',
           country: data.country || '',
           phone: data.phone || '',
-          password: data.password || '',
+          password: '', // Don’t pre-fill with hashed password
           emailSubscribed: data.emailSubscribed || false,
           smsSubscribed: data.smsSubscribed || false,
-          role: data.role || 'user', // Initialize role
+          role: data.role || 'user',
         })
       } catch (error) {
         console.error('Failed to fetch User:', error)
@@ -99,10 +99,12 @@ const EditUserForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    const requiredFields = ['name', 'email', 'password']
+    const requiredFields = ['name', 'email']
+    const isNewUser = !id
+    if (isNewUser) requiredFields.push('password') // Password required only for new users
+
     for (const field of requiredFields) {
       if (!user[field]) {
-        console.error(`${field} is required.`)
         toast(`Error: ${field} is required.`, {
           description: `Please fill in the ${field}.`,
         })
@@ -116,12 +118,18 @@ const EditUserForm = () => {
         : `${API_BASE_URL}/auth/addUser`
       const method = id ? 'PUT' : 'POST'
 
+      // For updates, only include password if it’s changed (non-empty)
+      const payload = { ...user }
+      if (id && !payload.password) {
+        delete payload.password // Remove password if empty for updates
+      }
+
       const response = await fetch(url, {
         method,
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(user),
+        body: JSON.stringify(payload),
       })
 
       if (!response.ok) {
@@ -136,14 +144,13 @@ const EditUserForm = () => {
         description: 'The user has been successfully added/updated.',
         action: {
           label: 'View Users',
-          onClick: () => router.push('/customers'),
+          onClick: () => router.push('/admin/customers'),
         },
       })
 
       router.push('/admin/customers')
     } catch (error) {
       console.error('Error submitting form:', error)
-
       toast('Failed to add/update user. Please try again.', {
         description: error.toString(),
         action: {
@@ -174,7 +181,6 @@ const EditUserForm = () => {
         <Input
           isClearable={true}
           value={user.name}
-          clearable
           bordered
           label="Name"
           name="name"
@@ -184,7 +190,6 @@ const EditUserForm = () => {
         <Input
           isClearable={true}
           value={user.lastName}
-          clearable
           bordered
           label="Last Name"
           name="lastName"
@@ -209,23 +214,21 @@ const EditUserForm = () => {
           onChange={handleChange}
           style={{ fontSize: '16px' }}
         />
-
         <Checkbox
           isSelected={user.emailSubscribed}
           onChange={(e) =>
             handleCheckboxChange('emailSubscribed', e.target.checked)
           }
-          className="mt-4 "
+          className="mt-4"
         >
           <p className="text-sm font-light">Email Subscribed</p>
         </Checkbox>
-
         <Checkbox
           isSelected={user.smsSubscribed}
           onChange={(e) =>
             handleCheckboxChange('smsSubscribed', e.target.checked)
           }
-          className="mt-4 "
+          className="mt-4"
         >
           <p className="text-sm font-light">SMS Subscribed</p>
         </Checkbox>
@@ -290,9 +293,10 @@ const EditUserForm = () => {
           style={{ fontSize: '16px' }}
         />
       </div>
+
       <div className="grid grid-cols-1 border bg-white shadow-md pr-4 pl-4 rounded-2xl pt-10 pb-10 md:grid-cols-2 gap-6">
         <Input
-          clearable
+          isClearable={true}
           bordered
           label="Password"
           name="password"
@@ -300,8 +304,10 @@ const EditUserForm = () => {
           type="password"
           value={user.password}
           style={{ fontSize: '16px' }}
+          placeholder={id ? 'Enter new password (optional)' : 'Enter password'}
         />
       </div>
+
       <div className="grid grid-cols-1 border bg-white pr-4 pl-4 shadow-md rounded-2xl pt-10 pb-10 md:grid-cols-2 gap-6">
         <Select
           size="sm"
@@ -349,7 +355,8 @@ const EditUserForm = () => {
           </SelectItem>
         </Select>
       </div>
-      <Button onClick={handleSubmit} type="submit" color="primary">
+
+      <Button type="submit" color="primary">
         Submit
       </Button>
     </form>
