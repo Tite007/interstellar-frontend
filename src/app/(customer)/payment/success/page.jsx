@@ -11,6 +11,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { Button } from '@heroui/button'
 import { CartContext } from '@/src/context/CartContext'
 import Image from 'next/image'
+import Link from 'next/link'
 
 const PaymentSuccessPage = () => {
   const { clearCart } = useContext(CartContext)
@@ -46,7 +47,6 @@ const PaymentSuccessPage = () => {
         const sessionData = await response.json()
         setSessionDetails(sessionData)
 
-        // Handle discount details only if there's a discount
         if (sessionData.total_details?.amount_discount > 0) {
           const promoCodeId = sessionData.discounts?.[0]?.promotion_code
           let promoCodeName = 'Discount'
@@ -118,11 +118,6 @@ const PaymentSuccessPage = () => {
         throw new Error(`Product not found: ${response.statusText}`)
       }
       const productData = await response.json()
-
-      if (!productData.active) {
-        console.warn(`Product with ID ${productId} is inactive`)
-      }
-
       return productData
     } catch (error) {
       console.error('Fetch product details error:', error)
@@ -144,8 +139,8 @@ const PaymentSuccessPage = () => {
     return calculateSubtotal + shipping + tax - discount
   }, [calculateSubtotal, sessionDetails, discountDetails])
 
-  const handleGoToOrders = () => {
-    router.push('/')
+  const handleGoToHome = () => {
+    router.push('/') // Adjust this route as needed
   }
 
   return (
@@ -165,7 +160,7 @@ const PaymentSuccessPage = () => {
             {sessionDetails?.customer_details?.email}.
           </p>
 
-          <div className="mb-10">
+          <div className="mb-10 ">
             <h4 className="text-lg font-semibold mb-2">Shipping Address:</h4>
             <p className="mb-1">
               {sessionDetails?.customer_details?.address?.line1},{' '}
@@ -180,9 +175,9 @@ const PaymentSuccessPage = () => {
             </p>
 
             <h4 className="text-lg font-semibold mb-2">Items Ordered:</h4>
-            {/* Desktop Table */}
-            <div className="hidden sm:block mb-10">
-              <table className="w-full table-auto text-left">
+            {/* Desktop table view */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="min-w-full table-auto text-left">
                 <thead>
                   <tr className="border-b-2 border-gray-200">
                     <th className="px-4 py-2 font-medium">Image</th>
@@ -198,13 +193,18 @@ const PaymentSuccessPage = () => {
                   {items.map((item, index) => (
                     <tr key={index} className="border-b border-gray-200">
                       <td className="px-4 py-2">
-                        <Image
-                          src={item.productDetails?.images?.[0]}
-                          alt={item.description}
-                          width={50}
-                          height={50}
-                          className="rounded-md object-cover"
-                        />
+                        {item.productDetails?.images?.[0] && (
+                          <Image
+                            src={
+                              item.productDetails.images[0] ||
+                              '/placeholder.svg'
+                            }
+                            alt={item.description}
+                            width={64}
+                            height={64}
+                            className="object-cover"
+                          />
+                        )}
                       </td>
                       <td className="px-4 py-2">{item.description}</td>
                       <td className="px-4 py-2 text-right">{item.quantity}</td>
@@ -221,76 +221,167 @@ const PaymentSuccessPage = () => {
                     </tr>
                   ))}
                 </tbody>
+                <tfoot>
+                  <tr>
+                    <td
+                      className="px-4 py-2 font-medium text-right"
+                      colSpan="4"
+                    >
+                      Subtotal:
+                    </td>
+                    <td className="px-4 py-2 text-right">
+                      ${calculateSubtotal.toFixed(2)}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      className="px-4 py-2 font-medium text-right"
+                      colSpan="4"
+                    >
+                      Shipping:
+                    </td>
+                    <td className="px-4 py-2 text-right">
+                      $
+                      {(
+                        sessionDetails?.shipping_cost?.amount_subtotal / 100 ||
+                        0
+                      ).toFixed(2)}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      className="px-4 py-2 font-medium text-right"
+                      colSpan="4"
+                    >
+                      Tax:
+                    </td>
+                    <td className="px-4 py-2 text-right">
+                      $
+                      {(
+                        sessionDetails?.total_details?.amount_tax / 100 || 0
+                      ).toFixed(2)}
+                    </td>
+                  </tr>
+                  {discountDetails && (
+                    <tr>
+                      <td
+                        className="px-4 py-2 font-medium text-right text-green-600"
+                        colSpan="4"
+                      >
+                        Discount :
+                      </td>
+                      <td className="px-4 py-2 text-right text-green-600">
+                        -${(discountDetails.amount / 100).toFixed(2)}
+                      </td>
+                    </tr>
+                  )}
+                  <tr>
+                    <td
+                      className="px-4 py-2 font-medium text-right"
+                      colSpan="4"
+                    >
+                      Total:
+                    </td>
+                    <td className="px-4 py-2 text-right">
+                      ${calculateTotal.toFixed(2)}
+                    </td>
+                  </tr>
+                </tfoot>
               </table>
             </div>
 
-            {/* Mobile List */}
-            <div className="block sm:hidden mb-10">
+            {/* Mobile card view */}
+            <div className="md:hidden space-y-4">
               {items.map((item, index) => (
-                <div
-                  key={index}
-                  className="border p-4 bg-white rounded-2xl border-gray-200 pb-4 mb-4"
-                >
-                  <div className="flex items-center">
-                    <Image
-                      src={item.productDetails?.images?.[0]}
-                      alt={item.description}
-                      width={50}
-                      height={50}
-                      className="rounded-md object-cover"
-                    />
-                    <div className="ml-4">
+                <div key={index} className="border rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center gap-3 mb-3">
+                    {item.productDetails?.images?.[0] && (
+                      <Image
+                        src={
+                          item.productDetails.images[0] || '/placeholder.svg'
+                        }
+                        alt={item.description}
+                        width={64}
+                        height={64}
+                        className="object-cover rounded-md"
+                      />
+                    )}
+                    <div className="flex-1">
                       <p className="font-medium">{item.description}</p>
-                      <p>Qty: {item.quantity}</p>
-                      <p>Price: ${(item.price.unit_amount / 100).toFixed(2)}</p>
-                      <p>
-                        Total: $
-                        {(
-                          (item.price.unit_amount / 100) *
-                          item.quantity
-                        ).toFixed(2)}
-                      </p>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-sm">
+                    <div>
+                      <span className="text-gray-500">Quantity:</span>
+                    </div>
+                    <div className="text-right">{item.quantity}</div>
+                    <div>
+                      <span className="text-gray-500">Unit Price:</span>
+                    </div>
+                    <div className="text-right">
+                      ${(item.price.unit_amount / 100).toFixed(2)}
+                    </div>
+                    <div>
+                      <span className="text-gray-500">Amount:</span>
+                    </div>
+                    <div className="text-right font-medium">
+                      $
+                      {((item.price.unit_amount / 100) * item.quantity).toFixed(
+                        2,
+                      )}
                     </div>
                   </div>
                 </div>
               ))}
-            </div>
-
-            {/* Totals Section */}
-            <div className="mt-4 space-y-2 text-right sm:text-right">
-              <div className="font-medium">
-                Subtotal: ${calculateSubtotal.toFixed(2)}
-              </div>
-              <div className="font-medium">
-                Shipping: $
-                {(sessionDetails?.shipping_cost?.amount_subtotal / 100).toFixed(
-                  2,
-                )}
-              </div>
-              <div className="font-medium">
-                Tax: $
-                {(sessionDetails?.total_details?.amount_tax / 100).toFixed(2)}
-              </div>
-              {discountDetails && (
-                <div className="font-medium text-green-600">
-                  Discount ({discountDetails.promoCode}): -$
-                  {(discountDetails.amount / 100).toFixed(2)}
+              <div className="border rounded-lg p-4 mt-4 bg-gray-50">
+                <h3 className="font-medium mb-3">Order Summary</h3>
+                <div className="grid grid-cols-2 gap-2 text-sm">
+                  <div>Subtotal:</div>
+                  <div className="text-right">
+                    ${calculateSubtotal.toFixed(2)}
+                  </div>
+                  <div>Shipping:</div>
+                  <div className="text-right">
+                    $
+                    {(
+                      sessionDetails?.shipping_cost?.amount_subtotal / 100 || 0
+                    ).toFixed(2)}
+                  </div>
+                  <div>Tax:</div>
+                  <div className="text-right">
+                    $
+                    {(
+                      sessionDetails?.total_details?.amount_tax / 100 || 0
+                    ).toFixed(2)}
+                  </div>
+                  {discountDetails && (
+                    <>
+                      <div className="text-green-600">Discount :</div>
+                      <div className="text-right text-green-600">
+                        -${(discountDetails.amount / 100).toFixed(2)}
+                      </div>
+                    </>
+                  )}
+                  <div className="font-medium text-base pt-2 border-t">
+                    Total:
+                  </div>
+                  <div className="text-right font-medium text-base pt-2 border-t">
+                    ${calculateTotal.toFixed(2)}
+                  </div>
                 </div>
-              )}
-              <div className="font-bold">
-                Total: ${calculateTotal.toFixed(2)}
               </div>
             </div>
           </div>
+
+          <Button
+            size="sm"
+            onPress={handleGoToHome}
+            className="mt-4 bg-redBranding text-white"
+          >
+            Go to Home Page
+          </Button>
         </div>
       )}
-      <Button
-        size="sm"
-        onPress={handleGoToOrders}
-        className="mt-4 bg-redBranding text-white"
-      >
-        Go to Orders Page
-      </Button>
     </div>
   )
 }
