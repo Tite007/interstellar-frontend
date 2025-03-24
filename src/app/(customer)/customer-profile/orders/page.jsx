@@ -1,25 +1,36 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
-import BreadcrumbsUserProfile from '@/src/components/customer/BreadcrumbsProfile'
-import OrderHistoryCard from '@/src/components/customer/OrderHistoryCard'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import BreadcrumbsUserProfileOrders from '@/src/components/customer/BreadcrumbsProfileOrders'
+import OrderHistoryCard from '@/src/components/customer/OrderHistoryCard'
+import { Pagination } from '@heroui/pagination'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
+const ORDERS_PER_PAGE = 5
 
 export default function CustomerOrdersPage() {
   const { data: session, status } = useSession()
   const [user, setUser] = useState(null)
   const [userOrders, setUserOrders] = useState([])
+  const [totalPages, setTotalPages] = useState(1)
   const router = useRouter()
+  const searchParams = useSearchParams()
+
+  // Get current page from URL params, default to 1
+  const currentPage = Number(searchParams.get('page')) || 1
 
   const handleCardClick = (order) => {
     if (order && order._id) {
-      router.push(`/customer-profile/orders/${order._id}`)
+      router.push(`/customer-profile/orders/${order._id}?page=${currentPage}`)
     } else {
       console.error('Order ID is undefined!')
     }
+  }
+
+  const handlePageChange = (page) => {
+    // Update URL with new page number
+    router.push(`/customer-profile/orders?page=${page}`, { scroll: false })
   }
 
   useEffect(() => {
@@ -29,26 +40,21 @@ export default function CustomerOrdersPage() {
           const userResponse = await fetch(
             `${API_BASE_URL}/auth/findUser/${session.user.id}`,
           )
-          if (!userResponse.ok) {
-            throw new Error('Network response was not ok')
-          }
+          if (!userResponse.ok) throw new Error('Network response was not ok')
           const userData = await userResponse.json()
           setUser(userData)
 
           const ordersResponse = await fetch(
             `${API_BASE_URL}/orders/getUserOrders/${session.user.id}`,
           )
-          if (!ordersResponse.ok) {
-            throw new Error('Network response was not ok')
-          }
+          if (!ordersResponse.ok) throw new Error('Network response was not ok')
           const ordersData = await ordersResponse.json()
 
-          // Sort orders by most recent
           const sortedOrders = ordersData.sort(
             (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
           )
-
           setUserOrders(sortedOrders)
+          setTotalPages(Math.ceil(sortedOrders.length / ORDERS_PER_PAGE))
         } catch (error) {
           console.error('Failed to fetch data:', error)
         }
@@ -58,16 +64,19 @@ export default function CustomerOrdersPage() {
     fetchData()
   }, [session])
 
-  if (status === 'loading') {
-    return <p>Loading...</p>
-  }
-
-  if (status === 'unauthenticated' || session?.user.role !== 'user') {
+  if (status === 'loading') return <p>Loading...</p>
+  if (status === 'unauthenticated' || session?.user.role !== 'user')
     return <p>Access Denied</p>
-  }
+
+  // Calculate orders to display based on current page
+  const startIndex = (currentPage - 1) * ORDERS_PER_PAGE
+  const paginatedOrders = userOrders.slice(
+    startIndex,
+    startIndex + ORDERS_PER_PAGE,
+  )
 
   return (
-    <div className=" xl:container mb-10 ">
+    <div className="xl:container mb-10">
       <BreadcrumbsUserProfileOrders />
       {user ? (
         <>
@@ -84,9 +93,22 @@ export default function CustomerOrdersPage() {
             <div className="flex-1">
               <h1 className="font-semibold text-xl mb-2">Your Order History</h1>
               <OrderHistoryCard
-                userOrders={userOrders}
+                userOrders={paginatedOrders}
                 onCardClick={handleCardClick}
               />
+              {totalPages > 1 && (
+                <div className="mt-6 flex justify-center">
+                  <Pagination
+                    showControls
+                    total={totalPages}
+                    initialPage={currentPage}
+                    page={currentPage}
+                    onChange={handlePageChange}
+                    color="primary"
+                    size="md"
+                  />
+                </div>
+              )}
             </div>
           </div>
         </>
