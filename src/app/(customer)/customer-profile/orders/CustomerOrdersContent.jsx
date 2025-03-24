@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import BreadcrumbsUserProfileOrders from '@/src/components/customer/BreadcrumbsProfileOrders'
 import OrderHistoryCard from '@/src/components/customer/OrderHistoryCard'
 import { Pagination } from '@heroui/pagination'
+import OrderHistorySkeleton from '@/src/components/customer/OrderHistorySkeleton'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 const ORDERS_PER_PAGE = 5
@@ -67,7 +68,7 @@ export default function CustomerOrdersContent() {
     fetchData()
   }, [session])
 
-  if (status === 'loading') return <p>Loading...</p>
+  if (status === 'loading') return <OrderHistorySkeleton />
   if (status === 'unauthenticated' || session?.user.role !== 'user')
     return <p>Access Denied</p>
 

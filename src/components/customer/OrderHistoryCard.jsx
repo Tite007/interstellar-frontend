@@ -2,14 +2,17 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import OrderCard from './OrderCard'
+import OrderCardSkeleton from './OrderCardSkeleton'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
 const OrderHistoryCard = ({ userOrders, onCardClick }) => {
   const [ordersWithImages, setOrdersWithImages] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const fetchImagesForOrders = async () => {
+      setIsLoading(true)
       const updatedOrders = await Promise.all(
         userOrders.map(async (order) => {
           if (order.items && order.items.length > 0) {
@@ -32,7 +35,6 @@ const OrderHistoryCard = ({ userOrders, onCardClick }) => {
                   }
                 }
 
-                // Add the image as productImage to match OrderCard's expectation
                 const updatedItems = [...order.items]
                 updatedItems[0] = { ...updatedItems[0], productImage: image }
                 return { ...order, items: updatedItems }
@@ -44,17 +46,28 @@ const OrderHistoryCard = ({ userOrders, onCardClick }) => {
               )
             }
           }
-          return { ...order } // Return unchanged if no image fetched
+          return { ...order }
         }),
       )
       setOrdersWithImages(updatedOrders)
+      setIsLoading(false)
     }
 
     fetchImagesForOrders()
   }, [userOrders])
 
+  if (isLoading) {
+    return (
+      <div className="space-y-4">
+        {userOrders.map((order) => (
+          <OrderCardSkeleton key={order._id} />
+        ))}
+      </div>
+    )
+  }
+
   return (
-    <div>
+    <div className="space-y-4">
       {ordersWithImages.map((order) => (
         <div key={order._id} onClick={() => onCardClick(order)}>
           <OrderCard order={order} />
