@@ -1,7 +1,7 @@
 // components/CustomPackageCheckbox.jsx
 
 import React from 'react'
-import { Checkbox } from "@heroui/checkbox"
+import { Checkbox } from '@heroui/checkbox'
 
 export default function CustomPackageCheckbox({
   title,
@@ -29,10 +29,7 @@ export default function CustomPackageCheckbox({
           onChange={() => onChange(value)}
           className="hidden"
         />
-        <span className="ml-2">{title}</span>
-      </div>
-      <div>
-        <span>{weight}</span>
+        <span className="ml-2">{weight}</span>
       </div>
     </label>
   )

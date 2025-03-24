@@ -330,7 +330,7 @@ export default function MainProductDetailsClient({ initialProduct }) {
             <h3 className="text-md font-semibold mt-2">
               Which is the Best for You:
             </h3>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-2">
               <CustomPackageCheckbox
                 key="main-product"
                 title={product.size}
