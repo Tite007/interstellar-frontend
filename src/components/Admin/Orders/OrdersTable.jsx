@@ -21,13 +21,13 @@ import OrderItemsModal from './OrderItemsModal' // Adjust path as needed
 const orderColumns = [
   { name: 'Order #', uid: 'orderNumber' },
   { name: 'User', uid: 'user.name' },
+  { name: 'Email', uid: 'user.email' }, // Added email column
   { name: 'Date Created', uid: 'createdAt' },
   { name: 'Items', uid: 'items' },
   { name: 'Total', uid: 'totalPrice' },
   { name: 'Payment Status', uid: 'paymentStatus' },
   { name: 'Fulfillment Status', uid: 'fulfillmentStatus' },
-  { name: 'Delivery Status', uid: 'deliveryStatus' },
-  { name: 'Delivery Method', uid: 'deliveryMethod' },
+  { name: 'Carrier', uid: 'carrier' }, // Replaced Delivery Method with Carrier
   { name: 'Actions', uid: 'actions' },
 ]
 
@@ -66,17 +66,21 @@ export default function OrdersTable() {
       const orderNumberMatch = String(order.orderNumber || '')
         .toLowerCase()
         .includes(searchQuery.toLowerCase())
-      const userNameMatch =
-        `${order.user?.name || ''} ${order.user?.lastName || ''}`
-          .toLowerCase()
-          .includes(searchQuery.toLowerCase())
+      const userNameMatch = `${order.user?.name || ''} ${
+        order.user?.lastName || ''
+      }`
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase())
+      const emailMatch = String(order.user?.email || '')
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase()) // Added email search
       const itemsMatch =
         order.items?.some((item) =>
           String(item.name || '')
             .toLowerCase()
             .includes(searchQuery.toLowerCase()),
         ) || false
-      return orderNumberMatch || userNameMatch || itemsMatch
+      return orderNumberMatch || userNameMatch || emailMatch || itemsMatch
     })
     setFilteredOrders(filtered)
   }, [searchQuery, orders])
@@ -153,14 +157,14 @@ export default function OrdersTable() {
           Create new order
         </Button>
         <Input
-          placeholder="Search by order #, user, or item..."
+          placeholder="Search by order #, user, email, or item..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="w-full sm:w-64"
         />
       </div>
 
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto ">
         <Table
           isHeaderSticky
           isStriped
@@ -168,7 +172,6 @@ export default function OrdersTable() {
           shadow="none"
           selectionMode="none"
           aria-label="Order Table"
-          className="min-w-[1024px]"
         >
           <TableHeader>
             {orderColumns.map((column) => (
@@ -198,6 +201,8 @@ export default function OrdersTable() {
                       >
                         {order.user?.name || ''} {order.user?.lastName || ''}
                       </div>
+                    ) : column.uid === 'user.email' ? (
+                      order.user?.email || 'N/A' // Display email
                     ) : column.uid === 'items' ? (
                       <Button
                         variant="flat"
