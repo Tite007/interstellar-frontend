@@ -11,6 +11,7 @@ import {
 } from '@/src/components/Products/EmblaCarouselSelectedSnapDisplay'
 import useEmblaCarousel from 'embla-carousel-react'
 import SimilarProductsCard from './SimilarProductsCard'
+import SimilarProductsCardHome from '@/src/components/home/EmblaCarouselProductsHome'
 
 const EmblaCarouselProducts = ({ products = [], options }) => {
   const [emblaRef, emblaApi] = useEmblaCarousel(options)
@@ -30,7 +31,7 @@ const EmblaCarouselProducts = ({ products = [], options }) => {
             products.map((product, index) => (
               <div className="embla-product__slide" key={index}>
                 {/* No Link wrapping the whole card */}
-                <SimilarProductsCard product={product} />
+                <SimilarProductsCardHome product={product} />
               </div>
             ))
           ) : (
