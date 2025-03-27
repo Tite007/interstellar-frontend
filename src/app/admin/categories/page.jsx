@@ -5,7 +5,7 @@ import { Select, SelectItem } from '@heroui/select'
 import { Input } from '@heroui/input'
 import { Button } from '@heroui/button'
 import { Card, CardHeader, CardBody } from '@heroui/card'
-import { Plus } from 'lucide-react'
+import { Plus, ChevronRight, CornerDownRight, Trash2 } from 'lucide-react'
 import { Divider } from '@heroui/divider'
 import {
   Modal,
@@ -14,7 +14,6 @@ import {
   ModalBody,
   ModalFooter,
 } from '@heroui/modal'
-import { ChevronRight, CornerDownRight } from 'lucide-react'
 import { toast } from 'sonner'
 import { Toaster } from '@/src/components/ui/Toaster'
 
@@ -34,7 +33,7 @@ const CategoryAdminPage = () => {
   })
   const [categoryImage, setCategoryImage] = useState(null)
   const [subcategoryImage, setSubcategoryImage] = useState(null)
-  const [toastMessage, setToastMessage] = useState(null) // New state for toast
+  const [toastMessage, setToastMessage] = useState(null)
 
   const fetchCategories = useCallback(async () => {
     try {
@@ -52,15 +51,10 @@ const CategoryAdminPage = () => {
     fetchCategories()
   }, [fetchCategories])
 
-  // Handle toast messages with useEffect
   useEffect(() => {
     if (toastMessage) {
-      if (toastMessage.type === 'success') {
-        toast.success(toastMessage.message)
-      } else {
-        toast.error(toastMessage.message)
-      }
-      setToastMessage(null) // Clear after displaying
+      toast[toastMessage.type](toastMessage.message)
+      setToastMessage(null)
     }
   }, [toastMessage])
 
@@ -69,7 +63,6 @@ const CategoryAdminPage = () => {
     categories.forEach((category) => {
       categoryMap[category._id] = { ...category, subcategories: [] }
     })
-
     const categoryTree = []
     categories.forEach((category) => {
       if (category.parent && categoryMap[category.parent._id]) {
@@ -86,17 +79,14 @@ const CategoryAdminPage = () => {
   const addCategory = async (e) => {
     e.preventDefault()
     if (!newCategory.trim()) return
-
     const formData = new FormData()
     formData.append('name', newCategory)
     if (categoryImage) formData.append('image', categoryImage)
-
     try {
       const res = await fetch(`${API_BASE_URL}/categories/addCategory`, {
         method: 'POST',
         body: formData,
       })
-
       if (res.ok) {
         setNewCategory('')
         setCategoryImage(null)
@@ -105,9 +95,7 @@ const CategoryAdminPage = () => {
           type: 'success',
           message: 'Category added successfully',
         })
-      } else {
-        throw new Error('Failed to add category')
-      }
+      } else throw new Error('Failed to add category')
     } catch (error) {
       console.error('Error adding category:', error)
       setToastMessage({ type: 'error', message: 'Error adding category' })
@@ -117,18 +105,15 @@ const CategoryAdminPage = () => {
   const addSubcategory = async (e) => {
     e.preventDefault()
     if (!newSubcategory.trim() || !selectedCategory) return
-
     const formData = new FormData()
     formData.append('name', newSubcategory)
     formData.append('parentId', selectedCategory)
     if (subcategoryImage) formData.append('image', subcategoryImage)
-
     try {
       const res = await fetch(`${API_BASE_URL}/categories/addSubcategory`, {
         method: 'POST',
         body: formData,
       })
-
       if (res.ok) {
         setNewSubcategory('')
         setSubcategoryImage(null)
@@ -137,9 +122,7 @@ const CategoryAdminPage = () => {
           type: 'success',
           message: 'Subcategory added successfully',
         })
-      } else {
-        throw new Error('Failed to add subcategory')
-      }
+      } else throw new Error('Failed to add subcategory')
     } catch (error) {
       console.error('Error adding subcategory:', error)
       setToastMessage({ type: 'error', message: 'Error adding subcategory' })
@@ -149,7 +132,6 @@ const CategoryAdminPage = () => {
   const deleteCategory = async (categoryId) => {
     if (!window.confirm('Are you sure you want to delete this category?'))
       return
-
     try {
       const res = await fetch(
         `${API_BASE_URL}/categories/deleteCategory/${categoryId}`,
@@ -157,16 +139,13 @@ const CategoryAdminPage = () => {
           method: 'DELETE',
         },
       )
-
       if (res.ok) {
         fetchCategories()
         setToastMessage({
           type: 'success',
           message: 'Category deleted successfully',
         })
-      } else {
-        throw new Error('Failed to delete category')
-      }
+      } else throw new Error('Failed to delete category')
     } catch (error) {
       console.error('Error deleting category:', error)
       setToastMessage({ type: 'error', message: 'Error deleting category' })
@@ -185,7 +164,6 @@ const CategoryAdminPage = () => {
 
   const handleUpdateCategory = async () => {
     if (!editingCategory) return
-
     const formData = new FormData()
     formData.append('name', modalContent.name)
     if (
@@ -197,7 +175,6 @@ const CategoryAdminPage = () => {
     }
     if (modalContent.image instanceof File)
       formData.append('image', modalContent.image)
-
     try {
       const res = await fetch(
         `${API_BASE_URL}/categories/updateCategory/${editingCategory._id}`,
@@ -206,7 +183,6 @@ const CategoryAdminPage = () => {
           body: formData,
         },
       )
-
       if (res.ok) {
         setIsModalOpen(false)
         fetchCategories()
@@ -214,22 +190,15 @@ const CategoryAdminPage = () => {
           type: 'success',
           message: 'Category updated successfully',
         })
-      } else {
-        const errorData = await res.json()
-        throw new Error(errorData.message || 'Failed to update category')
-      }
+      } else throw new Error('Failed to update category')
     } catch (error) {
       console.error('Error updating category:', error)
-      setToastMessage({
-        type: 'error',
-        message: `Error updating category: ${error.message}`,
-      })
+      setToastMessage({ type: 'error', message: 'Error updating category' })
     }
   }
 
   const handleRemoveImage = async () => {
     if (!editingCategory || !modalContent.image) return
-
     try {
       const res = await fetch(
         `${API_BASE_URL}/categories/removeCategoryImage/${editingCategory._id}`,
@@ -237,7 +206,6 @@ const CategoryAdminPage = () => {
           method: 'PUT',
         },
       )
-
       if (res.ok) {
         setModalContent({ ...modalContent, image: null })
         fetchCategories()
@@ -245,9 +213,7 @@ const CategoryAdminPage = () => {
           type: 'success',
           message: 'Image removed successfully',
         })
-      } else {
-        throw new Error('Failed to remove image')
-      }
+      } else throw new Error('Failed to remove image')
     } catch (error) {
       console.error('Error removing image:', error)
       setToastMessage({ type: 'error', message: 'Error removing image' })
@@ -256,94 +222,107 @@ const CategoryAdminPage = () => {
 
   const renderCategoryTree = (category) => (
     <li key={category._id} className="mb-4">
-      <div className="flex justify-between mt-2 items-center">
-        <strong className="text-lg ml-1 flex items-center">
-          {category.name}
+      <div className="flex justify-between items-center p-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
+        <div className="flex items-center">
+          <ChevronRight className="w-5 h-5 text-gray-500 mr-2" />
+          <span className="text-sm sm:text-sm md:text-lg  font-semibold">
+            {category.name}
+          </span>
           {category.image && (
             <img
               src={category.image}
               alt={category.name}
-              className="ml-2 h-10 w-10 object-cover"
+              className="ml-3 h-8 w-8 rounded-full object-cover"
             />
           )}
-        </strong>
-        <div>
+        </div>
+        <div className="flex gap-2">
           <Button
             size="sm"
-            className="mr-2"
-            onClick={() => openUpdateModal(category)}
+            variant="solid"
+            onPress={() => openUpdateModal(category)}
+            className="hover:bg-blue-100"
           >
-            Update
+            Edit
           </Button>
           <Button
             size="sm"
             color="danger"
-            onClick={() => deleteCategory(category._id)}
+            variant="solid"
+            onPress={() => deleteCategory(category._id)}
+            className="hover:bg-red-100"
           >
-            Delete
+            <Trash2 className="w-4 h-4" />
           </Button>
         </div>
       </div>
       {category.subcategories?.length > 0 && (
-        <>
-          <div className="ml-9 flex items-center">
-            <CornerDownRight strokeWidth={1.5} className="mr-2 mb-2" />
-            <span className="text-sm font-medium mb-2">Subcategories:</span>
-          </div>
-          <div className="ml-9">
-            <Divider />
-            <ul className="ml-8">
-              {category.subcategories.map(renderCategoryTree)}
-            </ul>
-          </div>
-        </>
+        <ul className="ml-6 mt-2 space-y-2">
+          {category.subcategories.map((subcat) => renderCategoryTree(subcat))}
+        </ul>
       )}
     </li>
   )
 
   return (
-    <div className="xl:container lg:container">
+    <div className="xl:container mx-auto ">
       <Toaster />
-      <h1 className="text-2xl font-bold mb-6">Category Management</h1>
-      <div className="grid md:grid-cols-2 gap-6">
-        <Card className="max-w-auto">
-          <CardHeader>
-            <h2>Add Main Category</h2>
+      <h1 className="text-3xl font-bold mb-8 text-gray-800">
+        Category Management
+      </h1>
+
+      <div className="grid md:grid-cols-2 gap-6 mb-8">
+        {/* Add Main Category */}
+        <Card className="shadow-md">
+          <CardHeader className="bg-blue-50">
+            <h2 className="text-xl font-semibold text-blue-700">
+              Add Main Category
+            </h2>
           </CardHeader>
           <Divider />
-          <CardBody>
+          <CardBody className="p-6">
             <form onSubmit={addCategory} className="space-y-4">
               <Input
                 label="Category Name"
                 value={newCategory}
                 onChange={(e) => setNewCategory(e.target.value)}
                 placeholder="Enter category name"
-                clearable
+                className="w-full"
               />
               <Input
                 type="file"
                 label="Category Image"
                 onChange={(e) => setCategoryImage(e.target.files[0])}
                 accept="image/*"
+                className="w-full"
               />
-              <Button size="sm" type="submit" color="primary">
-                <Plus className="mr-2 h-4 w-4" /> Add Category
+              <Button
+                size="md"
+                type="submit"
+                color="primary"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                <Plus className="mr-2 h-5 w-5" /> Add Category
               </Button>
             </form>
           </CardBody>
         </Card>
 
-        <Card className="max-w-auto">
-          <CardHeader>
-            <h2>Add Subcategory</h2>
+        {/* Add Subcategory */}
+        <Card className="shadow-md">
+          <CardHeader className="bg-green-50">
+            <h2 className="text-xl font-semibold text-green-700">
+              Add Subcategory
+            </h2>
           </CardHeader>
           <Divider />
-          <CardBody>
+          <CardBody className="p-6">
             <form onSubmit={addSubcategory} className="space-y-4">
               <Select
                 label="Main Category"
                 placeholder="Select a category"
                 onChange={(e) => setSelectedCategory(e.target.value)}
+                className="w-full"
               >
                 {categories
                   .filter((category) => !category.parent)
@@ -358,43 +337,63 @@ const CategoryAdminPage = () => {
                 value={newSubcategory}
                 onChange={(e) => setNewSubcategory(e.target.value)}
                 placeholder="Enter subcategory name"
-                clearable
+                className="w-full"
               />
               <Input
                 type="file"
                 label="Subcategory Image"
                 onChange={(e) => setSubcategoryImage(e.target.files[0])}
                 accept="image/*"
+                className="w-full"
               />
-              <Button size="sm" type="submit" color="primary">
-                <Plus className="mr-2 h-4 w-4" /> Add Subcategory
+              <Button
+                size="md"
+                type="submit"
+                color="primary"
+                className="w-full bg-green-600 hover:bg-green-700 text-white"
+              >
+                <Plus className="mr-2 h-5 w-5" /> Add Subcategory
               </Button>
             </form>
           </CardBody>
         </Card>
       </div>
-      <Card className="mt-6 max-w">
-        <CardHeader>
-          <h2>Existing Categories</h2>
+
+      {/* Existing Categories */}
+      <Card className="shadow-md">
+        <CardHeader className="bg-gray-100">
+          <h2 className="text-xl font-semibold text-gray-700">
+            Existing Categories
+          </h2>
         </CardHeader>
         <Divider />
-        <CardBody>
-          <ul className="space-y-4">{categories.map(renderCategoryTree)}</ul>
+        <CardBody className="p-6 ">
+          {categories.length === 0 ? (
+            <p className="text-gray-500">No categories found.</p>
+          ) : (
+            <ul className="space-y-4">{categories.map(renderCategoryTree)}</ul>
+          )}
         </CardBody>
       </Card>
-      <Modal isOpen={isModalOpen} onOpenChange={setIsModalOpen}>
+
+      {/* Update Modal */}
+      <Modal
+        isOpen={isModalOpen}
+        onOpenChange={setIsModalOpen}
+        className="max-w-lg"
+      >
         <ModalContent>
-          <ModalHeader>
-            <h2>Update Category</h2>
+          <ModalHeader className="bg-gray-50">
+            <h2 className="text-xl font-semibold">Update Category</h2>
           </ModalHeader>
-          <ModalBody>
+          <ModalBody className="p-6">
             <Input
-              clearable
               label="Category Name"
               value={modalContent.name}
               onChange={(e) =>
                 setModalContent({ ...modalContent, name: e.target.value })
               }
+              className="mb-4"
             />
             <Select
               label="Parent Category (Optional)"
@@ -403,6 +402,7 @@ const CategoryAdminPage = () => {
                 setModalContent({ ...modalContent, parentId: e.target.value })
               }
               placeholder="Select parent category (optional)"
+              className="mb-4"
             >
               <SelectItem value="">None (Main Category)</SelectItem>
               {categories.map((category) => (
@@ -418,19 +418,21 @@ const CategoryAdminPage = () => {
                 setModalContent({ ...modalContent, image: e.target.files[0] })
               }
               accept="image/*"
+              className="mb-4"
             />
             {modalContent.image && typeof modalContent.image === 'string' && (
-              <div className="mt-2">
+              <div className="mt-4 flex items-center gap-4">
                 <img
                   src={modalContent.image}
                   alt="Current Image"
-                  className="h-20 w-20 object-cover"
+                  className="h-16 w-16 rounded-md object-cover"
                 />
                 <Button
                   size="sm"
                   color="danger"
-                  onClick={handleRemoveImage}
-                  className="mt-2"
+                  variant="outline"
+                  onPress={handleRemoveImage}
+                  className="hover:bg-red-100"
                 >
                   Remove Image
                 </Button>
@@ -439,14 +441,18 @@ const CategoryAdminPage = () => {
           </ModalBody>
           <ModalFooter>
             <Button
-              auto
-              flat
+              variant="outline"
               color="error"
-              onClick={() => setIsModalOpen(false)}
+              onPress={() => setIsModalOpen(false)}
+              className="mr-2"
             >
               Cancel
             </Button>
-            <Button auto onClick={handleUpdateCategory}>
+            <Button
+              color="primary"
+              onPress={handleUpdateCategory}
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+            >
               Save Changes
             </Button>
           </ModalFooter>
