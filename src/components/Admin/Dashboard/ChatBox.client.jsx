@@ -110,7 +110,7 @@ export default function ChatBox() {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-50">
+    <div className="fixed bottom-4  z-50">
       <Button
         endContent={<MessagesSquare size={20} strokeWidth={1.5} />}
         onPress={() => setIsOpen(!isOpen)}
