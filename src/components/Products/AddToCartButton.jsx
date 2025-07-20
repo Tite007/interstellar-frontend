@@ -1,7 +1,7 @@
 // components/Products/AddToCartButton.jsx
 import React from 'react'
-import { Button } from "@heroui/button"
-import { Select, SelectItem } from "@heroui/select"
+import { Button } from '@heroui/button'
+import { Select, SelectItem } from '@heroui/select'
 
 const AddToCartButton = ({
   selectedQuantity,
@@ -24,7 +24,7 @@ const AddToCartButton = ({
           selectedQuantity ? new Set([selectedQuantity]) : undefined
         }
         onSelectionChange={handleQuantityChange}
-        className="w-full borderrounded-lg md:max-w-[60px]" // Full width on mobile, fixed width on larger screens
+        className="w-full rounded-2xl md:max-w-[60px]" // Full width on mobile, fixed width on larger screens
         disabled={isOutOfStock}
       >
         {[1, 2, 3, 4, 5].map((quantity) => (
@@ -41,7 +41,7 @@ const AddToCartButton = ({
       <Button
         color="" // Use the color you defined in tailwind.config.js
         size="sm"
-        className="w-full text-white font-medium bg-redBranding text-sm" // Full width on mobile, adjust as needed
+        className="w-full text-white rounded-xl  font-medium bg-redBranding text-sm" // Full width on mobile, adjust as needed
         onPress={handleAddToCart}
         isDisabled={isOutOfStock || !selectedQuantity}
       >

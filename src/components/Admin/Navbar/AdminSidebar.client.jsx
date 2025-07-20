@@ -97,7 +97,7 @@ export default function Sidebar() {
   return (
     <div className="hidden xl:block fixed  bottom-0 bg-white start-0 z-50 h-full w-[270px]  2xl:w-72 ">
       <div className="flex items-center justify-center p-4 mt-2">
-        <Link href="/">
+        <Link href="/admin/dashboard">
           <Image
             src="/muchio_logo.webp"
             alt="Muchio Logo"

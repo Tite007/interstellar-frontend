@@ -1,10 +1,13 @@
+// src/components/Product-details/StarRating.jsx
 import React, { useState } from 'react'
-import { StarIcon } from '@/src/components/Product-details/StarIcon' // Assuming this imports the StarIcon correctly
+import { StarIcon } from '@/src/components/Product-details/StarIcon'
 
 function StarCheckbox({ isSelected, onClick, disableAnimation }) {
   return (
     <div
-      className={`inline-block cursor-pointer ${isSelected ? 'text-yellow-500 ' : 'text-gray-400'}`}
+      className={`inline-block cursor-pointer ${
+        isSelected ? 'text-yellow-400' : 'text-gray-400'
+      }`}
       onClick={onClick}
     >
       <StarIcon
@@ -25,6 +28,10 @@ export default function StarRating({
 }) {
   const [selectedRating, setSelectedRating] = useState(value)
 
+  React.useEffect(() => {
+    setSelectedRating(value)
+  }, [value])
+
   const handleStarClick = (rating) => {
     if (!readOnly) {
       setSelectedRating(rating)
@@ -35,13 +42,13 @@ export default function StarRating({
   }
 
   return (
-    <div className="flex mt-1">
+    <div className="flex mt-1 space-x-1">
       {Array.from({ length: maxStars }, (_, index) => (
         <StarCheckbox
           key={index + 1}
           isSelected={index + 1 <= selectedRating}
           disableAnimation={disableAnimation}
-          onClick={() => handleStarClick(index + 1)}
+          onClick={readOnly ? null : () => handleStarClick(index + 1)}
         />
       ))}
     </div>

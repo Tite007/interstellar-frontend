@@ -110,7 +110,7 @@ export default function MainNavbar() {
         <Button
           variant="flat"
           isIconOnly
-          onClick={() => {
+          onPress={() => {
             setMenuOpen(!menuOpen)
           }}
         >
@@ -136,7 +136,7 @@ export default function MainNavbar() {
         ))}
       </div>
       <div className="flex-grow xl:hidden ">
-        <Link href="/">
+        <Link href="/admin/dashboard">
           <Image
             src="/muchio_logo.webp"
             alt="Muchio Logo"
