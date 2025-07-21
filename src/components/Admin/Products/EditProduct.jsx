@@ -123,7 +123,7 @@ const ProductEditForm = () => {
         setProductId(idFromRouter)
       }
     }
-  }, [router.isReady, router.asPath])
+  }, [router.isReady, router.asPath, productId])
 
   console.log('Product ID:', productId)
 

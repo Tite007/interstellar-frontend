@@ -28,7 +28,7 @@ const ProductAddFormContent = () => {
 
   useEffect(() => {
     resetProduct()
-  }, [])
+  }, [resetProduct])
 
   const handleSave = async (e) => {
     e.preventDefault()

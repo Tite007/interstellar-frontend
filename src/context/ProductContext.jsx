@@ -115,7 +115,7 @@ export const ProductProvider = ({ productId, children }) => {
       }
     }
     fetchProductData()
-  }, [productId])
+  }, [productId, initialProductState.technicalData])
 
   // Reset state for adding a new product
   const resetProduct = () => {

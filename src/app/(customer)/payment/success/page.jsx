@@ -24,15 +24,53 @@ const PaymentSuccessPage = () => {
   const [sessionId, setSessionId] = useState(null)
   const [discountDetails, setDiscountDetails] = useState(null)
 
-  useEffect(() => {
-    const query = new URLSearchParams(window.location.search)
-    const session = query.get('session_id')
-    setSessionId(session)
-
-    if (session) {
-      fetchSessionDetails(session)
+  const fetchProductDetails = useCallback(async (productId) => {
+    try {
+      const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL
+      const response = await fetch(
+        `${baseURL}/payment/stripe/products/${productId}`,
+      )
+      if (!response.ok) {
+        throw new Error(`Product not found: ${response.statusText}`)
+      }
+      const productData = await response.json()
+      return productData
+    } catch (error) {
+      console.error('Fetch product details error:', error)
+      return null
     }
   }, [])
+
+  const fetchItems = useCallback(
+    async (sessionId) => {
+      try {
+        const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL
+        const response = await fetch(
+          `${baseURL}/payment/stripe/checkout-sessions/${sessionId}/line-items`,
+        )
+        if (!response.ok) {
+          throw new Error('Failed to fetch items')
+        }
+        const jsonResponse = await response.json()
+        const itemsData = await Promise.all(
+          jsonResponse.data.map(async (item) => {
+            const productDetails = await fetchProductDetails(item.price.product)
+            return {
+              ...item,
+              productDetails,
+            }
+          }),
+        )
+        setItems(itemsData)
+        setIsLoading(false)
+      } catch (error) {
+        console.error('Fetch error:', error)
+        setError(`Error: ${error.message}`)
+        setIsLoading(false)
+      }
+    },
+    [fetchProductDetails],
+  )
 
   const fetchSessionDetails = useCallback(
     async (sessionId) => {
@@ -77,53 +115,18 @@ const PaymentSuccessPage = () => {
         setIsLoading(false)
       }
     },
-    [clearCart],
+    [clearCart, fetchItems],
   )
 
-  const fetchItems = async (sessionId) => {
-    try {
-      const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL
-      const response = await fetch(
-        `${baseURL}/payment/stripe/checkout-sessions/${sessionId}/line-items`,
-      )
-      if (!response.ok) {
-        throw new Error('Failed to fetch items')
-      }
-      const jsonResponse = await response.json()
-      const itemsData = await Promise.all(
-        jsonResponse.data.map(async (item) => {
-          const productDetails = await fetchProductDetails(item.price.product)
-          return {
-            ...item,
-            productDetails,
-          }
-        }),
-      )
-      setItems(itemsData)
-      setIsLoading(false)
-    } catch (error) {
-      console.error('Fetch error:', error)
-      setError(`Error: ${error.message}`)
-      setIsLoading(false)
-    }
-  }
+  useEffect(() => {
+    const query = new URLSearchParams(window.location.search)
+    const session = query.get('session_id')
+    setSessionId(session)
 
-  const fetchProductDetails = async (productId) => {
-    try {
-      const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL
-      const response = await fetch(
-        `${baseURL}/payment/stripe/products/${productId}`,
-      )
-      if (!response.ok) {
-        throw new Error(`Product not found: ${response.statusText}`)
-      }
-      const productData = await response.json()
-      return productData
-    } catch (error) {
-      console.error('Fetch product details error:', error)
-      return null
+    if (session) {
+      fetchSessionDetails(session)
     }
-  }
+  }, [fetchSessionDetails])
 
   const calculateSubtotal = useMemo(() => {
     return items.reduce(

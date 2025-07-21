@@ -1,10 +1,10 @@
 // src/components/customer/UserReviews.jsx
 
 'use client'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useSession } from 'next-auth/react'
 import CustomerReviewItem from '@/src/components/customer/CustomerReviewItem'
-import { Spinner } from "@heroui/spinner"
+import { Spinner } from '@heroui/spinner'
 import axios from 'axios'
 
 const UserReviews = () => {
@@ -12,13 +12,7 @@ const UserReviews = () => {
   const [reviews, setReviews] = useState([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    if (status === 'authenticated' && session?.user?.id) {
-      fetchUserReviews()
-    }
-  }, [status])
-
-  const fetchUserReviews = async () => {
+  const fetchUserReviews = useCallback(async () => {
     try {
       const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL
       const response = await axios.get(
@@ -28,10 +22,15 @@ const UserReviews = () => {
       setLoading(false)
     } catch (error) {
       console.error('Error fetching user reviews:', error)
-      setReviews([])
       setLoading(false)
     }
-  }
+  }, [session?.user?.id])
+
+  useEffect(() => {
+    if (status === 'authenticated' && session?.user?.id) {
+      fetchUserReviews()
+    }
+  }, [status, fetchUserReviews, session?.user?.id])
 
   const handleDeleteReview = async (reviewId) => {
     try {
