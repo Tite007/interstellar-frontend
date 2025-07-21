@@ -1,3 +1,5 @@
+'use client'
+
 import dynamic from 'next/dynamic'
 import React from 'react'
 
@@ -9,10 +11,10 @@ const ProductsTable = dynamic(
   },
 )
 
-export default function ProductTable() {
+export default function ProductsTableWrapper() {
   return (
     <div>
-      <h1 className=" xl:container text-2xl mt-10 font-semibold text-gray-700">
+      <h1 className="xl:container text-2xl mt-10 font-semibold text-gray-700">
         Products
       </h1>
       <ProductsTable />

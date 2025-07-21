@@ -15,7 +15,7 @@ $border-color: #dee2e6;
 $shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 $transition: all 0.3s ease;
 
-// Import the library's SCSS
+// Import the library's SCSS (keeping @import for compatibility)
 @import '~@chatscope/chat-ui-kit-styles/themes/default/main';
 
 // Backdrop for modal-like experience

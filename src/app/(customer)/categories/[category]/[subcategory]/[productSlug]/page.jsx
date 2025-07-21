@@ -68,8 +68,8 @@ function prepareDescription(description) {
 
 // Generate dynamic metadata
 export async function generateMetadata({ params, searchParams }) {
-  const { category, subcategory, productSlug } = params
-  const productId = searchParams.productId
+  const { category, subcategory, productSlug } = await params
+  const productId = (await searchParams).productId
 
   const productData = await fetchProductDetails(productId)
   const reviews = await fetchProductReviews(productId)
@@ -132,8 +132,8 @@ export async function generateMetadata({ params, searchParams }) {
 
 // Server Component with JSON-LD and Microdata
 export default async function Page({ params, searchParams }) {
-  const { category, subcategory, productSlug } = params
-  const productId = searchParams.productId
+  const { category, subcategory, productSlug } = await params
+  const productId = (await searchParams).productId
 
   const productData = await fetchProductDetails(productId)
   const reviews = await fetchProductReviews(productId)

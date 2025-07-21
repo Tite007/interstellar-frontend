@@ -5,6 +5,7 @@ export const StarIcon = ({
   size = 24,
   color = 'currentColor',
   isSelected = false,
+  disableAnimation,
   ...props
 }) => {
   return (

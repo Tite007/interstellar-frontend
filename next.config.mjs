@@ -10,6 +10,17 @@ const nextConfig = {
     ],
     unoptimized: true, // Add this line to disable image optimization globally
   },
+  sassOptions: {
+    silenceDeprecations: [
+      'legacy-js-api',
+      'import',
+      'global-builtin',
+      'color-functions',
+      'mixed-decls',
+    ],
+    quietDeps: true,
+    verbose: false,
+  },
 }
 
 // Correct placement of export
