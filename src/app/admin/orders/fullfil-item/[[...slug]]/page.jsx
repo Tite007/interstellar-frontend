@@ -4,8 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { Button } from '@heroui/button'
 import { useRouter } from 'next/navigation'
 import { Input } from '@heroui/input'
-import { PDFDownloadLink } from '@react-pdf/renderer'
-import MyDocument from '@/src/components/Admin/Orders/PDFPackingSlip'
+import PDFDownloadButton from '@/src/components/Admin/Orders/PDFDownloadButton'
 import {
   Table,
   TableHeader,
@@ -179,16 +178,7 @@ export default function Orderfullfill() {
           Order # {order.orderNumber}
         </h1>
         <div className="flex justify-end items-end">
-          <PDFDownloadLink
-            document={<MyDocument order={order} userDetails={userDetails} />}
-            fileName={`packing-slip-${order.orderNumber}.pdf`}
-          >
-            {({ blob, url, loading, error }) => (
-              <Button size="sm" className="mt-7 w-52">
-                {loading ? 'Preparing Document...' : 'Print Packing Slip'}
-              </Button>
-            )}
-          </PDFDownloadLink>
+          <PDFDownloadButton order={order} userDetails={userDetails} />
         </div>
       </div>
 
