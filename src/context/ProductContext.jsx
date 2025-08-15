@@ -1,5 +1,11 @@
 // src/contexts/ProductContext.jsx
-import React, { createContext, useContext, useState, useEffect } from 'react'
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from 'react'
 import {
   parseToCalendarDate,
   formatDateForBackend,
@@ -228,7 +234,7 @@ export const ProductProvider = ({ productId, children }) => {
   }, [productId]) // Remove initialProductState.technicalData dependency
 
   // Reset state for adding a new product
-  const resetProduct = () => {
+  const resetProduct = useCallback(() => {
     setState((prev) => ({
       ...prev,
       product: initialProductState,
@@ -237,34 +243,34 @@ export const ProductProvider = ({ productId, children }) => {
       subcategories: [],
       selectedTaxCode: '',
     }))
-  }
+  }, [])
 
-  const updateProduct = (updates) => {
+  const updateProduct = useCallback((updates) => {
     setState((prev) => ({
       ...prev,
       product: { ...prev.product, ...updates },
     }))
-  }
+  }, [])
 
-  const updateImages = (images) => {
+  const updateImages = useCallback((images) => {
     setState((prev) => ({ ...prev, images }))
-  }
+  }, [])
 
-  const updateSubcategories = (subcategories) => {
+  const updateSubcategories = useCallback((subcategories) => {
     setState((prev) => ({ ...prev, subcategories }))
-  }
+  }, [])
 
-  const updateVariants = (variants) => {
+  const updateVariants = useCallback((variants) => {
     setState((prev) => ({ ...prev, variants }))
-  }
+  }, [])
 
-  const updateSelectedTaxCode = (taxCode) => {
+  const updateSelectedTaxCode = useCallback((taxCode) => {
     setState((prev) => ({
       ...prev,
       product: { ...prev.product, taxCode: taxCode.stripeTaxCode },
       selectedTaxCode: `${taxCode.type} - ${taxCode.name}`,
     }))
-  }
+  }, [])
 
   return (
     <ProductContext.Provider

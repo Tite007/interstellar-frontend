@@ -28,7 +28,7 @@ const ProductAddFormContent = () => {
 
   useEffect(() => {
     resetProduct()
-  }, [resetProduct])
+  }, [resetProduct]) // resetProduct is now memoized with useCallback
 
   const handleSave = async (e) => {
     e.preventDefault()
